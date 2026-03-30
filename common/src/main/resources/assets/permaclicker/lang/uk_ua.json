@@ -1,0 +1,59 @@
+{
+  "permaclicker.title": "PermaClicker",
+
+  "permaclicker.status.on": "PermaClicker активний",
+  "permaclicker.status.off": "PermaClicker неактивний",
+
+  "permaclicker.update.available": "[PermaClicker] Доступне оновлення! %s -> %s",
+  "permaclicker.update.provider.ok": "- %s: Версія %s",
+  "permaclicker.update.provider.error": "- %s: Не вдалося отримати.",
+
+  "key.categories.permaclicker": "PermaClicker",
+  "key.category.permaclicker": "PermaClicker",
+  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.permaclicker.toggle": "Перемкнути",
+  "key.permaclicker.config": "Налаштування",
+
+  "permaclicker.config.title": "Налаштування PermaClicker",
+  "permaclicker.config.button.save_close": "Зберегти й закрити",
+  "permaclicker.config.button.cancel": "Скасувати",
+  "permaclicker.config.section.general": "Загальні",
+  "permaclicker.config.section.overlay": "Оверлей",
+  "permaclicker.config.section.updates": "Оновлення",
+
+  "permaclicker.config.value.on": "Увімкнено",
+  "permaclicker.config.value.off": "Вимкнено",
+
+  "permaclicker.config.runtime_mode": "Режим роботи",
+  "permaclicker.config.runtime_mode.focused": "У фокусі",
+  "permaclicker.config.runtime_mode.background": "У тлі",
+  "permaclicker.config.runtime_mode.tooltip.focused.desc": "Працює лише коли вікно гри активне",
+  "permaclicker.config.runtime_mode.tooltip.background.desc": "Може продовжувати роботу у тлі, коли вікно не у фокусі або згорнуте",
+
+  "permaclicker.config.auto_stop_minutes": "Авто-зупинка (хвилини)",
+  "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Вимикає таймер",
+  "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "Число від 1 до 9999, щоб автоматично зупинити PermaClicker через цю кількість хвилин",
+
+  "permaclicker.config.cursor_lock": "Блокування руху",
+  "permaclicker.config.cursor_lock.tooltip.on.desc": "Блокує рух, екран паузи та чат, поки PermaClicker активний",
+  "permaclicker.config.cursor_lock.tooltip.off.desc": "Залишає керування рухом без змін",
+
+  "permaclicker.config.overlay.enabled": "Показувати оверлей стану",
+  "permaclicker.config.overlay.color": "Колір тексту",
+  "permaclicker.config.overlay.enabled.tooltip.on.desc": "Показує оверлей стану, поки PermaClicker активний",
+  "permaclicker.config.overlay.enabled.tooltip.off.desc": "Приховує оверлей стану",
+  "permaclicker.config.overlay.color.tooltip.any.label": "Колір",
+  "permaclicker.config.overlay.color.tooltip.any.desc": "Визначає колір тексту оверлею стану",
+
+  "permaclicker.config.update.enabled": "Перевірка оновлень",
+  "permaclicker.config.update.channel": "Канал релізів",
+  "permaclicker.config.update.channel.stable": "Стабільний",
+  "permaclicker.config.update.channel.beta": "Бета",
+  "permaclicker.config.update.channel.alpha": "Альфа",
+  "permaclicker.config.update.channel.disabled": "Вимкнено",
+  "permaclicker.config.update.enabled.tooltip.on.desc": "Перевіряє оновлення під час запуску гри.",
+  "permaclicker.config.update.enabled.tooltip.off.desc": "Пропускає перевірку оновлень.",
+  "permaclicker.config.update.channel.tooltip.stable.desc": "Лише стабільні збірки.",
+  "permaclicker.config.update.channel.tooltip.beta.desc": "Стабільні + бета збірки.",
+  "permaclicker.config.update.channel.tooltip.alpha.desc": "Усі збірки (стабільні, бета, альфа)."
+}

@@ -1,0 +1,59 @@
+{
+  "permaclicker.title": "PermaClicker",
+
+  "permaclicker.status.on": "PermaClicker is active",
+  "permaclicker.status.off": "PermaClicker is inactive",
+
+  "permaclicker.update.available": "[PermaClicker] Update available! %s -> %s",
+  "permaclicker.update.provider.ok": "- %s: Version %s",
+  "permaclicker.update.provider.error": "- %s: Fetch failed.",
+
+  "key.categories.permaclicker": "PermaClicker",
+  "key.category.permaclicker": "PermaClicker",
+  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.permaclicker.toggle": "Toggle",
+  "key.permaclicker.config": "Settings",
+
+  "permaclicker.config.title": "PermaClicker Settings",
+  "permaclicker.config.button.save_close": "Save and close",
+  "permaclicker.config.button.cancel": "Cancel",
+  "permaclicker.config.section.general": "General",
+  "permaclicker.config.section.overlay": "Overlay",
+  "permaclicker.config.section.updates": "Updates",
+
+  "permaclicker.config.value.on": "On",
+  "permaclicker.config.value.off": "Off",
+
+  "permaclicker.config.runtime_mode": "Runtime mode",
+  "permaclicker.config.runtime_mode.focused": "Focused",
+  "permaclicker.config.runtime_mode.background": "Background",
+  "permaclicker.config.runtime_mode.tooltip.focused.desc": "Runs only while the game window is active",
+  "permaclicker.config.runtime_mode.tooltip.background.desc": "May continue in background while unfocused or minimized",
+
+  "permaclicker.config.auto_stop_minutes": "Auto-stop (minutes)",
+  "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Disables the timer",
+  "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "Number from 1 to 9999 to stop PermaClicker automatically after that many minutes",
+
+  "permaclicker.config.cursor_lock": "Movement Lock",
+  "permaclicker.config.cursor_lock.tooltip.on.desc": "Blocks movement, pause screen and chat while PermaClicker is active",
+  "permaclicker.config.cursor_lock.tooltip.off.desc": "Leaves movement controls unchanged",
+
+  "permaclicker.config.overlay.enabled": "Show status overlay",
+  "permaclicker.config.overlay.color": "Text color",
+  "permaclicker.config.overlay.enabled.tooltip.on.desc": "Shows status overlay while PermaClicker isactive",
+  "permaclicker.config.overlay.enabled.tooltip.off.desc": "Hides status overlay",
+  "permaclicker.config.overlay.color.tooltip.any.label": "Color",
+  "permaclicker.config.overlay.color.tooltip.any.desc": "Defines text color for the status overlay",
+
+  "permaclicker.config.update.enabled": "Update check",
+  "permaclicker.config.update.channel": "Release channel",
+  "permaclicker.config.update.channel.stable": "Stable",
+  "permaclicker.config.update.channel.beta": "Beta",
+  "permaclicker.config.update.channel.alpha": "Alpha",
+  "permaclicker.config.update.channel.disabled": "Disabled",
+  "permaclicker.config.update.enabled.tooltip.on.desc": "Checks for updates when the game starts.",
+  "permaclicker.config.update.enabled.tooltip.off.desc": "Skips update checks.",
+  "permaclicker.config.update.channel.tooltip.stable.desc": "Only stable builds.",
+  "permaclicker.config.update.channel.tooltip.beta.desc": "Stable + beta builds.",
+  "permaclicker.config.update.channel.tooltip.alpha.desc": "All builds (stable, beta, alpha)."
+}

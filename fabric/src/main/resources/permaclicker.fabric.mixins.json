@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.github.hrobasti.permaclicker.fabric.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "FabricChatMiningAttackScreenBypassMixin",
+    "FabricPauseEscKeyMixin",
+    "FabricPauseScreenSetScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

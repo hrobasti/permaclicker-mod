@@ -1,0 +1,59 @@
+{
+  "permaclicker.title": "PermaClicker",
+
+  "permaclicker.status.on": "PermaClicker가 활성화됨",
+  "permaclicker.status.off": "PermaClicker가 비활성화됨",
+
+  "permaclicker.update.available": "[PermaClicker] 업데이트 가능! %s -> %s",
+  "permaclicker.update.provider.ok": "- %s: 버전 %s",
+  "permaclicker.update.provider.error": "- %s: 가져오기 실패.",
+
+  "key.categories.permaclicker": "PermaClicker",
+  "key.category.permaclicker": "PermaClicker",
+  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.permaclicker.toggle": "전환",
+  "key.permaclicker.config": "설정",
+
+  "permaclicker.config.title": "PermaClicker 설정",
+  "permaclicker.config.button.save_close": "저장하고 닫기",
+  "permaclicker.config.button.cancel": "취소",
+  "permaclicker.config.section.general": "일반",
+  "permaclicker.config.section.overlay": "오버레이",
+  "permaclicker.config.section.updates": "업데이트",
+
+  "permaclicker.config.value.on": "켜짐",
+  "permaclicker.config.value.off": "꺼짐",
+
+  "permaclicker.config.runtime_mode": "실행 모드",
+  "permaclicker.config.runtime_mode.focused": "포커스",
+  "permaclicker.config.runtime_mode.background": "백그라운드",
+  "permaclicker.config.runtime_mode.tooltip.focused.desc": "게임 창이 활성 상태일 때만 실행됩니다",
+  "permaclicker.config.runtime_mode.tooltip.background.desc": "포커스를 잃거나 최소화되어도 백그라운드에서 계속 실행될 수 있습니다",
+
+  "permaclicker.config.auto_stop_minutes": "자동 중지(분)",
+  "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "타이머를 비활성화합니다",
+  "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "1~9999 사이 숫자를 입력하면 해당 분 후 PermaClicker가 자동으로 중지됩니다",
+
+  "permaclicker.config.cursor_lock": "이동 잠금",
+  "permaclicker.config.cursor_lock.tooltip.on.desc": "PermaClicker가 활성화된 동안 이동, 일시정지 화면, 채팅을 차단합니다",
+  "permaclicker.config.cursor_lock.tooltip.off.desc": "이동 조작을 변경하지 않습니다",
+
+  "permaclicker.config.overlay.enabled": "상태 오버레이 표시",
+  "permaclicker.config.overlay.color": "텍스트 색상",
+  "permaclicker.config.overlay.enabled.tooltip.on.desc": "PermaClicker가 활성화된 동안 상태 오버레이를 표시합니다",
+  "permaclicker.config.overlay.enabled.tooltip.off.desc": "상태 오버레이를 숨깁니다",
+  "permaclicker.config.overlay.color.tooltip.any.label": "색상",
+  "permaclicker.config.overlay.color.tooltip.any.desc": "상태 오버레이 텍스트 색상을 정의합니다",
+
+  "permaclicker.config.update.enabled": "업데이트 확인",
+  "permaclicker.config.update.channel": "릴리스 채널",
+  "permaclicker.config.update.channel.stable": "안정",
+  "permaclicker.config.update.channel.beta": "베타",
+  "permaclicker.config.update.channel.alpha": "알파",
+  "permaclicker.config.update.channel.disabled": "사용 안 함",
+  "permaclicker.config.update.enabled.tooltip.on.desc": "게임 시작 시 업데이트를 확인합니다.",
+  "permaclicker.config.update.enabled.tooltip.off.desc": "업데이트 확인을 건너뜁니다.",
+  "permaclicker.config.update.channel.tooltip.stable.desc": "안정 빌드만.",
+  "permaclicker.config.update.channel.tooltip.beta.desc": "안정 + 베타 빌드.",
+  "permaclicker.config.update.channel.tooltip.alpha.desc": "모든 빌드(안정, 베타, 알파)."
+}

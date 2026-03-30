@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.github.hrobasti.permaclicker.neoforge.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "NeoForgeChatMiningAttackScreenBypassMixin",
+    "NeoForgePauseEscKeyMixin",
+    "NeoForgePauseScreenSetScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

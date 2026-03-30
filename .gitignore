@@ -1,0 +1,48 @@
+# Gradle
+.gradle/
+**/.gradle/
+
+# Build outputs
+build/
+**/build/
+out/
+dist/
+**/dist/
+bin/
+**/bin/
+
+# Java / JVM
+*.class
+hs_err_pid*
+replay_pid*
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+.classpath
+.project
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Local runtime/config artifacts
+run/
+logs/
+crash-reports/
+
+# Local wiki editing artifacts
+/wiki/
+
+# Isolated local Gradle user homes
+**/isolated/**/gradle-user-home/
+
+# Loader-local work directories (generated)
+**/isolated/
+**/loom-cache/
+**/devlibs/

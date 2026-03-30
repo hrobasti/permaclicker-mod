@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "targets": [
+    {
+      "minecraft": "1.21.10",
+      "java": 21,
+      "neoforge": "21.10.63",
+      "fabricLoader": "0.18.5",
+      "fabricApi": "0.134.1+1.21.10",
+      "modmenu": "16.0.0"
+    },
+    {
+      "minecraft": "1.21.11",
+      "java": 21,
+      "neoforge": "21.11.42",
+      "fabricLoader": "0.18.5",
+      "fabricApi": "0.135.1+1.21.11",
+      "modmenu": "17.0.0"
+    },
+    {
+      "minecraft": "26.1",
+      "java": 25,
+      "neoforge": "26.1.0.11-beta",
+      "fabricLoader": "0.18.5",
+      "fabricApi": "0.144.3+26.1",
+      "modmenu": "18.0.0-alpha.8"
+    }
+  ]
+}

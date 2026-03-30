@@ -1,0 +1,41 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="Apache-2.0"
+
+[[mods]]
+modId="${mod_id}"
+version="${file.jarVersion}"
+displayName="${mod_name}"
+displayURL="https://github.com/hrobasti/permaclicker-mod"
+logoFile="assets/permaclicker/icon.png"
+authors="hrobasti"
+description='''
+PermaClicker keeps client-side mining active with a configurable keybind.
+Source: https://github.com/hrobasti/permaclicker-mod
+GitHub Sponsors: https://github.com/sponsors/hrobasti
+Ko-Fi: https://ko-fi.com/hrobasti
+'''
+
+[[dependencies.permaclicker]]
+modId="minecraft"
+type="required"
+versionRange="[${minecraft_version}]"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.permaclicker]]
+modId="neoforge"
+type="required"
+versionRange="[${neoforge_version},)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.permaclicker]]
+modId="turtlelib"
+type="required"
+versionRange="[1.0.0,)"
+ordering="AFTER"
+side="CLIENT"
+
+[[mixins]]
+config="permaclicker.neoforge.mixins.json"

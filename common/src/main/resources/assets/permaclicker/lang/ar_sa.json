@@ -1,0 +1,59 @@
+{
+  "permaclicker.title": "PermaClicker",
+
+  "permaclicker.status.on": "PermaClicker نشط",
+  "permaclicker.status.off": "PermaClicker غير نشط",
+
+  "permaclicker.update.available": "[PermaClicker] تحديث متاح! %s -> %s",
+  "permaclicker.update.provider.ok": "- %s: الإصدار %s",
+  "permaclicker.update.provider.error": "- %s: فشل الجلب.",
+
+  "key.categories.permaclicker": "PermaClicker",
+  "key.category.permaclicker": "PermaClicker",
+  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.permaclicker.toggle": "تبديل",
+  "key.permaclicker.config": "الإعدادات",
+
+  "permaclicker.config.title": "إعدادات PermaClicker",
+  "permaclicker.config.button.save_close": "حفظ وإغلاق",
+  "permaclicker.config.button.cancel": "إلغاء",
+  "permaclicker.config.section.general": "عام",
+  "permaclicker.config.section.overlay": "التراكب",
+  "permaclicker.config.section.updates": "التحديثات",
+
+  "permaclicker.config.value.on": "تشغيل",
+  "permaclicker.config.value.off": "إيقاف",
+
+  "permaclicker.config.runtime_mode": "وضع التشغيل",
+  "permaclicker.config.runtime_mode.focused": "مركّز",
+  "permaclicker.config.runtime_mode.background": "في الخلفية",
+  "permaclicker.config.runtime_mode.tooltip.focused.desc": "يعمل فقط عندما تكون نافذة اللعبة نشطة",
+  "permaclicker.config.runtime_mode.tooltip.background.desc": "قد يستمر في الخلفية عند فقدان التركيز أو التصغير",
+
+  "permaclicker.config.auto_stop_minutes": "إيقاف تلقائي (دقائق)",
+  "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "يعطّل المؤقت",
+  "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "رقم من 1 إلى 9999 لإيقاف PermaClicker تلقائيًا بعد هذا العدد من الدقائق",
+
+  "permaclicker.config.cursor_lock": "قفل الحركة",
+  "permaclicker.config.cursor_lock.tooltip.on.desc": "يمنع الحركة وشاشة الإيقاف المؤقت والدردشة أثناء نشاط PermaClicker",
+  "permaclicker.config.cursor_lock.tooltip.off.desc": "يترك عناصر تحكم الحركة دون تغيير",
+
+  "permaclicker.config.overlay.enabled": "إظهار تراكب الحالة",
+  "permaclicker.config.overlay.color": "لون النص",
+  "permaclicker.config.overlay.enabled.tooltip.on.desc": "يعرض تراكب الحالة أثناء نشاط PermaClicker",
+  "permaclicker.config.overlay.enabled.tooltip.off.desc": "يخفي تراكب الحالة",
+  "permaclicker.config.overlay.color.tooltip.any.label": "اللون",
+  "permaclicker.config.overlay.color.tooltip.any.desc": "يحدد لون نص تراكب الحالة",
+
+  "permaclicker.config.update.enabled": "التحقق من التحديث",
+  "permaclicker.config.update.channel": "قناة الإصدار",
+  "permaclicker.config.update.channel.stable": "مستقر",
+  "permaclicker.config.update.channel.beta": "بيتا",
+  "permaclicker.config.update.channel.alpha": "ألفا",
+  "permaclicker.config.update.channel.disabled": "معطّل",
+  "permaclicker.config.update.enabled.tooltip.on.desc": "يتحقق من التحديثات عند بدء اللعبة.",
+  "permaclicker.config.update.enabled.tooltip.off.desc": "يتخطى التحقق من التحديثات.",
+  "permaclicker.config.update.channel.tooltip.stable.desc": "إصدارات مستقرة فقط.",
+  "permaclicker.config.update.channel.tooltip.beta.desc": "الإصدارات المستقرة + بيتا.",
+  "permaclicker.config.update.channel.tooltip.alpha.desc": "جميع الإصدارات (مستقر، بيتا، ألفا)."
+}

@@ -1,0 +1,59 @@
+{
+  "permaclicker.title": "PermaClicker",
+
+  "permaclicker.status.on": "PermaClicker jest aktywny",
+  "permaclicker.status.off": "PermaClicker jest nieaktywny",
+
+  "permaclicker.update.available": "[PermaClicker] Dostępna aktualizacja! %s -> %s",
+  "permaclicker.update.provider.ok": "- %s: Wersja %s",
+  "permaclicker.update.provider.error": "- %s: Nie udało się pobrać.",
+
+  "key.categories.permaclicker": "PermaClicker",
+  "key.category.permaclicker": "PermaClicker",
+  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.permaclicker.toggle": "Przełącz",
+  "key.permaclicker.config": "Ustawienia",
+
+  "permaclicker.config.title": "Ustawienia PermaClicker",
+  "permaclicker.config.button.save_close": "Zapisz i zamknij",
+  "permaclicker.config.button.cancel": "Anuluj",
+  "permaclicker.config.section.general": "Ogólne",
+  "permaclicker.config.section.overlay": "Nakładka",
+  "permaclicker.config.section.updates": "Aktualizacje",
+
+  "permaclicker.config.value.on": "Włączone",
+  "permaclicker.config.value.off": "Wyłączone",
+
+  "permaclicker.config.runtime_mode": "Tryb działania",
+  "permaclicker.config.runtime_mode.focused": "Skupiony",
+  "permaclicker.config.runtime_mode.background": "W tle",
+  "permaclicker.config.runtime_mode.tooltip.focused.desc": "Działa tylko, gdy okno gry jest aktywne",
+  "permaclicker.config.runtime_mode.tooltip.background.desc": "Może działać w tle, gdy okno jest nieaktywne lub zminimalizowane",
+
+  "permaclicker.config.auto_stop_minutes": "Auto-stop (minuty)",
+  "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Wyłącza licznik czasu",
+  "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "Liczba od 1 do 9999, aby automatycznie zatrzymać PermaClicker po tylu minutach",
+
+  "permaclicker.config.cursor_lock": "Blokada ruchu",
+  "permaclicker.config.cursor_lock.tooltip.on.desc": "Blokuje ruch, ekran pauzy i czat, gdy PermaClicker jest aktywny",
+  "permaclicker.config.cursor_lock.tooltip.off.desc": "Pozostawia sterowanie ruchem bez zmian",
+
+  "permaclicker.config.overlay.enabled": "Pokaż nakładkę statusu",
+  "permaclicker.config.overlay.color": "Kolor tekstu",
+  "permaclicker.config.overlay.enabled.tooltip.on.desc": "Pokazuje nakładkę statusu, gdy PermaClicker jest aktywny",
+  "permaclicker.config.overlay.enabled.tooltip.off.desc": "Ukrywa nakładkę statusu",
+  "permaclicker.config.overlay.color.tooltip.any.label": "Kolor",
+  "permaclicker.config.overlay.color.tooltip.any.desc": "Określa kolor tekstu nakładki statusu",
+
+  "permaclicker.config.update.enabled": "Sprawdzanie aktualizacji",
+  "permaclicker.config.update.channel": "Kanał wydań",
+  "permaclicker.config.update.channel.stable": "Stabilny",
+  "permaclicker.config.update.channel.beta": "Beta",
+  "permaclicker.config.update.channel.alpha": "Alfa",
+  "permaclicker.config.update.channel.disabled": "Wyłączony",
+  "permaclicker.config.update.enabled.tooltip.on.desc": "Sprawdza aktualizacje przy uruchamianiu gry.",
+  "permaclicker.config.update.enabled.tooltip.off.desc": "Pomija sprawdzanie aktualizacji.",
+  "permaclicker.config.update.channel.tooltip.stable.desc": "Tylko stabilne buildy.",
+  "permaclicker.config.update.channel.tooltip.beta.desc": "Stabilne + beta buildy.",
+  "permaclicker.config.update.channel.tooltip.alpha.desc": "Wszystkie buildy (stabilne, beta, alfa)."
+}

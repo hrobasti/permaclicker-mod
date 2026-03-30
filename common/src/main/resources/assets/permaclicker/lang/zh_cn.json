@@ -1,0 +1,59 @@
+{
+  "permaclicker.title": "PermaClicker",
+
+  "permaclicker.status.on": "PermaClicker 已启用",
+  "permaclicker.status.off": "PermaClicker 已禁用",
+
+  "permaclicker.update.available": "[PermaClicker] 有可用更新！%s -> %s",
+  "permaclicker.update.provider.ok": "- %s：版本 %s",
+  "permaclicker.update.provider.error": "- %s：获取失败。",
+
+  "key.categories.permaclicker": "PermaClicker",
+  "key.category.permaclicker": "PermaClicker",
+  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.permaclicker.toggle": "切换",
+  "key.permaclicker.config": "设置",
+
+  "permaclicker.config.title": "PermaClicker 设置",
+  "permaclicker.config.button.save_close": "保存并关闭",
+  "permaclicker.config.button.cancel": "取消",
+  "permaclicker.config.section.general": "常规",
+  "permaclicker.config.section.overlay": "覆盖层",
+  "permaclicker.config.section.updates": "更新",
+
+  "permaclicker.config.value.on": "开",
+  "permaclicker.config.value.off": "关",
+
+  "permaclicker.config.runtime_mode": "运行模式",
+  "permaclicker.config.runtime_mode.focused": "前台",
+  "permaclicker.config.runtime_mode.background": "后台",
+  "permaclicker.config.runtime_mode.tooltip.focused.desc": "仅在游戏窗口处于活动状态时运行",
+  "permaclicker.config.runtime_mode.tooltip.background.desc": "在失去焦点或最小化时可能继续在后台运行",
+
+  "permaclicker.config.auto_stop_minutes": "自动停止（分钟）",
+  "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "禁用计时器",
+  "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "输入 1 到 9999 的数字，PermaClicker 将在对应分钟后自动停止",
+
+  "permaclicker.config.cursor_lock": "移动锁定",
+  "permaclicker.config.cursor_lock.tooltip.on.desc": "当 PermaClicker 启用时，阻止移动、暂停界面和聊天",
+  "permaclicker.config.cursor_lock.tooltip.off.desc": "保持移动控制不变",
+
+  "permaclicker.config.overlay.enabled": "显示状态覆盖层",
+  "permaclicker.config.overlay.color": "文本颜色",
+  "permaclicker.config.overlay.enabled.tooltip.on.desc": "当 PermaClicker 启用时显示状态覆盖层",
+  "permaclicker.config.overlay.enabled.tooltip.off.desc": "隐藏状态覆盖层",
+  "permaclicker.config.overlay.color.tooltip.any.label": "颜色",
+  "permaclicker.config.overlay.color.tooltip.any.desc": "定义状态覆盖层的文本颜色",
+
+  "permaclicker.config.update.enabled": "更新检查",
+  "permaclicker.config.update.channel": "发布渠道",
+  "permaclicker.config.update.channel.stable": "稳定版",
+  "permaclicker.config.update.channel.beta": "测试版",
+  "permaclicker.config.update.channel.alpha": "内测版",
+  "permaclicker.config.update.channel.disabled": "已禁用",
+  "permaclicker.config.update.enabled.tooltip.on.desc": "游戏启动时检查更新。",
+  "permaclicker.config.update.enabled.tooltip.off.desc": "跳过更新检查。",
+  "permaclicker.config.update.channel.tooltip.stable.desc": "仅稳定版本。",
+  "permaclicker.config.update.channel.tooltip.beta.desc": "稳定版 + 测试版。",
+  "permaclicker.config.update.channel.tooltip.alpha.desc": "所有版本（稳定版、测试版、内测版）。"
+}

@@ -1,0 +1,59 @@
+{
+  "permaclicker.title": "PermaClicker",
+
+  "permaclicker.status.on": "PermaClicker está activo",
+  "permaclicker.status.off": "PermaClicker está inactivo",
+
+  "permaclicker.update.available": "[PermaClicker] ¡Actualización disponible! %s -> %s",
+  "permaclicker.update.provider.ok": "- %s: Versión %s",
+  "permaclicker.update.provider.error": "- %s: Error al obtener datos.",
+
+  "key.categories.permaclicker": "PermaClicker",
+  "key.category.permaclicker": "PermaClicker",
+  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.permaclicker.toggle": "Alternar",
+  "key.permaclicker.config": "Ajustes",
+
+  "permaclicker.config.title": "Ajustes de PermaClicker",
+  "permaclicker.config.button.save_close": "Guardar y cerrar",
+  "permaclicker.config.button.cancel": "Cancelar",
+  "permaclicker.config.section.general": "General",
+  "permaclicker.config.section.overlay": "Superposición",
+  "permaclicker.config.section.updates": "Actualizaciones",
+
+  "permaclicker.config.value.on": "Activado",
+  "permaclicker.config.value.off": "Desactivado",
+
+  "permaclicker.config.runtime_mode": "Modo de ejecución",
+  "permaclicker.config.runtime_mode.focused": "Enfocado",
+  "permaclicker.config.runtime_mode.background": "En segundo plano",
+  "permaclicker.config.runtime_mode.tooltip.focused.desc": "Solo se ejecuta cuando la ventana del juego está activa",
+  "permaclicker.config.runtime_mode.tooltip.background.desc": "Puede continuar en segundo plano cuando está sin foco o minimizada",
+
+  "permaclicker.config.auto_stop_minutes": "Auto-detener (minutos)",
+  "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Desactiva el temporizador",
+  "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "Número de 1 a 9999 para detener PermaClicker automáticamente tras esa cantidad de minutos",
+
+  "permaclicker.config.cursor_lock": "Bloqueo de movimiento",
+  "permaclicker.config.cursor_lock.tooltip.on.desc": "Bloquea movimiento, menú de pausa y chat mientras PermaClicker está activo",
+  "permaclicker.config.cursor_lock.tooltip.off.desc": "Mantiene los controles de movimiento sin cambios",
+
+  "permaclicker.config.overlay.enabled": "Mostrar superposición de estado",
+  "permaclicker.config.overlay.color": "Color del texto",
+  "permaclicker.config.overlay.enabled.tooltip.on.desc": "Muestra la superposición de estado mientras PermaClicker está activo",
+  "permaclicker.config.overlay.enabled.tooltip.off.desc": "Oculta la superposición de estado",
+  "permaclicker.config.overlay.color.tooltip.any.label": "Color",
+  "permaclicker.config.overlay.color.tooltip.any.desc": "Define el color del texto de la superposición de estado",
+
+  "permaclicker.config.update.enabled": "Comprobación de actualizaciones",
+  "permaclicker.config.update.channel": "Canal de lanzamiento",
+  "permaclicker.config.update.channel.stable": "Estable",
+  "permaclicker.config.update.channel.beta": "Beta",
+  "permaclicker.config.update.channel.alpha": "Alfa",
+  "permaclicker.config.update.channel.disabled": "Desactivado",
+  "permaclicker.config.update.enabled.tooltip.on.desc": "Comprueba actualizaciones al iniciar el juego.",
+  "permaclicker.config.update.enabled.tooltip.off.desc": "Omite la comprobación de actualizaciones.",
+  "permaclicker.config.update.channel.tooltip.stable.desc": "Solo versiones estables.",
+  "permaclicker.config.update.channel.tooltip.beta.desc": "Versiones estables + beta.",
+  "permaclicker.config.update.channel.tooltip.alpha.desc": "Todas las versiones (estable, beta, alfa)."
+}

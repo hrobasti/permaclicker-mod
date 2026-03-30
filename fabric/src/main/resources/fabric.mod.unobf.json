@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "PermaClicker",
+  "icon": "assets/permaclicker/icon.png",
+  "description": "PermaClicker keeps mining active while enabled.",
+  "authors": [
+    "hrobasti"
+  ],
+  "license": "Apache-2.0",
+  "contact": {
+    "homepage": "https://github.com/hrobasti/permaclicker-mod"
+  },
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.github.hrobasti.permaclicker.fabric.PermaClickerFabricEntrypoint"
+    ],
+    "modmenu": [
+      "com.github.hrobasti.permaclicker.fabric.PermaClickerModMenuApi"
+    ]
+  },
+  "mixins": [
+    "permaclicker.fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": ">=${fabric_api_version}",
+    "turtlelib": ">=1.0.0",
+    "minecraft": "${minecraft_version}",
+    "java": ">=${java_language_version}"
+  },
+  "suggests": {
+    "modmenu": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.source": "https://github.com/hrobasti/permaclicker-mod",
+        "modmenu.github_sponsors": "https://github.com/sponsors/hrobasti",
+        "modmenu.kofi": "https://ko-fi.com/hrobasti"
+      }
+    }
+  }
+}

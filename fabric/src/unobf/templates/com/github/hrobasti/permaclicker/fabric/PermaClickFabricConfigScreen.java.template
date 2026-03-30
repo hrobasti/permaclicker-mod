@@ -1,0 +1,457 @@
+package com.github.hrobasti.permaclicker.fabric;
+
+import com.github.hrobasti.permaclicker.common.config.PermaClickConfig;
+import com.github.hrobasti.permaclicker.common.config.UpdateChannel;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.OptionsList;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.options.OptionsSubScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+
+/**
+ * Dedicated unobfuscated-target config screen (e.g. MC 26.1) with vanilla options-layout styling.
+ */
+public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
+    private static final int ROW_HEIGHT = 20;
+    private static final int LABEL_WIDTH = 150;
+    private static final int CONTROL_WIDTH = 150;
+    private static final int INFO_ICON_SIZE = 10;
+    private static final int INFO_ICON_BG_COLOR = 0xAA2E5A88;
+    private static final int INFO_ICON_TEXT_COLOR = 0xFFFFFFFF;
+    private static final List<String> OVERLAY_COLORS = List.of(
+        "black",
+        "dark_blue",
+        "dark_green",
+        "dark_aqua",
+        "dark_red",
+        "dark_purple",
+        "gold",
+        "gray",
+        "dark_gray",
+        "blue",
+        "green",
+        "aqua",
+        "red",
+        "light_purple",
+        "yellow",
+        "white"
+    );
+
+    private final Screen parent;
+
+    private boolean overlayEnabled;
+    private String overlayColor;
+    private boolean runInBackground;
+    private int autoStopMinutes;
+    private boolean movementLockEnabled;
+    private boolean updateCheckEnabled;
+    private UpdateChannel updateChannel;
+
+    private Button runtimeModeButton;
+    private Button movementLockButton;
+    private Button overlayEnabledButton;
+    private Button overlayColorButton;
+    private Button updateCheckButton;
+    private Button updateChannelButton;
+    private EditBox autoStopInputField;
+    private OptionsList optionsList;
+
+    public PermaClickFabricConfigScreen(Screen parent) {
+        super(parent, Minecraft.getInstance().options, Component.translatable("permaclicker.config.title"));
+        this.parent = parent;
+
+        PermaClickConfig config = PermaClickFabricEntrypoint.bridge().currentConfig();
+        this.overlayEnabled = config.overlayEnabled();
+        this.overlayColor = config.overlayColor();
+        this.runInBackground = config.runWhenUnfocused() || config.runWhenMinimized();
+        this.autoStopMinutes = config.autoStopMinutes();
+        this.movementLockEnabled = config.movementLockEnabled();
+        this.updateCheckEnabled = config.updateCheckEnabled();
+        this.updateChannel = config.updateChannel();
+    }
+
+    @Override
+    protected void addContents() {
+        this.optionsList = this.layout.addToContents(new OptionsList(this.minecraft, this.width, this));
+        this.list = this.optionsList;
+        addOptions();
+    }
+
+    @Override
+    protected void addOptions() {
+        if (this.optionsList == null) {
+            return;
+        }
+
+        addSectionRow(Component.translatable("permaclicker.config.section.general"));
+        this.runtimeModeButton = this.createToggleButton(runtimeModeValue(), button -> {
+            runInBackground = !runInBackground;
+            refreshButtonMessages();
+        });
+        addLabeledRow(
+            Component.translatable("permaclicker.config.runtime_mode"),
+            tooltipLines(
+                tooltipLine(Component.translatable("permaclicker.config.runtime_mode.focused"), "permaclicker.config.runtime_mode.tooltip.focused.desc"),
+                tooltipLine(Component.translatable("permaclicker.config.runtime_mode.background"), "permaclicker.config.runtime_mode.tooltip.background.desc")
+            ),
+            this.runtimeModeButton
+        );
+
+        this.autoStopInputField = new EditBox(
+            this.font,
+            0,
+            0,
+            CONTROL_WIDTH,
+            ROW_HEIGHT,
+            Component.translatable("permaclicker.config.auto_stop_minutes")
+        );
+        this.autoStopInputField.setMaxLength(4);
+        this.autoStopInputField.setValue(Integer.toString(autoStopMinutes));
+        addLabeledRow(
+            Component.translatable("permaclicker.config.auto_stop_minutes"),
+            tooltipLines(
+                tooltipLine(Component.literal("0"), "permaclicker.config.auto_stop_minutes.tooltip.off.desc"),
+                tooltipLine(Component.literal("1-9999"), "permaclicker.config.auto_stop_minutes.tooltip.range.desc")
+            ),
+            this.autoStopInputField
+        );
+
+        this.movementLockButton = this.createToggleButton(toggleValue(movementLockEnabled), button -> {
+            movementLockEnabled = !movementLockEnabled;
+            refreshButtonMessages();
+        });
+        addLabeledRow(
+            Component.translatable("permaclicker.config.cursor_lock"),
+            tooltipLines(
+                tooltipLine(Component.translatable("permaclicker.config.value.on"), "permaclicker.config.cursor_lock.tooltip.on.desc"),
+                tooltipLine(Component.translatable("permaclicker.config.value.off"), "permaclicker.config.cursor_lock.tooltip.off.desc")
+            ),
+            this.movementLockButton
+        );
+
+        addSectionRow(Component.translatable("permaclicker.config.section.overlay"));
+        this.overlayEnabledButton = this.createToggleButton(toggleValue(overlayEnabled), button -> {
+            overlayEnabled = !overlayEnabled;
+            refreshButtonMessages();
+        });
+        addLabeledRow(
+            Component.translatable("permaclicker.config.overlay.enabled"),
+            tooltipLines(
+                tooltipLine(Component.translatable("permaclicker.config.value.on"), "permaclicker.config.overlay.enabled.tooltip.on.desc"),
+                tooltipLine(Component.translatable("permaclicker.config.value.off"), "permaclicker.config.overlay.enabled.tooltip.off.desc")
+            ),
+            this.overlayEnabledButton
+        );
+
+        this.overlayColorButton = this.createToggleButton(overlayColorValue(), button -> {
+            overlayColor = nextOverlayColor(overlayColor);
+            refreshButtonMessages();
+        });
+        addLabeledRow(
+            Component.translatable("permaclicker.config.overlay.color"),
+            tooltipLines(
+                tooltipLine(
+                    Component.translatable("permaclicker.config.overlay.color.tooltip.any.label"),
+                    "permaclicker.config.overlay.color.tooltip.any.desc"
+                )
+            ),
+            this.overlayColorButton
+        );
+
+        addSectionRow(Component.translatable("permaclicker.config.section.updates"));
+        this.updateCheckButton = this.createToggleButton(toggleValue(updateCheckEnabled), button -> {
+            updateCheckEnabled = !updateCheckEnabled;
+            refreshButtonMessages();
+        });
+        addLabeledRow(
+            Component.translatable("permaclicker.config.update.enabled"),
+            tooltipLines(
+                tooltipLine(Component.translatable("permaclicker.config.value.on"), "permaclicker.config.update.enabled.tooltip.on.desc"),
+                tooltipLine(Component.translatable("permaclicker.config.value.off"), "permaclicker.config.update.enabled.tooltip.off.desc")
+            ),
+            this.updateCheckButton
+        );
+
+        this.updateChannelButton = this.createToggleButton(updateChannelValue(), button -> {
+            updateChannel = nextChannel(updateChannel);
+            refreshButtonMessages();
+        });
+        addLabeledRow(
+            Component.translatable("permaclicker.config.update.channel"),
+            tooltipLines(
+                tooltipLine(Component.translatable("permaclicker.config.update.channel.stable"), "permaclicker.config.update.channel.tooltip.stable.desc"),
+                tooltipLine(Component.translatable("permaclicker.config.update.channel.beta"), "permaclicker.config.update.channel.tooltip.beta.desc"),
+                tooltipLine(Component.translatable("permaclicker.config.update.channel.alpha"), "permaclicker.config.update.channel.tooltip.alpha.desc")
+            ),
+            this.updateChannelButton
+        );
+
+        refreshButtonMessages();
+    }
+
+    @Override
+    protected void addFooter() {
+        LinearLayout footerButtons = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
+
+        footerButtons.addChild(
+            Button.builder(Component.translatable("permaclicker.config.button.cancel"), btn -> onClose())
+                .width(150)
+                .build()
+        );
+        footerButtons.addChild(
+            Button.builder(Component.translatable("permaclicker.config.button.save_close"), btn -> saveAndClose())
+                .width(150)
+                .build()
+        );
+    }
+
+    @Override
+    protected void repositionElements() {
+        super.repositionElements();
+    }
+
+    private void refreshButtonMessages() {
+        if (runtimeModeButton != null) {
+            runtimeModeButton.setMessage(runtimeModeValue());
+        }
+        if (movementLockButton != null) {
+            movementLockButton.setMessage(toggleValue(movementLockEnabled));
+        }
+        if (overlayEnabledButton != null) {
+            overlayEnabledButton.setMessage(toggleValue(overlayEnabled));
+        }
+        if (overlayColorButton != null) {
+            overlayColorButton.setMessage(overlayColorValue());
+        }
+        if (updateCheckButton != null) {
+            updateCheckButton.setMessage(toggleValue(updateCheckEnabled));
+        }
+        if (updateChannelButton != null) {
+            updateChannelButton.setMessage(updateChannelValue());
+            updateChannelButton.active = updateCheckEnabled;
+        }
+    }
+
+    private Button createToggleButton(Component initialText, Button.OnPress onPress) {
+        return Button.builder(initialText, onPress)
+            .bounds(0, 0, CONTROL_WIDTH, ROW_HEIGHT)
+            .build();
+    }
+
+    private void addLabeledRow(Component labelText, List<Component> infoTooltipLines, AbstractWidget controlWidget) {
+        InfoLabelWidget labelWidget = new InfoLabelWidget(labelText, infoTooltipLines);
+        controlWidget.setWidth(CONTROL_WIDTH);
+        this.optionsList.addSmall(labelWidget, controlWidget);
+    }
+
+    private void addSectionRow(Component sectionText) {
+        SectionLabelWidget left = new SectionLabelWidget(sectionText);
+        SpacerWidget right = new SpacerWidget();
+        this.optionsList.addSmall(left, right);
+    }
+
+    private static List<Component> tooltipLines(Component... lines) {
+        List<Component> result = new ArrayList<>();
+        for (Component line : lines) {
+            if (line == null || line.getString().isBlank()) {
+                continue;
+            }
+            result.add(line);
+        }
+        return result;
+    }
+
+    private static Component tooltipLine(Component value, String descriptionKey) {
+        MutableComponent line = Component.empty();
+        line.append(value.copy().withStyle(ChatFormatting.BOLD));
+        line.append(Component.literal(": "));
+        line.append(Component.translatable(descriptionKey));
+        return line;
+    }
+
+    private final class InfoLabelWidget extends AbstractWidget {
+        private final List<Component> infoTooltipLines;
+
+        InfoLabelWidget(Component label, List<Component> infoTooltipLines) {
+            super(0, 0, LABEL_WIDTH, ROW_HEIGHT, label);
+            this.infoTooltipLines = infoTooltipLines == null ? List.of() : infoTooltipLines;
+        }
+
+        @Override
+        protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+            int textY = this.getY() + (this.height - 9) / 2;
+            guiGraphics.text(PermaClickFabricConfigScreen.this.font, this.getMessage(), this.getX(), textY, 0xFFFFFFFF, true);
+
+            int iconX = this.getX() + this.width - INFO_ICON_SIZE;
+            int iconY = this.getY() + (this.height - INFO_ICON_SIZE) / 2;
+            guiGraphics.fill(iconX, iconY, iconX + INFO_ICON_SIZE, iconY + INFO_ICON_SIZE, INFO_ICON_BG_COLOR);
+            guiGraphics.text(PermaClickFabricConfigScreen.this.font, Component.literal("i"), iconX + 3, iconY + 1, INFO_ICON_TEXT_COLOR, false);
+
+            boolean hoveredIcon = mouseX >= iconX && mouseX < iconX + INFO_ICON_SIZE
+                && mouseY >= iconY && mouseY < iconY + INFO_ICON_SIZE;
+            if (hoveredIcon && !this.infoTooltipLines.isEmpty()) {
+                guiGraphics.setComponentTooltipForNextFrame(
+                    PermaClickFabricConfigScreen.this.font,
+                    this.infoTooltipLines,
+                    mouseX,
+                    mouseY
+                );
+            }
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+            this.defaultButtonNarrationText(narrationElementOutput);
+        }
+    }
+
+    private final class SectionLabelWidget extends AbstractWidget {
+        SectionLabelWidget(Component label) {
+            super(0, 0, LABEL_WIDTH, ROW_HEIGHT, label);
+        }
+
+        @Override
+        protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+            int centeredX = PermaClickFabricConfigScreen.this.width / 2 - PermaClickFabricConfigScreen.this.font.width(this.getMessage()) / 2;
+            int textY = this.getY() + (this.height - 9) / 2;
+            guiGraphics.text(PermaClickFabricConfigScreen.this.font, this.getMessage(), centeredX, textY, 0xFFE7E7E7, true);
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+            this.defaultButtonNarrationText(narrationElementOutput);
+        }
+    }
+
+    private static final class SpacerWidget extends AbstractWidget {
+        SpacerWidget() {
+            super(0, 0, CONTROL_WIDTH, ROW_HEIGHT, Component.empty());
+            this.active = false;
+            this.visible = false;
+        }
+
+        @Override
+        protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+        }
+    }
+
+    private Component runtimeModeValue() {
+        return Component.translatable(runInBackground
+            ? "permaclicker.config.runtime_mode.background"
+            : "permaclicker.config.runtime_mode.focused");
+    }
+
+    private Component overlayColorValue() {
+        ChatFormatting color = resolveOverlayColor(overlayColor);
+        String label = overlayColor.replace('_', ' ');
+        label = label.isEmpty()
+            ? PermaClickConfig.DEFAULT_OVERLAY_COLOR
+            : Character.toUpperCase(label.charAt(0)) + label.substring(1).toLowerCase(Locale.ROOT);
+        return Component.literal(label).withStyle(color);
+    }
+
+    private Component updateChannelValue() {
+        String channelKey = switch (updateChannel) {
+            case ALPHA -> "permaclicker.config.update.channel.alpha";
+            case STABLE -> "permaclicker.config.update.channel.stable";
+            case BETA -> "permaclicker.config.update.channel.beta";
+        };
+
+        return updateCheckEnabled
+            ? Component.translatable(channelKey)
+            : Component.translatable("permaclicker.config.update.channel.disabled");
+    }
+
+    private static Component toggleValue(boolean value) {
+        return Component.translatable(value ? "permaclicker.config.value.on" : "permaclicker.config.value.off");
+    }
+
+    private void saveAndClose() {
+        FabricPermaClickBridge bridge = PermaClickFabricEntrypoint.bridge();
+        int parsedAutoStop = autoStopMinutes;
+        if (autoStopInputField != null) {
+            parsedAutoStop = parseAutoStopInput(autoStopInputField.getValue(), autoStopMinutes);
+        }
+
+        PermaClickConfig updated = new PermaClickConfig(
+            bridge.currentConfig().enabled(),
+            bridge.currentConfig().toggleKeyCode(),
+            overlayEnabled,
+            overlayColor,
+            runInBackground,
+            runInBackground,
+            PermaClickConfig.clampAutoStopMinutes(parsedAutoStop),
+            movementLockEnabled,
+            updateCheckEnabled,
+            updateChannel
+        );
+
+        bridge.applyConfig(updated);
+        try {
+            new FabricConfigLifecycle().saveCurrent(bridge, FabricLoader.getInstance().getGameDir());
+        } catch (IOException ignored) {
+            // best effort
+        }
+
+        onClose();
+    }
+
+    @Override
+    public void onClose() {
+        if (this.minecraft != null) {
+            this.minecraft.setScreen(parent);
+        }
+    }
+
+    private static int parseAutoStopInput(String raw, int fallback) {
+        if (raw == null || raw.isBlank()) {
+            return fallback;
+        }
+        try {
+            return Integer.parseInt(raw);
+        } catch (NumberFormatException ignored) {
+            return fallback;
+        }
+    }
+
+    private static UpdateChannel nextChannel(UpdateChannel current) {
+        return switch (current) {
+            case STABLE -> UpdateChannel.BETA;
+            case BETA -> UpdateChannel.ALPHA;
+            case ALPHA -> UpdateChannel.STABLE;
+        };
+    }
+
+    private static String nextOverlayColor(String current) {
+        String normalized = PermaClickConfig.normalizeOverlayColor(current);
+        int currentIndex = OVERLAY_COLORS.indexOf(normalized);
+        int nextIndex = currentIndex < 0 ? 0 : (currentIndex + 1) % OVERLAY_COLORS.size();
+        return OVERLAY_COLORS.get(nextIndex);
+    }
+
+    private static ChatFormatting resolveOverlayColor(String rawColorName) {
+        ChatFormatting parsed = ChatFormatting.getByName(PermaClickConfig.normalizeOverlayColor(rawColorName));
+        if (parsed == null || !parsed.isColor()) {
+            return ChatFormatting.GREEN;
+        }
+        return parsed;
+    }
+}

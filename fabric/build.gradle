@@ -1,0 +1,206 @@
+plugins {
+    id 'fabric-loom' version '1.15.5' apply false
+    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT' apply false
+    id 'java'
+}
+
+def versionProperties = new Properties()
+def versionFile = file('../version.properties')
+if (versionFile.exists()) {
+    versionFile.withInputStream { versionProperties.load(it) }
+}
+def versionFromFile = versionProperties.getProperty('version')
+
+def resolvedMinecraftVersion = providers.gradleProperty('minecraft_version').orElse('1.21.10').get()
+def minecraftMajorMatcher = (resolvedMinecraftVersion =~ /^(\d+).*/)
+def minecraftMajor = minecraftMajorMatcher.matches() ? Integer.parseInt(minecraftMajorMatcher.group(1)) : null
+def isUnobfuscatedTarget = minecraftMajor != null && minecraftMajor >= 26
+
+if (isUnobfuscatedTarget) {
+    apply plugin: 'net.fabricmc.fabric-loom'
+} else {
+    apply plugin: 'fabric-loom'
+}
+
+def pluginNameForFile = (providers.gradleProperty('mod_name').getOrElse('PermaClick') as String).replaceAll(/[^A-Za-z0-9]/, '')
+def mcVersionForFile = (resolvedMinecraftVersion as String).replace('.', '-')
+def fabricVersionForFile = (fabric_loader_version as String).replace('.', '-').replace('+', '-').replace('_', '-')
+def resolvedJavaLanguageVersion = providers.gradleProperty('java_language_version').orElse('21').get()
+
+group = providers.gradleProperty('mod_group').get()
+version = providers.gradleProperty('mod_version').orElse(versionFromFile ?: '0.1').get()
+
+repositories {
+    maven { url = 'https://maven.fabricmc.net/' }
+    maven {
+        name = 'Terraformers'
+        url = 'https://maven.terraformersmc.com/'
+    }
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${resolvedMinecraftVersion}"
+
+    if (!isUnobfuscatedTarget) {
+        mappings loom.officialMojangMappings()
+    }
+
+    add(isUnobfuscatedTarget ? 'implementation' : 'modImplementation', "net.fabricmc:fabric-loader:${fabric_loader_version}")
+    add(isUnobfuscatedTarget ? 'implementation' : 'modImplementation', "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}")
+    add(isUnobfuscatedTarget ? 'implementation' : 'modCompileOnly', "com.terraformersmc:modmenu:${modmenu_version}")
+
+    implementation project(':permaclicker-common')
+    implementation project(':turtlelib')
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.1'
+}
+
+def commonMainOutput = project(':permaclicker-common').sourceSets.main.output
+def permaClickerDistDir = rootProject.layout.projectDirectory.dir('mods/permaclicker-mod/dist')
+def permaClickerDistSourcesDir = rootProject.layout.projectDirectory.dir('mods/permaclicker-mod/dist/sources')
+def modLicenseFile = file('../LICENSE')
+def runtimeJarTaskName = isUnobfuscatedTarget ? 'jar' : 'remapJar'
+def generatedUnobfJavaDir = layout.buildDirectory.dir('generated/sources/unobf/java')
+
+sourceSets {
+    main {
+        java {
+            if (isUnobfuscatedTarget) {
+                srcDir generatedUnobfJavaDir
+
+                exclude { details ->
+                    details.file.absolutePath.replace('\\', '/').endsWith(
+                        '/src/main/java/com/github/hrobasti/permaclicker/fabric/PermaClickFabricConfigScreen.java'
+                    )
+                }
+            }
+        }
+    }
+}
+
+def generateUnobfConfigScreen = tasks.register('generateUnobfConfigScreen', Copy) {
+    onlyIf { isUnobfuscatedTarget }
+    from('src/unobf/templates')
+    include('**/PermaClickFabricConfigScreen.java.template')
+    eachFile { details ->
+        details.path = details.path.replace('.java.template', '.java')
+    }
+    includeEmptyDirs = false
+    into(generatedUnobfJavaDir)
+}
+
+tasks.named('compileJava') {
+    if (isUnobfuscatedTarget) {
+        dependsOn(generateUnobfConfigScreen)
+    }
+}
+
+tasks.named('sourcesJar') {
+    if (isUnobfuscatedTarget) {
+        dependsOn(generateUnobfConfigScreen)
+    }
+}
+
+tasks.named('processResources', ProcessResources) {
+    inputs.property('version', project.version)
+    inputs.property('mod_id', providers.gradleProperty('mod_id').get())
+    inputs.property('fabric_loader_version', fabric_loader_version)
+    inputs.property('fabric_api_version', fabric_api_version)
+    inputs.property('minecraft_version', resolvedMinecraftVersion)
+    inputs.property('java_language_version', resolvedJavaLanguageVersion)
+
+    def metadataTemplateName = isUnobfuscatedTarget ? 'fabric.mod.unobf.json' : 'fabric.mod.json'
+    inputs.property('metadata_template', metadataTemplateName)
+
+    if (isUnobfuscatedTarget) {
+        exclude('fabric.mod.json')
+    }
+
+    filesMatching(metadataTemplateName) {
+        expand([
+            version               : project.version,
+            mod_id                : providers.gradleProperty('mod_id').get(),
+            fabric_loader_version : fabric_loader_version,
+            fabric_api_version    : fabric_api_version,
+            minecraft_version     : resolvedMinecraftVersion,
+            java_language_version : resolvedJavaLanguageVersion
+        ])
+
+        if (isUnobfuscatedTarget) {
+            name = 'fabric.mod.json'
+        }
+    }
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+tasks.named('jar') {
+    from(commonMainOutput)
+    from(modLicenseFile) {
+        into 'META-INF'
+        rename { 'LICENSE' }
+    }
+
+    destinationDirectory = isUnobfuscatedTarget ? permaClickerDistDir : layout.buildDirectory.dir('devlibs')
+    archiveFileName = "${pluginNameForFile}_${project.version}_MC-${mcVersionForFile}_FABRIC_${fabricVersionForFile}.jar"
+    manifest {
+        attributes(
+            'Implementation-Title': providers.gradleProperty('mod_name').get(),
+            'Implementation-Version': project.version,
+            'Implementation-Vendor': 'hrobasti'
+        )
+    }
+}
+
+tasks.named('sourcesJar') {
+    from(modLicenseFile) {
+        into 'META-INF'
+        rename { 'LICENSE' }
+    }
+
+    destinationDirectory = permaClickerDistSourcesDir
+    archiveFileName = "${pluginNameForFile}_${project.version}_MC-${mcVersionForFile}_FABRIC_${fabricVersionForFile}-source.jar"
+}
+
+if (!isUnobfuscatedTarget) {
+    tasks.named('remapJar') {
+        destinationDirectory = permaClickerDistDir
+        archiveFileName = "${pluginNameForFile}_${project.version}_MC-${mcVersionForFile}_FABRIC_${fabricVersionForFile}.jar"
+    }
+}
+
+tasks.register('exportPermaClickerFabricJarToDist', Copy) {
+    group = 'build'
+    description = 'Exports Fabric runtime jar into mods/permaclicker-mod/dist.'
+    dependsOn(tasks.named(runtimeJarTaskName))
+
+    from(tasks.named(runtimeJarTaskName).flatMap { it.archiveFile })
+    into(permaClickerDistDir)
+}
+
+tasks.register('exportPermaClickerFabricSourcesToDist', Copy) {
+    group = 'build'
+    description = 'Exports Fabric source jar into mods/permaclicker-mod/dist/sources.'
+    dependsOn(tasks.named('sourcesJar'))
+
+    from(tasks.named('sourcesJar').flatMap { it.archiveFile })
+    into(permaClickerDistSourcesDir)
+}
+
+tasks.named('assemble') {
+    finalizedBy(
+        tasks.named('exportPermaClickerFabricJarToDist'),
+        tasks.named('exportPermaClickerFabricSourcesToDist')
+    )
+}
+
+tasks.named('build') {
+    finalizedBy(
+        tasks.named('exportPermaClickerFabricJarToDist'),
+        tasks.named('exportPermaClickerFabricSourcesToDist')
+    )
+}

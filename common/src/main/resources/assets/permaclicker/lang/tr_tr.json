@@ -1,0 +1,59 @@
+{
+  "permaclicker.title": "PermaClicker",
+
+  "permaclicker.status.on": "PermaClicker etkin",
+  "permaclicker.status.off": "PermaClicker etkin değil",
+
+  "permaclicker.update.available": "[PermaClicker] Güncelleme mevcut! %s -> %s",
+  "permaclicker.update.provider.ok": "- %s: Sürüm %s",
+  "permaclicker.update.provider.error": "- %s: Alınamadı.",
+
+  "key.categories.permaclicker": "PermaClicker",
+  "key.category.permaclicker": "PermaClicker",
+  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.permaclicker.toggle": "Aç/Kapat",
+  "key.permaclicker.config": "Ayarlar",
+
+  "permaclicker.config.title": "PermaClicker Ayarları",
+  "permaclicker.config.button.save_close": "Kaydet ve kapat",
+  "permaclicker.config.button.cancel": "İptal",
+  "permaclicker.config.section.general": "Genel",
+  "permaclicker.config.section.overlay": "Kaplama",
+  "permaclicker.config.section.updates": "Güncellemeler",
+
+  "permaclicker.config.value.on": "Açık",
+  "permaclicker.config.value.off": "Kapalı",
+
+  "permaclicker.config.runtime_mode": "Çalışma modu",
+  "permaclicker.config.runtime_mode.focused": "Odaklı",
+  "permaclicker.config.runtime_mode.background": "Arka plan",
+  "permaclicker.config.runtime_mode.tooltip.focused.desc": "Yalnızca oyun penceresi etkin olduğunda çalışır",
+  "permaclicker.config.runtime_mode.tooltip.background.desc": "Odak dışı veya simge durumunda arka planda çalışmaya devam edebilir",
+
+  "permaclicker.config.auto_stop_minutes": "Otomatik durdurma (dakika)",
+  "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Zamanlayıcıyı devre dışı bırakır",
+  "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "PermaClicker'ı bu kadar dakika sonra otomatik durdurmak için 1-9999 arası sayı",
+
+  "permaclicker.config.cursor_lock": "Hareket kilidi",
+  "permaclicker.config.cursor_lock.tooltip.on.desc": "PermaClicker etkinken hareketi, duraklatma ekranını ve sohbeti engeller",
+  "permaclicker.config.cursor_lock.tooltip.off.desc": "Hareket kontrollerini değiştirmez",
+
+  "permaclicker.config.overlay.enabled": "Durum kaplamasını göster",
+  "permaclicker.config.overlay.color": "Metin rengi",
+  "permaclicker.config.overlay.enabled.tooltip.on.desc": "PermaClicker etkinken durum kaplamasını gösterir",
+  "permaclicker.config.overlay.enabled.tooltip.off.desc": "Durum kaplamasını gizler",
+  "permaclicker.config.overlay.color.tooltip.any.label": "Renk",
+  "permaclicker.config.overlay.color.tooltip.any.desc": "Durum kaplaması metin rengini belirler",
+
+  "permaclicker.config.update.enabled": "Güncelleme kontrolü",
+  "permaclicker.config.update.channel": "Yayın kanalı",
+  "permaclicker.config.update.channel.stable": "Kararlı",
+  "permaclicker.config.update.channel.beta": "Beta",
+  "permaclicker.config.update.channel.alpha": "Alfa",
+  "permaclicker.config.update.channel.disabled": "Devre dışı",
+  "permaclicker.config.update.enabled.tooltip.on.desc": "Oyun başlatıldığında güncellemeleri kontrol eder.",
+  "permaclicker.config.update.enabled.tooltip.off.desc": "Güncelleme kontrolünü atlar.",
+  "permaclicker.config.update.channel.tooltip.stable.desc": "Yalnızca kararlı sürümler.",
+  "permaclicker.config.update.channel.tooltip.beta.desc": "Kararlı + beta sürümler.",
+  "permaclicker.config.update.channel.tooltip.alpha.desc": "Tüm sürümler (kararlı, beta, alfa)."
+}

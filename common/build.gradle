@@ -1,0 +1,19 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    api project(':turtlelib')
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.1'
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+tasks.named('processResources', ProcessResources) {
+    from(layout.projectDirectory.file('../update-sources.properties')) {
+        rename { 'permaclicker-update-sources.properties' }
+    }
+}

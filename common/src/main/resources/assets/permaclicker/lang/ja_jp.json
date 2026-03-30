@@ -1,0 +1,59 @@
+{
+  "permaclicker.title": "PermaClicker",
+
+  "permaclicker.status.on": "PermaClicker は有効です",
+  "permaclicker.status.off": "PermaClicker は無効です",
+
+  "permaclicker.update.available": "[PermaClicker] アップデートがあります! %s -> %s",
+  "permaclicker.update.provider.ok": "- %s: バージョン %s",
+  "permaclicker.update.provider.error": "- %s: 取得に失敗しました。",
+
+  "key.categories.permaclicker": "PermaClicker",
+  "key.category.permaclicker": "PermaClicker",
+  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.permaclicker.toggle": "切り替え",
+  "key.permaclicker.config": "設定",
+
+  "permaclicker.config.title": "PermaClicker 設定",
+  "permaclicker.config.button.save_close": "保存して閉じる",
+  "permaclicker.config.button.cancel": "キャンセル",
+  "permaclicker.config.section.general": "一般",
+  "permaclicker.config.section.overlay": "オーバーレイ",
+  "permaclicker.config.section.updates": "アップデート",
+
+  "permaclicker.config.value.on": "オン",
+  "permaclicker.config.value.off": "オフ",
+
+  "permaclicker.config.runtime_mode": "実行モード",
+  "permaclicker.config.runtime_mode.focused": "フォーカス時",
+  "permaclicker.config.runtime_mode.background": "バックグラウンド",
+  "permaclicker.config.runtime_mode.tooltip.focused.desc": "ゲームウィンドウがアクティブなときのみ動作します",
+  "permaclicker.config.runtime_mode.tooltip.background.desc": "フォーカス外または最小化時でもバックグラウンドで動作を続ける場合があります",
+
+  "permaclicker.config.auto_stop_minutes": "自動停止（分）",
+  "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "タイマーを無効にします",
+  "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "1〜9999 の数値で、その分数後に PermaClicker を自動停止します",
+
+  "permaclicker.config.cursor_lock": "移動ロック",
+  "permaclicker.config.cursor_lock.tooltip.on.desc": "PermaClicker 有効中は移動、ポーズ画面、チャットをブロックします",
+  "permaclicker.config.cursor_lock.tooltip.off.desc": "移動操作は変更しません",
+
+  "permaclicker.config.overlay.enabled": "ステータスオーバーレイを表示",
+  "permaclicker.config.overlay.color": "テキスト色",
+  "permaclicker.config.overlay.enabled.tooltip.on.desc": "PermaClicker 有効中にステータスオーバーレイを表示します",
+  "permaclicker.config.overlay.enabled.tooltip.off.desc": "ステータスオーバーレイを非表示にします",
+  "permaclicker.config.overlay.color.tooltip.any.label": "色",
+  "permaclicker.config.overlay.color.tooltip.any.desc": "ステータスオーバーレイのテキスト色を設定します",
+
+  "permaclicker.config.update.enabled": "アップデート確認",
+  "permaclicker.config.update.channel": "リリースチャンネル",
+  "permaclicker.config.update.channel.stable": "安定版",
+  "permaclicker.config.update.channel.beta": "ベータ",
+  "permaclicker.config.update.channel.alpha": "アルファ",
+  "permaclicker.config.update.channel.disabled": "無効",
+  "permaclicker.config.update.enabled.tooltip.on.desc": "ゲーム起動時にアップデートを確認します。",
+  "permaclicker.config.update.enabled.tooltip.off.desc": "アップデート確認をスキップします。",
+  "permaclicker.config.update.channel.tooltip.stable.desc": "安定版ビルドのみ。",
+  "permaclicker.config.update.channel.tooltip.beta.desc": "安定版 + ベータビルド。",
+  "permaclicker.config.update.channel.tooltip.alpha.desc": "すべてのビルド（安定版、ベータ、アルファ）。"
+}

@@ -1,0 +1,59 @@
+{
+  "permaclicker.title": "PermaClicker",
+
+  "permaclicker.status.on": "PermaClicker is actief",
+  "permaclicker.status.off": "PermaClicker is inactief",
+
+  "permaclicker.update.available": "[PermaClicker] Update beschikbaar! %s -> %s",
+  "permaclicker.update.provider.ok": "- %s: Versie %s",
+  "permaclicker.update.provider.error": "- %s: Ophalen mislukt.",
+
+  "key.categories.permaclicker": "PermaClicker",
+  "key.category.permaclicker": "PermaClicker",
+  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.permaclicker.toggle": "Schakelen",
+  "key.permaclicker.config": "Instellingen",
+
+  "permaclicker.config.title": "PermaClicker-instellingen",
+  "permaclicker.config.button.save_close": "Opslaan en sluiten",
+  "permaclicker.config.button.cancel": "Annuleren",
+  "permaclicker.config.section.general": "Algemeen",
+  "permaclicker.config.section.overlay": "Overlay",
+  "permaclicker.config.section.updates": "Updates",
+
+  "permaclicker.config.value.on": "Aan",
+  "permaclicker.config.value.off": "Uit",
+
+  "permaclicker.config.runtime_mode": "Uitvoeringsmodus",
+  "permaclicker.config.runtime_mode.focused": "Gefocust",
+  "permaclicker.config.runtime_mode.background": "Achtergrond",
+  "permaclicker.config.runtime_mode.tooltip.focused.desc": "Werkt alleen wanneer het spelvenster actief is",
+  "permaclicker.config.runtime_mode.tooltip.background.desc": "Kan op de achtergrond doorgaan wanneer het venster niet gefocust of geminimaliseerd is",
+
+  "permaclicker.config.auto_stop_minutes": "Auto-stop (minuten)",
+  "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Schakelt de timer uit",
+  "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "Getal van 1 tot 9999 om PermaClicker automatisch te stoppen na dat aantal minuten",
+
+  "permaclicker.config.cursor_lock": "Bewegingsvergrendeling",
+  "permaclicker.config.cursor_lock.tooltip.on.desc": "Blokkeert beweging, pauzescherm en chat terwijl PermaClicker actief is",
+  "permaclicker.config.cursor_lock.tooltip.off.desc": "Laat bewegingsbesturing ongewijzigd",
+
+  "permaclicker.config.overlay.enabled": "Statusoverlay tonen",
+  "permaclicker.config.overlay.color": "Tekstkleur",
+  "permaclicker.config.overlay.enabled.tooltip.on.desc": "Toont statusoverlay terwijl PermaClicker actief is",
+  "permaclicker.config.overlay.enabled.tooltip.off.desc": "Verbergt statusoverlay",
+  "permaclicker.config.overlay.color.tooltip.any.label": "Kleur",
+  "permaclicker.config.overlay.color.tooltip.any.desc": "Bepaalt de tekstkleur van de statusoverlay",
+
+  "permaclicker.config.update.enabled": "Updatecontrole",
+  "permaclicker.config.update.channel": "Releasekanaal",
+  "permaclicker.config.update.channel.stable": "Stabiel",
+  "permaclicker.config.update.channel.beta": "Bèta",
+  "permaclicker.config.update.channel.alpha": "Alfa",
+  "permaclicker.config.update.channel.disabled": "Uitgeschakeld",
+  "permaclicker.config.update.enabled.tooltip.on.desc": "Controleert op updates bij het starten van het spel.",
+  "permaclicker.config.update.enabled.tooltip.off.desc": "Slaat updatecontrole over.",
+  "permaclicker.config.update.channel.tooltip.stable.desc": "Alleen stabiele builds.",
+  "permaclicker.config.update.channel.tooltip.beta.desc": "Stabiele + bèta builds.",
+  "permaclicker.config.update.channel.tooltip.alpha.desc": "Alle builds (stabiel, bèta, alfa)."
+}

@@ -1,0 +1,172 @@
+plugins {
+    id 'net.neoforged.moddev' version '2.0.140'
+}
+
+def versionProperties = new Properties()
+def versionFile = file('../version.properties')
+if (versionFile.exists()) {
+    versionFile.withInputStream { versionProperties.load(it) }
+}
+def versionFromFile = versionProperties.getProperty('version')
+
+def pluginNameForFile = (providers.gradleProperty('mod_name').getOrElse('PermaClick') as String).replaceAll(/[^A-Za-z0-9]/, '')
+def mcVersionForFile = (minecraft_version as String).replace('.', '-')
+def neoForgeVersionForFile = (neoforge_version as String).replace('.', '-')
+def resolvedMinecraftVersion = providers.gradleProperty('minecraft_version').get()
+def resolvedNeoForgeVersion = providers.gradleProperty('neoforge_version').get()
+def resolvedJavaLanguageVersion = providers.gradleProperty('java_language_version').orElse('21').get()
+def minecraftMajorMatcher = (resolvedMinecraftVersion =~ /^(\d+).*/)
+def minecraftMajor = minecraftMajorMatcher.matches() ? Integer.parseInt(minecraftMajorMatcher.group(1)) : null
+def isApiCompatRestrictedTarget = minecraftMajor != null && minecraftMajor >= 26
+def generatedUnobfJavaDir = layout.buildDirectory.dir('generated/sources/unobf/java')
+
+version = providers.gradleProperty('mod_version').orElse(versionFromFile ?: '0.1').get()
+
+dependencies {
+    implementation project(':permaclicker-common')
+    implementation project(':turtlelib')
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.1'
+}
+
+sourceSets {
+    main {
+        java {
+            if (isApiCompatRestrictedTarget) {
+                srcDir generatedUnobfJavaDir
+                exclude { details ->
+                    details.file.absolutePath.replace('\\', '/').endsWith(
+                        '/src/main/java/com/github/hrobasti/permaclicker/neoforge/PermaClickNeoForgeConfigScreen.java'
+                    )
+                }
+            } else {
+                exclude { details ->
+                    details.file.absolutePath.replace('\\', '/').endsWith(
+                        '/src/unobf/java_unobf/com/github/hrobasti/permaclicker/neoforge/PermaClickNeoForgeConfigScreen.java'
+                    )
+                }
+            }
+        }
+    }
+}
+
+def generateUnobfNeoForgeConfigScreen = tasks.register('generateUnobfNeoForgeConfigScreen', Copy) {
+    onlyIf { isApiCompatRestrictedTarget }
+    from('src/unobf/templates')
+    include('**/PermaClickNeoForgeConfigScreen.java.template')
+    eachFile { details ->
+        details.path = details.path.replace('.java.template', '.java')
+    }
+    includeEmptyDirs = false
+    into(generatedUnobfJavaDir)
+}
+
+tasks.named('compileJava') {
+    if (isApiCompatRestrictedTarget) {
+        dependsOn(generateUnobfNeoForgeConfigScreen)
+    }
+}
+
+tasks.named('sourcesJar') {
+    if (isApiCompatRestrictedTarget) {
+        dependsOn(generateUnobfNeoForgeConfigScreen)
+    }
+}
+
+tasks.named('processResources', ProcessResources) {
+    inputs.property('mod_id', providers.gradleProperty('mod_id').get())
+    inputs.property('mod_name', providers.gradleProperty('mod_name').get())
+    inputs.property('minecraft_version', resolvedMinecraftVersion)
+    inputs.property('neoforge_version', resolvedNeoForgeVersion)
+    inputs.property('java_language_version', resolvedJavaLanguageVersion)
+
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand([
+            file                  : [jarVersion: project.version],
+            mod_id                : providers.gradleProperty('mod_id').get(),
+            mod_name              : providers.gradleProperty('mod_name').get(),
+            minecraft_version     : resolvedMinecraftVersion,
+            neoforge_version      : resolvedNeoForgeVersion,
+            java_language_version : resolvedJavaLanguageVersion
+        ])
+    }
+}
+
+def commonMainOutput = project(':permaclicker-common').sourceSets.main.output
+def permaClickerDistDir = rootProject.layout.projectDirectory.dir('mods/permaclicker-mod/dist')
+def permaClickerDistSourcesDir = rootProject.layout.projectDirectory.dir('mods/permaclicker-mod/dist/sources')
+def modLicenseFile = file('../LICENSE')
+
+neoForge {
+    version = neoforge_version
+
+    mods {
+        permaclicker {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+tasks.named('jar') {
+    from(commonMainOutput)
+    from(modLicenseFile) {
+        into 'META-INF'
+        rename { 'LICENSE' }
+    }
+
+    destinationDirectory = permaClickerDistDir
+    archiveFileName = "${pluginNameForFile}_${project.version}_MC-${mcVersionForFile}_NEOFORGE_${neoForgeVersionForFile}.jar"
+    manifest {
+        attributes(
+            'Implementation-Title': providers.gradleProperty('mod_name').get(),
+            'Implementation-Version': project.version,
+            'Implementation-Vendor': 'hrobasti'
+        )
+    }
+}
+
+tasks.named('sourcesJar') {
+    from(modLicenseFile) {
+        into 'META-INF'
+        rename { 'LICENSE' }
+    }
+
+    destinationDirectory = permaClickerDistSourcesDir
+    archiveFileName = "${pluginNameForFile}_${project.version}_MC-${mcVersionForFile}_NEOFORGE_${neoForgeVersionForFile}-source.jar"
+}
+
+tasks.register('exportPermaClickerNeoForgeJarToDist', Copy) {
+    group = 'build'
+    description = 'Exports NeoForge runtime jar into mods/permaclicker-mod/dist.'
+    dependsOn(tasks.named('jar'))
+
+    from(tasks.named('jar').flatMap { it.archiveFile })
+    into(permaClickerDistDir)
+}
+
+tasks.register('exportPermaClickerNeoForgeSourcesToDist', Copy) {
+    group = 'build'
+    description = 'Exports NeoForge source jar into mods/permaclicker-mod/dist/sources.'
+    dependsOn(tasks.named('sourcesJar'))
+
+    from(tasks.named('sourcesJar').flatMap { it.archiveFile })
+    into(permaClickerDistSourcesDir)
+}
+
+tasks.named('assemble') {
+    finalizedBy(
+        tasks.named('exportPermaClickerNeoForgeJarToDist'),
+        tasks.named('exportPermaClickerNeoForgeSourcesToDist')
+    )
+}
+
+tasks.named('build') {
+    finalizedBy(
+        tasks.named('exportPermaClickerNeoForgeJarToDist'),
+        tasks.named('exportPermaClickerNeoForgeSourcesToDist')
+    )
+}

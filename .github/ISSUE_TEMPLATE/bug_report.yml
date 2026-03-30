@@ -1,0 +1,107 @@
+name: Bug Report
+description: Share reproducible problems so we can fix them quickly.
+labels: [bug]
+title: "[Bug] <short summary>"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report an issue!
+        Please fill out the fields below so we can reproduce the problem quickly.
+  - type: input
+    id: minecraft_version
+    attributes:
+      label: Minecraft Version
+      description: The exact Minecraft client version.
+      placeholder: "1.21.11"
+    validations:
+      required: true
+  - type: dropdown
+    id: loader
+    attributes:
+      label: Loader
+      description: Which loader are you using for PermaClicker?
+      options:
+        - Fabric
+        - NeoForge
+    validations:
+      required: true
+  - type: textarea
+    id: permaclicker_version
+    attributes:
+      label: PermaClicker Version
+      description: Which PermaClicker build are you running? If built from source, include the commit hash.
+      placeholder: "v1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: turtlelib_version
+    attributes:
+      label: TurtleLib Version
+      description: PermaClicker depends on TurtleLib. Please provide the exact TurtleLib version in your mods folder.
+      placeholder: "v1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      description: Your OS and version.
+      placeholder: "Windows 11 / Ubuntu 24.04 / macOS 15"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the bug and what you expected instead.
+      placeholder: Clear and concise description.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Provide a numbered list of steps that reliably reproduces the issue.
+      placeholder: |
+        1. Launch Minecraft with PermaClicker + TurtleLib.
+        2. Open a world and enable PermaClicker.
+        3. Press the toggle/config key...
+        4. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+      description: Describe the expected behavior.
+      placeholder: Expected behavior description.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Log Output
+      description: Paste stack traces or relevant client log output (use code fences).
+      render: shell
+    validations:
+      required: false
+  - type: textarea
+    id: config
+    attributes:
+      label: Relevant Config / Keybind Details
+      description: Share relevant PermaClicker settings (runtime mode, auto-stop, update channel, keybinds, etc.).
+      placeholder: |
+        enabled=true
+        runtimeMode=FOCUSED_ONLY
+        autoStopMinutes=0
+        key.toggle=...
+    validations:
+      required: false
+  - type: textarea
+    id: extra
+    attributes:
+      label: Additional Context
+      description: Add any other context or screenshots that might help.
+    validations:
+      required: false
