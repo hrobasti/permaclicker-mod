@@ -13,7 +13,7 @@ body:
     attributes:
       label: Minecraft Version
       description: The exact Minecraft client version.
-      placeholder: "1.21.11"
+      placeholder: "26.1.1"
     validations:
       required: true
   - type: dropdown

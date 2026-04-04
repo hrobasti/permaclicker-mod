@@ -14,10 +14,7 @@ def mcVersionForFile = (minecraft_version as String).replace('.', '-')
 def neoForgeVersionForFile = (neoforge_version as String).replace('.', '-')
 def resolvedMinecraftVersion = providers.gradleProperty('minecraft_version').get()
 def resolvedNeoForgeVersion = providers.gradleProperty('neoforge_version').get()
-def resolvedJavaLanguageVersion = providers.gradleProperty('java_language_version').orElse('21').get()
-def minecraftMajorMatcher = (resolvedMinecraftVersion =~ /^(\d+).*/)
-def minecraftMajor = minecraftMajorMatcher.matches() ? Integer.parseInt(minecraftMajorMatcher.group(1)) : null
-def isApiCompatRestrictedTarget = minecraftMajor != null && minecraftMajor >= 26
+def resolvedJavaLanguageVersion = providers.gradleProperty('java_language_version').orElse('25').get()
 def generatedUnobfJavaDir = layout.buildDirectory.dir('generated/sources/unobf/java')
 
 version = providers.gradleProperty('mod_version').orElse(versionFromFile ?: '0.1').get()
@@ -32,26 +29,17 @@ dependencies {
 sourceSets {
     main {
         java {
-            if (isApiCompatRestrictedTarget) {
-                srcDir generatedUnobfJavaDir
-                exclude { details ->
-                    details.file.absolutePath.replace('\\', '/').endsWith(
-                        '/src/main/java/com/github/hrobasti/permaclicker/neoforge/PermaClickNeoForgeConfigScreen.java'
-                    )
-                }
-            } else {
-                exclude { details ->
-                    details.file.absolutePath.replace('\\', '/').endsWith(
-                        '/src/unobf/java_unobf/com/github/hrobasti/permaclicker/neoforge/PermaClickNeoForgeConfigScreen.java'
-                    )
-                }
+            srcDir generatedUnobfJavaDir
+            exclude { details ->
+                details.file.absolutePath.replace('\\', '/').endsWith(
+                    '/src/main/java/com/github/hrobasti/permaclicker/neoforge/PermaClickNeoForgeConfigScreen.java'
+                )
             }
         }
     }
 }
 
 def generateUnobfNeoForgeConfigScreen = tasks.register('generateUnobfNeoForgeConfigScreen', Copy) {
-    onlyIf { isApiCompatRestrictedTarget }
     from('src/unobf/templates')
     include('**/PermaClickNeoForgeConfigScreen.java.template')
     eachFile { details ->
@@ -62,15 +50,11 @@ def generateUnobfNeoForgeConfigScreen = tasks.register('generateUnobfNeoForgeCon
 }
 
 tasks.named('compileJava') {
-    if (isApiCompatRestrictedTarget) {
-        dependsOn(generateUnobfNeoForgeConfigScreen)
-    }
+    dependsOn(generateUnobfNeoForgeConfigScreen)
 }
 
 tasks.named('sourcesJar') {
-    if (isApiCompatRestrictedTarget) {
-        dependsOn(generateUnobfNeoForgeConfigScreen)
-    }
+    dependsOn(generateUnobfNeoForgeConfigScreen)
 }
 
 tasks.named('processResources', ProcessResources) {

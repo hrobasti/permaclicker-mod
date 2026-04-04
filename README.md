@@ -1,25 +1,19 @@
 # PermaClicker ⛏️
 
-PermaClicker keeps client-side mining/click input active while the mod is enabled.
+PermaClicker keeps client-side mining/click input active while the mod is enabled, e. g. to provide a cobblestone farm while you're AFK. It is intended for single-player or explicitly allowed environments, with configurable safety limits.
 
-It is intended for single-player or explicitly allowed environments, with configurable safety limits.
-
-[!WARNING]
-**Anti-cheat and server notice**
+## Anti-cheat notice ⚠️
 
 PermaClicker automates input behavior.
 Use it only where this is explicitly allowed.
 On many servers this may violate rules and can result in penalties such as kick/ban.
 
-## Quick start (for players) 🎮
+## Quick start for players 🎮
 
-1. Put **both** mods in the same `mods` folder:
-   - `permaclicker`
-   - `turtle-lib-mod` (required dependency)
+1. Put `PermaClicker` and `TurtleLib` (required dependency) in the `mods` folder.
 2. Start the game.
-3. Enable/configure PermaClicker in-game via the config screen.
-
-Without `turtle-lib-mod`, PermaClicker cannot load correctly.
+3. Configure Hotkeys in Minecraft key binds. Defaults:  `o` for Options, `F4` toggle on/off.
+4. Configure PermaClicker in-game via the config screen.
 
 ## What PermaClicker provides ✨
 
@@ -31,45 +25,41 @@ Without `turtle-lib-mod`, PermaClicker cannot load correctly.
 - optional movement lock while active
 - optional update checks (Stable / Beta / Alpha)
 
-## Runtime behavior (current) 🧭
+## Runtime behavior 🧭
 
 - While PermaClicker is active, opening chat is intentionally blocked.
-- In **Focused** mode, `ESC` stops PermaClicker and opens the pause menu.
-- In **Background** mode, pause opening stays blocked while active.
+- **Focused** mode: `ESC` stops PermaClicker and opens the pause menu.  `o` stops PermaClicker and opens the config screen.
+- **Background** mode: pause screen and config screen stays blocked while active.
 
 ## Configuration ⚙️
 
 Most settings are managed directly in the in-game config screen.
 
-Additional update source metadata is stored in `update-sources.properties`.
-
 ## Supported languages 🌍
 
 PermaClicker bundles each locale as a JSON file. Included languages:
 
-🇺🇸 English (en_US)
-🇩🇪 German (de_DE)
-🇸🇦 Arabic (ar_SA)
-🇪🇸 Spanish (es_ES)
-🇫🇷 French (fr_FR)
-🇮🇹 Italian (it_IT)
-🇯🇵 Japanese (ja_JP)
-🇰🇷 Korean (ko_KR)
-🇳🇱 Dutch (nl_NL)
-🇵🇱 Polish (pl_PL)
-🇵🇹 Portuguese (pt_PT)
-🇹🇷 Turkish (tr_TR)
-🇺🇦 Ukrainian (uk_UA)
-🇨🇳 Simplified Chinese (zh_CN)
+- 🇺🇸 English (en_us)
+- 🇩🇪 German (de_de)
+- 🇸🇦 Arabic (ar_sa)
+- 🇪🇸 Spanish (es_es)
+- 🇫🇷 French (fr_fr)
+- 🇮🇹 Italian (it_it)
+- 🇯🇵 Japanese (ja_jp)
+- 🇰🇷 Korean (ko_kr)
+- 🇳🇱 Dutch (nl_nl)
+- 🇵🇱 Polish (pl_pl)
+- 🇵🇹 Portuguese (pt_pt)
+- 🇹🇷 Turkish (tr_tr)
+- 🇺🇦 Ukrainian (uk_ua)
+- 🇨🇳 Simplified Chinese (zh_cn)
 
-## Build quickstart (developers) 🛠️
+## Quick start for devs 🛠️
 
-PermaClicker ships loader-local Gradle wrappers, so no global Gradle install is required.
+Use the workspace root wrapper for all build/test tasks.
 
-- Fabric build entrypoints: `fabric/gradlew` (Linux/macOS), `fabric/gradlew.bat` (Windows)
-- NeoForge build entrypoints: `neoforge/gradlew` (Linux/macOS), `neoforge/gradlew.bat` (Windows)
-
-Typical tasks: `build`, `test`, `tasks`.
+- PermaClicker full matrix build: `./gradlew releasePermaClicker`
+- Typical checks: `./gradlew verifyMatrixTargets`, `./gradlew tasks`
 
 ## AI support & privacy transparency 🤖
 
@@ -79,7 +69,7 @@ Parts of the source code and documentation were created with AI assistance.
 - Ideas, design decisions, and quality standards come from humans.
 - Quality assurance is reviewed and validated by humans.
 
-## Developer notes (short) 🧩
+## Developer notes 🧩
 
 PermaClicker uses TurtleLib helpers in `common` intentionally via facades:
 

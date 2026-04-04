@@ -7,7 +7,9 @@ build/
 **/build/
 out/
 dist/
+dist-archive/
 **/dist/
+**/dist-archive/
 bin/
 **/bin/
 
