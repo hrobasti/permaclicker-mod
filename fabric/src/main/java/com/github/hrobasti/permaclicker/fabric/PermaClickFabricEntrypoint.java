@@ -158,6 +158,7 @@ public final class PermaClickFabricEntrypoint implements ClientModInitializer {
     private void onClientTick(Minecraft client) {
         flushPendingUpdateMessage();
         backgroundPauseSuppressedThisTick = false;
+        boolean inGameHotkeyContext = isInGameHotkeyContext(client);
 
         refreshKeyMappingRegistrationState();
 
@@ -166,20 +167,20 @@ public final class PermaClickFabricEntrypoint implements ClientModInitializer {
 
         if (toggleMappedAvailable) {
             boolean keyDown = toggleKeyMapping.isDown();
-            if (keyDown != keyWasDown) {
+            if (inGameHotkeyContext && keyDown != keyWasDown) {
                 EVENT_LOOP.onKeyInput(BRIDGE.boundKeyCode(), keyDown);
-                keyWasDown = keyDown;
             }
+            keyWasDown = keyDown;
         } else if (toggleKeyUnavailable || toggleKeyMapping != null) {
             boolean keyDown = isRawKeyDown(BRIDGE.boundKeyCode());
-            if (keyDown != keyWasDown) {
+            if (inGameHotkeyContext && keyDown != keyWasDown) {
                 EVENT_LOOP.onKeyInput(BRIDGE.boundKeyCode(), keyDown);
-                keyWasDown = keyDown;
             }
+            keyWasDown = keyDown;
         }
 
         boolean openedConfigScreen = false;
-        if (configMappedAvailable) {
+        if (inGameHotkeyContext && configMappedAvailable) {
             while (configKeyMapping.consumeClick()) {
                 openedConfigScreen = openConfigScreen(client);
             }
@@ -198,7 +199,7 @@ public final class PermaClickFabricEntrypoint implements ClientModInitializer {
         }
 
         boolean configKeyDown = isRawKeyDown(GLFW.GLFW_KEY_O);
-        if (configKeyDown && !rawConfigKeyWasDown && !openedConfigScreen) {
+        if (inGameHotkeyContext && configKeyDown && !rawConfigKeyWasDown && !openedConfigScreen) {
             openConfigScreen(client);
         }
         rawConfigKeyWasDown = configKeyDown;
@@ -214,6 +215,14 @@ public final class PermaClickFabricEntrypoint implements ClientModInitializer {
     private void onClientTickPost(Minecraft client) {
         suppressBackgroundPauseScreen(client);
         applyMovementLockViewFreeze(client);
+    }
+
+    private static boolean isInGameHotkeyContext(Minecraft minecraft) {
+        return minecraft != null
+            && minecraft.player != null
+            && minecraft.level != null
+            && minecraft.gameMode != null
+            && minecraft.screen == null;
     }
 
     private void onClientDisconnect() {

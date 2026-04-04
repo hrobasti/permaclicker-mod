@@ -227,14 +227,15 @@ public final class PermaClickNeoForgeEntrypoint {
         flushPendingUpdateMessage();
         Minecraft minecraft = Minecraft.getInstance();
         backgroundPauseSuppressedThisTick = false;
+        boolean inGameHotkeyContext = isInGameHotkeyContext(minecraft);
 
         boolean keyDown = toggleKeyMapping.isDown();
-        if (keyDown != keyWasDown) {
+        if (inGameHotkeyContext && keyDown != keyWasDown) {
             EVENT_LOOP.onKeyInput(BRIDGE.boundKeyCode(), keyDown);
-            keyWasDown = keyDown;
         }
+        keyWasDown = keyDown;
 
-        if (configKeyMapping != null) {
+        if (inGameHotkeyContext && configKeyMapping != null) {
             while (configKeyMapping.consumeClick()) {
                 if (minecraft != null) {
                     Screen configScreen = createConfigScreenCompat(minecraft.screen);
@@ -251,6 +252,14 @@ public final class PermaClickNeoForgeEntrypoint {
         syncAttackHoldState(minecraft);
         applyMovementLockInputSuppression(minecraft);
         updateCursorCapture(minecraft);
+    }
+
+    private static boolean isInGameHotkeyContext(Minecraft minecraft) {
+        return minecraft != null
+            && minecraft.player != null
+            && minecraft.level != null
+            && minecraft.gameMode != null
+            && minecraft.screen == null;
     }
 
     private void onClientTickPost(ClientTickEvent.Post event) {
