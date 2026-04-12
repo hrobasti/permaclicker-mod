@@ -7,8 +7,8 @@
     - `minecraft`
     - `java`
     - `neoforge`
-    - `loader`
-    - `api`
+    - `fabricLoader`
+    - `fabricApi`
     - `modmenu`
 - `version.properties`
   - Authoritative version source (`version`).

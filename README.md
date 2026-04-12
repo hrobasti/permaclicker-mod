@@ -31,6 +31,10 @@ On many servers this may violate rules and can result in penalties such as kick/
 - **Focused** mode: `ESC` stops PermaClicker and opens the pause menu.  `o` stops PermaClicker and opens the config screen.
 - **Background** mode: pause screen and config screen stays blocked while active.
 
+## Tool durability
+
+If you care about tool durability (breaking while PermaCLickers runs), you can use [Inventory Profiles Next](https://inventory-profiles-next.github.io/en/downloads/) to replace them before they break or after they're broken.
+
 ## Configuration ⚙️
 
 Most settings are managed directly in the in-game config screen.
