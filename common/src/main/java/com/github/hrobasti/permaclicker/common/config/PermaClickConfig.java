@@ -18,7 +18,7 @@ public record PermaClickConfig(
     boolean updateCheckEnabled,
     UpdateChannel updateChannel
 ) {
-    public static final int DEFAULT_TOGGLE_KEY_CODE = 293;
+    public static final int DEFAULT_TOGGLE_KEY_CODE = 296;
     public static final String DEFAULT_OVERLAY_COLOR = "green";
     private static final Set<String> ALLOWED_OVERLAY_COLORS = Set.of(
         "black",

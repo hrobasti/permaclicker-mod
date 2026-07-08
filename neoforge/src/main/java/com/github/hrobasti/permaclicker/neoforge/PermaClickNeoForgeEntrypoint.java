@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -116,12 +117,12 @@ public final class PermaClickNeoForgeEntrypoint {
             },
             payload -> {
                 Minecraft minecraft = Minecraft.getInstance();
-                if (minecraft != null) {
+                if (minecraft != null && minecraft.player != null) {
                     ChatFormatting overlayColor = resolveOverlayColor(payload.colorName());
                     Component overlayMessage = Component.literal(payload.message()).withStyle(overlayColor);
-                    if (!displayActionBarCompat(minecraft, overlayMessage) && minecraft.player != null) {
-                        displayClientMessageCompat(minecraft.player, overlayMessage, true);
-                    }
+                    // 26.2: action-bar text is LocalPlayer.sendOverlayMessage(Component). Call it directly
+                    // so the loader toolchain remaps it; reflection by Mojang name is unreliable on Fabric.
+                    minecraft.player.sendOverlayMessage(overlayMessage);
                 }
             },
             active -> setMovementLockActive(Minecraft.getInstance(), active),
@@ -131,7 +132,7 @@ public final class PermaClickNeoForgeEntrypoint {
 
     private void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
         toggleKeyMapping = createKeyMapping(KEY_TRANSLATION, PermaClickConfig.DEFAULT_TOGGLE_KEY_CODE);
-        configKeyMapping = createKeyMapping(CONFIG_KEY_TRANSLATION, GLFW.GLFW_KEY_O);
+        configKeyMapping = createKeyMapping(CONFIG_KEY_TRANSLATION, GLFW.GLFW_KEY_U);
         keyWasDown = false;
         event.register(toggleKeyMapping);
         event.register(configKeyMapping);
@@ -238,9 +239,9 @@ public final class PermaClickNeoForgeEntrypoint {
         if (inGameHotkeyContext && configKeyMapping != null) {
             while (configKeyMapping.consumeClick()) {
                 if (minecraft != null) {
-                    Screen configScreen = createConfigScreenCompat(minecraft.screen);
+                    Screen configScreen = createConfigScreenCompat(minecraft.gui.screen());
                     if (configScreen != null) {
-                        minecraft.execute(() -> minecraft.setScreen(configScreen));
+                        minecraft.execute(() -> minecraft.setScreenAndShow(configScreen));
                     }
                 }
             }
@@ -259,7 +260,7 @@ public final class PermaClickNeoForgeEntrypoint {
             && minecraft.player != null
             && minecraft.level != null
             && minecraft.gameMode != null
-            && minecraft.screen == null;
+            && minecraft.gui.screen() == null;
     }
 
     private void onClientTickPost(ClientTickEvent.Post event) {
@@ -361,7 +362,7 @@ public final class PermaClickNeoForgeEntrypoint {
             return false;
         }
 
-        if (!isMiningAllowedScreen(minecraft) || minecraft.screen == null) {
+        if (!isMiningAllowedScreen(minecraft) || minecraft.gui.screen() == null) {
             return false;
         }
 
@@ -584,70 +585,6 @@ public final class PermaClickNeoForgeEntrypoint {
         invokeCompatibleMethodByShape(player, new Object[] { message });
     }
 
-    private static boolean displayActionBarCompat(Minecraft minecraft, Component message) {
-        if (minecraft == null || message == null) {
-            return false;
-        }
-
-        Object gui = resolveMinecraftGui(minecraft);
-        if (gui != null) {
-            if (invokeCompatibleMethod(gui, "setOverlayMessage", message, false)) {
-                return true;
-            }
-            if (invokeCompatibleMethod(gui, "setOverlayMessage", message, Boolean.FALSE)) {
-                return true;
-            }
-            if (invokeCompatibleMethod(gui, "setOverlayMessage", message)) {
-                return true;
-            }
-            if (invokeCompatibleMethod(gui, "setActionBarText", message)) {
-                return true;
-            }
-            if (invokeCompatibleMethod(gui, "displayClientMessage", message, true)) {
-                return true;
-            }
-
-            if (invokeCompatibleMethodByShape(gui, new Object[] { message, false })) {
-                return true;
-            }
-
-            if (invokeCompatibleMethodByShape(gui, new Object[] { message, true })) {
-                return true;
-            }
-
-            if (invokeCompatibleMethodByShape(gui, new Object[] { message })) {
-                return true;
-            }
-        }
-
-        if (minecraft.player == null) {
-            return false;
-        }
-
-        return invokeCompatibleMethod(minecraft.player, "displayClientMessage", message, true)
-            || invokeCompatibleMethodByShape(minecraft.player, new Object[] { message, true })
-            || invokeCompatibleMethodByShape(minecraft.player, new Object[] { message });
-    }
-
-    private static Object resolveMinecraftGui(Minecraft minecraft) {
-        try {
-            Field field = getAccessibleField(minecraft.getClass(), "gui");
-            Object value = field.get(minecraft);
-            if (value != null) {
-                return value;
-            }
-        } catch (Throwable ignored) {
-            // try method fallback
-        }
-
-        try {
-            Method method = getAccessibleMethod(minecraft.getClass(), "gui");
-            return method.invoke(minecraft);
-        } catch (Throwable ignored) {
-            return null;
-        }
-    }
-
     private static boolean invokeCompatibleMethod(Object receiver, String methodName, Object... args) {
         for (Class<?> type = receiver.getClass(); type != null; type = type.getSuperclass()) {
             for (Method method : type.getDeclaredMethods()) {
@@ -760,11 +697,12 @@ public final class PermaClickNeoForgeEntrypoint {
     }
 
     private static ChatFormatting resolveOverlayColor(String rawColorName) {
-        ChatFormatting parsed = ChatFormatting.getByName(PermaClickConfig.normalizeOverlayColor(rawColorName));
-        if (parsed == null || !parsed.isColor()) {
+        String normalized = PermaClickConfig.normalizeOverlayColor(rawColorName);
+        try {
+            return ChatFormatting.valueOf(normalized.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException ignored) {
             return ChatFormatting.GREEN;
         }
-        return parsed;
     }
 
     private boolean performHeldAttackTick(Minecraft minecraft) {
@@ -1031,14 +969,14 @@ public final class PermaClickNeoForgeEntrypoint {
     }
 
     private static boolean isMiningAllowedScreen(Minecraft minecraft) {
-        if (minecraft.screen == null) {
+        if (minecraft.gui.screen() == null) {
             return true;
         }
-        if (minecraft.screen instanceof ChatScreen) {
+        if (minecraft.gui.screen() instanceof ChatScreen) {
             return true;
         }
 
-        String simpleName = minecraft.screen.getClass().getSimpleName();
+        String simpleName = minecraft.gui.screen().getClass().getSimpleName();
         return "ChatScreen".equals(simpleName) || simpleName.endsWith("ChatScreen");
     }
 

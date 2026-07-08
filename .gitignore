@@ -41,10 +41,10 @@ crash-reports/
 # Local wiki editing artifacts
 /wiki/
 
-# Isolated local Gradle user homes
-**/isolated/**/gradle-user-home/
-
 # Loader-local work directories (generated)
 **/isolated/
 **/loom-cache/
 **/devlibs/
+
+# Claude Code local ruleset (kept out of version control)
+CLAUDE.md

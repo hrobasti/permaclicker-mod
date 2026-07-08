@@ -21,7 +21,7 @@ version = providers.gradleProperty('mod_version').orElse(versionFromFile ?: '0.1
 
 dependencies {
     implementation project(':permaclicker-common')
-    implementation project(':turtlelib')
+    implementation project(':turtlelib-core')
     testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.1'
 }
@@ -123,34 +123,7 @@ tasks.named('sourcesJar') {
     archiveFileName = "${pluginNameForFile}_${project.version}_MC-${mcVersionForFile}_NEOFORGE_${neoForgeVersionForFile}-source.jar"
 }
 
-tasks.register('exportPermaClickerNeoForgeJarToDist', Copy) {
-    group = 'build'
-    description = 'Exports NeoForge runtime jar into mods/permaclicker-mod/dist.'
-    dependsOn(tasks.named('jar'))
-
-    from(tasks.named('jar').flatMap { it.archiveFile })
-    into(permaClickerDistDir)
-}
-
-tasks.register('exportPermaClickerNeoForgeSourcesToDist', Copy) {
-    group = 'build'
-    description = 'Exports NeoForge source jar into mods/permaclicker-mod/dist/sources.'
-    dependsOn(tasks.named('sourcesJar'))
-
-    from(tasks.named('sourcesJar').flatMap { it.archiveFile })
-    into(permaClickerDistSourcesDir)
-}
-
-tasks.named('assemble') {
-    finalizedBy(
-        tasks.named('exportPermaClickerNeoForgeJarToDist'),
-        tasks.named('exportPermaClickerNeoForgeSourcesToDist')
-    )
-}
-
-tasks.named('build') {
-    finalizedBy(
-        tasks.named('exportPermaClickerNeoForgeJarToDist'),
-        tasks.named('exportPermaClickerNeoForgeSourcesToDist')
-    )
-}
+// The jar / sourcesJar tasks already write directly into dist (and dist/sources) via
+// destinationDirectory, so no extra export/copy step is needed. Separate Copy-into-dist
+// tasks would also trip Gradle 9.6+ overlapping-output validation because both loader
+// subprojects share the same mods/permaclicker-mod/dist directory.

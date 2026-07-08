@@ -26,7 +26,7 @@ final class NeoForgeBackgroundModeExecutor {
             return false;
         }
 
-        if (minecraft.screen instanceof PauseScreen) {
+        if (minecraft.gui.screen() instanceof PauseScreen) {
             return false;
         }
 
@@ -60,8 +60,8 @@ final class NeoForgeBackgroundModeExecutor {
         }
 
         writePauseOnLostFocusValue(minecraft, false);
-        if (minecraft.screen instanceof PauseScreen) {
-            minecraft.setScreen(null);
+        if (minecraft.gui.screen() instanceof PauseScreen) {
+            minecraft.setScreenAndShow(null);
             return true;
         }
 

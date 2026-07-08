@@ -23,7 +23,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 /**
- * Dedicated unobfuscated-target config screen (e.g. MC 26.1) with vanilla options-layout styling.
+ * Dedicated unobfuscated-target config screen (e.g. MC 26.2) with vanilla options-layout styling.
  */
 public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
     private static final int ROW_HEIGHT = 20;
@@ -417,7 +417,7 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
     @Override
     public void onClose() {
         if (this.minecraft != null) {
-            this.minecraft.setScreen(parent);
+            this.minecraft.setScreenAndShow(parent);
         }
     }
 
@@ -448,10 +448,11 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
     }
 
     private static ChatFormatting resolveOverlayColor(String rawColorName) {
-        ChatFormatting parsed = ChatFormatting.getByName(PermaClickConfig.normalizeOverlayColor(rawColorName));
-        if (parsed == null || !parsed.isColor()) {
+        String normalized = PermaClickConfig.normalizeOverlayColor(rawColorName);
+        try {
+            return ChatFormatting.valueOf(normalized.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException ignored) {
             return ChatFormatting.GREEN;
         }
-        return parsed;
     }
 }

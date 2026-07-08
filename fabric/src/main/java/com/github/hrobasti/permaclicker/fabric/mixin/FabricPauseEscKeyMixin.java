@@ -19,7 +19,7 @@ final class FabricPauseEscKeyMixin {
         }
 
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft == null || minecraft.screen != null) {
+        if (minecraft == null || minecraft.gui.screen() != null) {
             return;
         }
 

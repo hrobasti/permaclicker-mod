@@ -6,7 +6,7 @@ This file documents third-party dependencies and license references for **PermaC
 
 | Library | Coordinates / source | Usage scope | License | License text |
 | --- | --- | --- | --- | --- |
-| TurtleLib | internal module `project(':turtlelib')` | Runtime dependency | Apache-2.0 | [`../turtle-lib-mod/LICENSE`](../turtle-lib-mod/LICENSE) |
+| TurtleLib | internal module `project(':turtlelib-core')` | Runtime dependency | Apache-2.0 | [`../turtle-lib-mod/LICENSE`](../turtle-lib-mod/LICENSE) |
 | Fabric API | `net.fabricmc.fabric-api:fabric-api` | Fabric runtime/API | Apache-2.0 | [Fabric LICENSE](https://github.com/FabricMC/fabric/blob/HEAD/LICENSE) |
 | NeoForge API | `net.neoforged:neoforge` | NeoForge runtime/API | LGPL-2.1 | [NeoForge LICENSE](https://github.com/NeoForged/NeoForge/blob/1.13-pre/LICENSE.txt) |
 

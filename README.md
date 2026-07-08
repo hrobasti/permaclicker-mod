@@ -12,7 +12,7 @@ On many servers this may violate rules and can result in penalties such as kick/
 
 1. Put `PermaClicker` and `TurtleLib` (required dependency) in the `mods` folder.
 2. Start the game.
-3. Configure Hotkeys in Minecraft key binds. Defaults:  `o` for Options, `F4` toggle on/off.
+3. Configure Hotkeys in Minecraft key binds. Defaults:  `u` for Options, `F7` toggle on/off.
 4. Configure PermaClicker in-game via the config screen.
 
 ## What PermaClicker provides ✨
@@ -28,7 +28,7 @@ On many servers this may violate rules and can result in penalties such as kick/
 ## Runtime behavior 🧭
 
 - While PermaClicker is active, opening chat is intentionally blocked.
-- **Focused** mode: `ESC` stops PermaClicker and opens the pause menu.  `o` stops PermaClicker and opens the config screen.
+- **Focused** mode: `ESC` stops PermaClicker and opens the pause menu.  `u` stops PermaClicker and opens the config screen.
 - **Background** mode: pause screen and config screen stays blocked while active.
 
 ## Tool durability

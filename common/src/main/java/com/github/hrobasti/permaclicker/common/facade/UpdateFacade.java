@@ -10,9 +10,14 @@ import java.util.Map;
  * Single facade for update-check operations delegated to TurtleLib UpdateChecker.
  */
 public final class UpdateFacade {
-    private static final String DEFAULT_USER_AGENT = "PermaClick/0.1 (+https://github.com/hrobasti)";
+    private static final String USER_AGENT_SUFFIX = " (+https://github.com/hrobasti)";
 
     private UpdateFacade() {
+    }
+
+    private static String userAgent(String currentVersion) {
+        String version = currentVersion == null || currentVersion.isBlank() ? "dev" : currentVersion.trim();
+        return "PermaClicker/" + version + USER_AGENT_SUFFIX;
     }
 
     public static UpdateCheckResult check(
@@ -24,7 +29,7 @@ public final class UpdateFacade {
     ) {
         try {
             UpdateChecker checker = new UpdateChecker(
-                DEFAULT_USER_AGENT,
+                userAgent(currentVersion),
                 emptyToNull(modrinthProjectId),
                 emptyToNull(curseforgeProjectId),
                 mapChannel(updateChannel),

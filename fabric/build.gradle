@@ -1,5 +1,5 @@
 plugins {
-    id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
+    id 'net.fabricmc.fabric-loom' version '1.17-SNAPSHOT'
     id 'java'
 }
 
@@ -10,7 +10,7 @@ if (versionFile.exists()) {
 }
 def versionFromFile = versionProperties.getProperty('version')
 
-def resolvedMinecraftVersion = providers.gradleProperty('minecraft_version').orElse('26.1.1').get()
+def resolvedMinecraftVersion = providers.gradleProperty('minecraft_version').orElse('26.2').get()
 
 def pluginNameForFile = (providers.gradleProperty('mod_name').getOrElse('PermaClick') as String).replaceAll(/[^A-Za-z0-9]/, '')
 def mcVersionForFile = (resolvedMinecraftVersion as String).replace('.', '-')
@@ -37,7 +37,7 @@ dependencies {
     implementation "com.terraformersmc:modmenu:${modmenu_version}"
 
     implementation project(':permaclicker-common')
-    implementation project(':turtlelib')
+    implementation project(':turtlelib-core')
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.1'
@@ -140,34 +140,7 @@ tasks.named('sourcesJar') {
     archiveFileName = "${pluginNameForFile}_${project.version}_MC-${mcVersionForFile}_FABRIC_${fabricVersionForFile}-source.jar"
 }
 
-tasks.register('exportPermaClickerFabricJarToDist', Copy) {
-    group = 'build'
-    description = 'Exports Fabric runtime jar into mods/permaclicker-mod/dist.'
-    dependsOn(tasks.named('jar'))
-
-    from(tasks.named('jar').flatMap { it.archiveFile })
-    into(permaClickerDistDir)
-}
-
-tasks.register('exportPermaClickerFabricSourcesToDist', Copy) {
-    group = 'build'
-    description = 'Exports Fabric source jar into mods/permaclicker-mod/dist/sources.'
-    dependsOn(tasks.named('sourcesJar'))
-
-    from(tasks.named('sourcesJar').flatMap { it.archiveFile })
-    into(permaClickerDistSourcesDir)
-}
-
-tasks.named('assemble') {
-    finalizedBy(
-        tasks.named('exportPermaClickerFabricJarToDist'),
-        tasks.named('exportPermaClickerFabricSourcesToDist')
-    )
-}
-
-tasks.named('build') {
-    finalizedBy(
-        tasks.named('exportPermaClickerFabricJarToDist'),
-        tasks.named('exportPermaClickerFabricSourcesToDist')
-    )
-}
+// The jar / sourcesJar tasks already write directly into dist (and dist/sources) via
+// destinationDirectory, so no extra export/copy step is needed. Separate Copy-into-dist
+// tasks would also trip Gradle 9.6+ overlapping-output validation because both loader
+// subprojects share the same mods/permaclicker-mod/dist directory.

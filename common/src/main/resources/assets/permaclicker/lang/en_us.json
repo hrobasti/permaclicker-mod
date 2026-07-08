@@ -40,7 +40,7 @@
 
   "permaclicker.config.overlay.enabled": "Show status overlay",
   "permaclicker.config.overlay.color": "Text color",
-  "permaclicker.config.overlay.enabled.tooltip.on.desc": "Shows status overlay while PermaClicker isactive",
+  "permaclicker.config.overlay.enabled.tooltip.on.desc": "Shows status overlay while PermaClicker is active",
   "permaclicker.config.overlay.enabled.tooltip.off.desc": "Hides status overlay",
   "permaclicker.config.overlay.color.tooltip.any.label": "Color",
   "permaclicker.config.overlay.color.tooltip.any.desc": "Defines text color for the status overlay",

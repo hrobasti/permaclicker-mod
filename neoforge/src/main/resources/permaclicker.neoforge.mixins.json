@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "NeoForgeChatMiningAttackScreenBypassMixin",
+    "NeoForgeChatOpenBlockMixin",
     "NeoForgePauseEscKeyMixin",
     "NeoForgePauseScreenSetScreenMixin"
   ],

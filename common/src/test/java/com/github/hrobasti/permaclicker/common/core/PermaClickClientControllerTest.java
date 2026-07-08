@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 
 class PermaClickClientControllerTest {
     @Test
-    void defaultKeyCodeIsF4() {
+    void defaultKeyCodeIsF7() {
         PermaClickClientController controller = new PermaClickClientController();
-        assertEquals(PermaClickClientController.DEFAULT_F4_KEY_CODE, controller.boundKeyCode());
+        assertEquals(PermaClickClientController.DEFAULT_TOGGLE_KEY_CODE, controller.boundKeyCode());
     }
 
     @Test

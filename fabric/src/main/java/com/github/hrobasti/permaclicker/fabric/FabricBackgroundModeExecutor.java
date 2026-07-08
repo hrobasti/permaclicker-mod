@@ -26,7 +26,7 @@ final class FabricBackgroundModeExecutor {
             return false;
         }
 
-        if (minecraft.screen instanceof PauseScreen) {
+        if (minecraft.gui.screen() instanceof PauseScreen) {
             return false;
         }
 
@@ -60,8 +60,8 @@ final class FabricBackgroundModeExecutor {
         }
 
         writePauseOnLostFocusValue(minecraft, false);
-        if (minecraft.screen instanceof PauseScreen) {
-            minecraft.setScreen(null);
+        if (minecraft.gui.screen() instanceof PauseScreen) {
+            minecraft.setScreenAndShow(null);
             return true;
         }
 
