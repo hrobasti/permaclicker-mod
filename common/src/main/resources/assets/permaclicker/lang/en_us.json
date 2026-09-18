@@ -7,6 +7,7 @@
   "permaclicker.update.available": "[PermaClicker] Update available! %s -> %s",
   "permaclicker.update.provider.ok": "- %s: Version %s",
   "permaclicker.update.provider.error": "- %s: Fetch failed.",
+  "permaclicker.config.toggle_key_reset": "[PermaClicker] Your toggle key was reset to the default because Minecraft 26.3 changed how keys are stored. Rebind it in PermaClicker settings if needed.",
 
   "key.categories.permaclicker": "PermaClicker",
   "key.category.permaclicker": "PermaClicker",

@@ -15,7 +15,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "com.github.hrobasti.permaclicker.fabric.PermaClickerFabricEntrypoint"
+      "com.github.hrobasti.permaclicker.fabric.PermaClickerFabricBootstrap"
     ],
     "modmenu": [
       "com.github.hrobasti.permaclicker.fabric.PermaClickerModMenuApi"

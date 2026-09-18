@@ -29,7 +29,7 @@ On many servers this may violate rules and can result in penalties such as kick/
 
 - While PermaClicker is active, opening chat is intentionally blocked.
 - **Focused** mode: `ESC` stops PermaClicker and opens the pause menu.  `u` stops PermaClicker and opens the config screen.
-- **Background** mode: pause screen and config screen stays blocked while active.
+- **Background** mode: pause screen and PermaClicker's own config screen (`u`) stay blocked while active — even if the game window is currently focused. Disable PermaClicker (`F7`) first to change settings.
 
 ## Tool durability
 

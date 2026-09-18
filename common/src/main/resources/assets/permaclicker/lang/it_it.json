@@ -7,6 +7,7 @@
   "permaclicker.update.available": "[PermaClicker] Aggiornamento disponibile! %s -> %s",
   "permaclicker.update.provider.ok": "- %s: Versione %s",
   "permaclicker.update.provider.error": "- %s: Recupero non riuscito.",
+  "permaclicker.config.toggle_key_reset": "[PermaClicker] Il tuo tasto di attivazione è stato ripristinato al valore predefinito perché Minecraft 26.3 ha cambiato il modo in cui i tasti vengono memorizzati. Riassegnalo nelle impostazioni di PermaClicker se necessario.",
 
   "key.categories.permaclicker": "PermaClicker",
   "key.category.permaclicker": "PermaClicker",

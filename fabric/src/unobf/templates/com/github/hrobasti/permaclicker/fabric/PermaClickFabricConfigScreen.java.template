@@ -2,6 +2,7 @@ package com.github.hrobasti.permaclicker.fabric;
 
 import com.github.hrobasti.permaclicker.common.config.PermaClickConfig;
 import com.github.hrobasti.permaclicker.common.config.UpdateChannel;
+import com.github.hrobasti.permaclicker.common.core.PermaClickBridge;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 /**
- * Dedicated unobfuscated-target config screen (e.g. MC 26.2) with vanilla options-layout styling.
+ * Dedicated unobfuscated-target config screen (e.g. MC 26.3) with vanilla options-layout styling.
  */
 public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
     private static final int ROW_HEIGHT = 20;
@@ -77,7 +78,7 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
         PermaClickConfig config = PermaClickFabricEntrypoint.bridge().currentConfig();
         this.overlayEnabled = config.overlayEnabled();
         this.overlayColor = config.overlayColor();
-        this.runInBackground = config.runWhenUnfocused() || config.runWhenMinimized();
+        this.runInBackground = config.runInBackground();
         this.autoStopMinutes = config.autoStopMinutes();
         this.movementLockEnabled = config.movementLockEnabled();
         this.updateCheckEnabled = config.updateCheckEnabled();
@@ -385,7 +386,7 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
     }
 
     private void saveAndClose() {
-        FabricPermaClickBridge bridge = PermaClickFabricEntrypoint.bridge();
+        PermaClickBridge bridge = PermaClickFabricEntrypoint.bridge();
         int parsedAutoStop = autoStopMinutes;
         if (autoStopInputField != null) {
             parsedAutoStop = parseAutoStopInput(autoStopInputField.getValue(), autoStopMinutes);
@@ -396,7 +397,6 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
             bridge.currentConfig().toggleKeyCode(),
             overlayEnabled,
             overlayColor,
-            runInBackground,
             runInBackground,
             PermaClickConfig.clampAutoStopMinutes(parsedAutoStop),
             movementLockEnabled,

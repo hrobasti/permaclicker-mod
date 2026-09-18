@@ -1,4 +1,4 @@
-package com.github.hrobasti.permaclicker.fabric;
+package com.github.hrobasti.permaclicker.client;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -7,69 +7,44 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.world.phys.BlockHitResult;
 
 /**
- * Background-mode execution path based on aggressive pause suppression,
- * without cursor/focus-detach hacks.
+ * Stable focused-mode mining execution path. Shared between Fabric and NeoForge.
  */
-final class FabricBackgroundModeExecutor {
-    private static final int UNFOCUSED_REPRIME_INTERVAL_TICKS = 1;
-
-    private int unfocusedMissTicks;
+public final class FocusedModeExecutor {
     private BlockPos cachedDestroyPos;
     private Direction cachedDestroyDirection;
 
-    boolean performBackgroundMiningTick(Minecraft minecraft) {
+    public boolean performFocusedMiningTick(Minecraft minecraft) {
         if (minecraft == null || minecraft.options == null) {
-            return false;
-        }
-
-        if (minecraft.gui.screen() instanceof PauseScreen) {
             return false;
         }
 
         updateCachedDestroyTarget(minecraft);
         minecraft.options.keyAttack.setDown(true);
 
-        boolean continueInvoked = invokeContinueAttack(minecraft);
-        boolean continueCached = continueDestroyWithCachedTarget(minecraft);
-        if (continueInvoked || continueCached) {
-            unfocusedMissTicks = 0;
-            return true;
-        }
+        boolean invoked;
+        try {
+            boolean continueInvoked = invokeContinueAttack(minecraft);
+            boolean continueCached = continueDestroyWithCachedTarget(minecraft);
+            invoked = continueInvoked || continueCached;
 
-        unfocusedMissTicks++;
-        if (unfocusedMissTicks >= UNFOCUSED_REPRIME_INTERVAL_TICKS) {
-            boolean reprimeInvoked = invokeStartAttack(minecraft)
-                || startDestroyWithCachedTarget(minecraft)
-                || invokeKeyMappingClick(minecraft);
-            unfocusedMissTicks = 0;
-            if (reprimeInvoked) {
-                return true;
+            if (!invoked && minecraft.isWindowActive()) {
+                invoked = invokeStartAttack(minecraft);
+                if (!invoked) {
+                    invoked = startDestroyWithCachedTarget(minecraft);
+                }
             }
+
+            if (!invoked && minecraft.isWindowActive()) {
+                invoked = invokeKeyMappingClick(minecraft);
+            }
+        } catch (Throwable ignored) {
+            invoked = minecraft.isWindowActive() && invokeKeyMappingClick(minecraft);
         }
 
-        return false;
-    }
-
-    boolean aggressivelySuppressPauseScreen(Minecraft minecraft) {
-        if (minecraft == null) {
-            return false;
-        }
-
-        writePauseOnLostFocusValue(minecraft, false);
-        if (minecraft.gui.screen() instanceof PauseScreen) {
-            minecraft.setScreenAndShow(null);
-            return true;
-        }
-
-        return false;
-    }
-
-    void reset() {
-        unfocusedMissTicks = 0;
+        return invoked;
     }
 
     private static boolean invokeContinueAttack(Minecraft minecraft) {
@@ -255,71 +230,6 @@ final class FabricBackgroundModeExecutor {
     private static int getDestroyStage(Minecraft minecraft) {
         MultiPlayerGameMode gameMode = minecraft == null ? null : minecraft.gameMode;
         return gameMode == null ? Integer.MIN_VALUE : gameMode.getDestroyStage();
-    }
-
-    private static void writePauseOnLostFocusValue(Minecraft minecraft, boolean value) {
-        Object options = minecraft == null ? null : minecraft.options;
-        if (options == null) {
-            return;
-        }
-
-        Object option = null;
-        try {
-            Method accessor = getAccessibleMethod(options.getClass(), "pauseOnLostFocus");
-            option = accessor.invoke(options);
-            if (option instanceof Boolean) {
-                Method setter = getAccessibleMethod(options.getClass(), "pauseOnLostFocus", boolean.class);
-                setter.invoke(options, value);
-                return;
-            }
-        } catch (Throwable ignored) {
-            // fallback
-        }
-
-        if (option == null) {
-            try {
-                Field field = getAccessibleField(options.getClass(), "pauseOnLostFocus");
-                Object fieldValue = field.get(options);
-                if (fieldValue instanceof Boolean) {
-                    field.set(options, value);
-                    return;
-                }
-                option = fieldValue;
-            } catch (Throwable ignored) {
-                return;
-            }
-        }
-
-        writeBooleanToOption(option, value);
-    }
-
-    private static void writeBooleanToOption(Object option, boolean value) {
-        if (option == null) {
-            return;
-        }
-
-        try {
-            Method setPrimitive = getAccessibleMethod(option.getClass(), "set", boolean.class);
-            setPrimitive.invoke(option, value);
-            return;
-        } catch (Throwable ignored) {
-            // try boxed overload
-        }
-
-        try {
-            Method setBoxed = getAccessibleMethod(option.getClass(), "set", Object.class);
-            setBoxed.invoke(option, Boolean.valueOf(value));
-            return;
-        } catch (Throwable ignored) {
-            // try setValue overload
-        }
-
-        try {
-            Method setValue = getAccessibleMethod(option.getClass(), "setValue", Object.class);
-            setValue.invoke(option, Boolean.valueOf(value));
-        } catch (Throwable ignored) {
-            // best effort
-        }
     }
 
     private static Method getAccessibleMethod(Class<?> owner, String name, Class<?>... parameterTypes) throws NoSuchMethodException {

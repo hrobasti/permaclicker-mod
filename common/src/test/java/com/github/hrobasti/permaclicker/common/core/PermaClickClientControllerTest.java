@@ -19,7 +19,7 @@ class PermaClickClientControllerTest {
         PermaClickClientController controller = new PermaClickClientController();
         RuntimeStub runtime = new RuntimeStub();
 
-        controller.applyConfig(new PermaClickConfig(false, 292, true, "green", true, false, 0, true, true, UpdateChannel.BETA));
+        controller.applyConfig(new PermaClickConfig(false, 292, true, "green", true, 0, true, true, UpdateChannel.BETA));
         controller.onKeyEvent(292, true, runtime);
         controller.onClientTick(runtime);
 
@@ -30,7 +30,7 @@ class PermaClickClientControllerTest {
     void applyConfigUpdatesBoundKeyCode() {
         PermaClickClientController controller = new PermaClickClientController();
 
-        controller.applyConfig(new PermaClickConfig(false, 293, true, "green", true, false, 0, true, true, UpdateChannel.BETA));
+        controller.applyConfig(new PermaClickConfig(false, 293, true, "green", true, 0, true, true, UpdateChannel.BETA));
 
         assertEquals(293, controller.boundKeyCode());
     }

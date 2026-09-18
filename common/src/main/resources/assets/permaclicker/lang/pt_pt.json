@@ -7,6 +7,7 @@
   "permaclicker.update.available": "[PermaClicker] Atualização disponível! %s -> %s",
   "permaclicker.update.provider.ok": "- %s: Versão %s",
   "permaclicker.update.provider.error": "- %s: Falha ao obter.",
+  "permaclicker.config.toggle_key_reset": "[PermaClicker] A tua tecla de alternar foi reposta para a predefinição porque o Minecraft 26.3 alterou a forma como as teclas são guardadas. Reatribui-a nas definições do PermaClicker se necessário.",
 
   "key.categories.permaclicker": "PermaClicker",
   "key.category.permaclicker": "PermaClicker",

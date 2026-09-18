@@ -1,10 +1,12 @@
 package com.github.hrobasti.permaclicker.fabric;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import com.github.hrobasti.permaclicker.common.config.PermaClickConfig;
 import com.github.hrobasti.permaclicker.common.config.PermaClickConfigStore;
 import com.github.hrobasti.permaclicker.common.config.UpdateChannel;
+import com.github.hrobasti.permaclicker.common.core.PermaClickBridge;
 import com.github.hrobasti.permaclicker.common.core.PermaClickClientController;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -17,25 +19,25 @@ class FabricConfigLifecycleTest {
 
     @Test
     void loadAndApplyUsesDefaultsWhenMissing() {
-        FabricPermaClickBridge bridge = new FabricPermaClickBridge(new PermaClickClientController());
+        PermaClickBridge bridge = new PermaClickBridge(new PermaClickClientController());
         FabricConfigLifecycle lifecycle = new FabricConfigLifecycle();
 
-        PermaClickConfig loaded = lifecycle.loadAndApply(bridge, tempDir);
+        PermaClickConfigStore.LoadResult result = lifecycle.loadAndApply(bridge, tempDir);
 
-        assertEquals(PermaClickConfig.defaults(), loaded);
+        assertEquals(PermaClickConfig.defaults(), result.config());
+        assertFalse(result.toggleKeyWasReset());
         assertEquals(PermaClickConfig.DEFAULT_TOGGLE_KEY_CODE, bridge.boundKeyCode());
     }
 
     @Test
     void saveCurrentWritesExpectedFile() throws IOException {
-        FabricPermaClickBridge bridge = new FabricPermaClickBridge(new PermaClickClientController());
+        PermaClickBridge bridge = new PermaClickBridge(new PermaClickClientController());
         FabricConfigLifecycle lifecycle = new FabricConfigLifecycle();
         PermaClickConfig source = new PermaClickConfig(
             true,
             293,
             false,
             "yellow",
-            false,
             true,
             20,
             true,
@@ -48,7 +50,6 @@ class FabricConfigLifecycleTest {
             false,
             "yellow",
             true,
-            true,
             20,
             true,
             true,
@@ -60,7 +61,7 @@ class FabricConfigLifecycleTest {
 
         Path configPath = lifecycle.resolveConfigPath(tempDir);
         PermaClickConfigStore store = new PermaClickConfigStore(configPath);
-        assertEquals(expectedLoaded, store.load());
+        assertEquals(expectedLoaded, store.load().config());
     }
 }
 

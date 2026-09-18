@@ -10,7 +10,7 @@ if (versionFile.exists()) {
 }
 def versionFromFile = versionProperties.getProperty('version')
 
-def resolvedMinecraftVersion = providers.gradleProperty('minecraft_version').orElse('26.2').get()
+def resolvedMinecraftVersion = providers.gradleProperty('minecraft_version').orElse('26.3').get()
 
 def pluginNameForFile = (providers.gradleProperty('mod_name').getOrElse('PermaClick') as String).replaceAll(/[^A-Za-z0-9]/, '')
 def mcVersionForFile = (resolvedMinecraftVersion as String).replace('.', '-')
@@ -37,6 +37,7 @@ dependencies {
     implementation "com.terraformersmc:modmenu:${modmenu_version}"
 
     implementation project(':permaclicker-common')
+    implementation project(':permaclicker-client')
     implementation project(':turtlelib-core')
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
@@ -44,6 +45,7 @@ dependencies {
 }
 
 def commonMainOutput = project(':permaclicker-common').sourceSets.main.output
+def clientMainOutput = project(':permaclicker-client').sourceSets.main.output
 def permaClickerDistDir = rootProject.layout.projectDirectory.dir('mods/permaclicker-mod/dist')
 def permaClickerDistSourcesDir = rootProject.layout.projectDirectory.dir('mods/permaclicker-mod/dist/sources')
 def modLicenseFile = file('../LICENSE')
@@ -114,6 +116,7 @@ tasks.test {
 
 tasks.named('jar') {
     from(commonMainOutput)
+    from(clientMainOutput)
     from(modLicenseFile) {
         into 'META-INF'
         rename { 'LICENSE' }

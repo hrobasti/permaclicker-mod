@@ -1,7 +1,7 @@
 package com.github.hrobasti.permaclicker.fabric;
 
-import com.github.hrobasti.permaclicker.common.config.PermaClickConfig;
 import com.github.hrobasti.permaclicker.common.config.PermaClickConfigStore;
+import com.github.hrobasti.permaclicker.common.core.PermaClickBridge;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -15,14 +15,14 @@ public final class FabricConfigLifecycle {
         return gameDirectory.resolve(CONFIG_RELATIVE_PATH);
     }
 
-    public PermaClickConfig loadAndApply(FabricPermaClickBridge bridge, Path gameDirectory) {
+    public PermaClickConfigStore.LoadResult loadAndApply(PermaClickBridge bridge, Path gameDirectory) {
         PermaClickConfigStore store = new PermaClickConfigStore(resolveConfigPath(gameDirectory));
-        PermaClickConfig config = store.load();
-        bridge.applyConfig(config);
-        return config;
+        PermaClickConfigStore.LoadResult result = store.load();
+        bridge.applyConfig(result.config());
+        return result;
     }
 
-    public void saveCurrent(FabricPermaClickBridge bridge, Path gameDirectory) throws IOException {
+    public void saveCurrent(PermaClickBridge bridge, Path gameDirectory) throws IOException {
         PermaClickConfigStore store = new PermaClickConfigStore(resolveConfigPath(gameDirectory));
         store.save(bridge.currentConfig());
     }

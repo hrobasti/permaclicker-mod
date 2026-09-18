@@ -1,19 +1,18 @@
-package com.github.hrobasti.permaclicker.fabric;
+package com.github.hrobasti.permaclicker.common.core;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.github.hrobasti.permaclicker.common.core.PermaClickClientController;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.Test;
 
-class FabricBridgeEventLoopTest {
+class PermaClickBridgeEventLoopTest {
     @Test
     void keyPressAndTickTriggerMiningWhenRuntimeReady() {
-        FabricPermaClickBridge bridge = new FabricPermaClickBridge(new PermaClickClientController());
-        FabricClientEventLoop loop = new FabricClientEventLoop(bridge);
+        PermaClickBridge bridge = new PermaClickBridge(new PermaClickClientController());
+        PermaClickClientEventLoop loop = new PermaClickClientEventLoop(bridge);
 
         AtomicInteger miningCalls = new AtomicInteger();
-        bridge.bind(new FabricRuntimeBindings(
+        bridge.bind(new PermaClickRuntimeBindings(
             () -> true,
             () -> false,
             () -> true,
@@ -37,11 +36,11 @@ class FabricBridgeEventLoopTest {
 
     @Test
     void secondPressTogglesOff() {
-        FabricPermaClickBridge bridge = new FabricPermaClickBridge(new PermaClickClientController());
-        FabricClientEventLoop loop = new FabricClientEventLoop(bridge);
+        PermaClickBridge bridge = new PermaClickBridge(new PermaClickClientController());
+        PermaClickClientEventLoop loop = new PermaClickClientEventLoop(bridge);
 
         AtomicInteger miningCalls = new AtomicInteger();
-        bridge.bind(new FabricRuntimeBindings(
+        bridge.bind(new PermaClickRuntimeBindings(
             () -> true,
             () -> false,
             () -> true,
@@ -69,4 +68,3 @@ class FabricBridgeEventLoopTest {
         assertEquals(1, miningCalls.get());
     }
 }
-

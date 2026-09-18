@@ -2,6 +2,7 @@ package com.github.hrobasti.permaclicker.neoforge;
 
 import com.github.hrobasti.permaclicker.common.config.PermaClickConfig;
 import com.github.hrobasti.permaclicker.common.config.UpdateChannel;
+import com.github.hrobasti.permaclicker.common.core.PermaClickBridge;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.fml.loading.FMLPaths;
 
 /**
- * Dedicated unobfuscated-target config screen (e.g. MC 26.2) with vanilla options-layout styling.
+ * Dedicated unobfuscated-target config screen (e.g. MC 26.3) with vanilla options-layout styling.
  */
 public final class PermaClickNeoForgeConfigScreen extends OptionsSubScreen {
     private static final int ROW_HEIGHT = 20;
@@ -73,7 +74,7 @@ public final class PermaClickNeoForgeConfigScreen extends OptionsSubScreen {
         super(parent, Minecraft.getInstance().options, Component.translatable("permaclicker.config.title"));
         this.parent = parent;
 
-        NeoForgePermaClickBridge bridge = PermaClickNeoForgeEntrypoint.bridge();
+        PermaClickBridge bridge = PermaClickNeoForgeEntrypoint.bridge();
         PermaClickConfig config = bridge != null ? bridge.currentConfig() : null;
         if (config == null) {
             config = PermaClickConfig.defaults();
@@ -81,7 +82,7 @@ public final class PermaClickNeoForgeConfigScreen extends OptionsSubScreen {
 
         this.overlayEnabled = config.overlayEnabled();
         this.overlayColor = config.overlayColor();
-        this.runInBackground = config.runWhenUnfocused() || config.runWhenMinimized();
+        this.runInBackground = config.runInBackground();
         this.autoStopMinutes = config.autoStopMinutes();
         this.movementLockEnabled = config.movementLockEnabled();
         this.updateCheckEnabled = config.updateCheckEnabled();
@@ -389,7 +390,7 @@ public final class PermaClickNeoForgeConfigScreen extends OptionsSubScreen {
     }
 
     private void saveAndClose() {
-        NeoForgePermaClickBridge bridge = PermaClickNeoForgeEntrypoint.bridge();
+        PermaClickBridge bridge = PermaClickNeoForgeEntrypoint.bridge();
         if (bridge == null) {
             onClose();
             return;
@@ -410,7 +411,6 @@ public final class PermaClickNeoForgeConfigScreen extends OptionsSubScreen {
             current.toggleKeyCode(),
             overlayEnabled,
             overlayColor,
-            runInBackground,
             runInBackground,
             PermaClickConfig.clampAutoStopMinutes(parsedAutoStop),
             movementLockEnabled,

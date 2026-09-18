@@ -14,7 +14,7 @@ class PermaClickServiceTest {
         PermaClickService service = new PermaClickService();
         RuntimeStub runtime = new RuntimeStub();
 
-        service.applyConfig(new PermaClickConfig(false, 292, true, "green", false, false, 0, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(false, 292, true, "green", false, 0, true, true, UpdateChannel.BETA));
         service.toggle(runtime);
 
         assertTrue(service.isEnabled());
@@ -28,7 +28,7 @@ class PermaClickServiceTest {
         PermaClickService service = new PermaClickService();
         RuntimeStub runtime = new RuntimeStub();
 
-        service.applyConfig(new PermaClickConfig(false, 292, true, "red", false, false, 0, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(false, 292, true, "red", false, 0, true, true, UpdateChannel.BETA));
         service.toggle(runtime);
 
         assertEquals("red", runtime.lastActionBarColor);
@@ -43,7 +43,7 @@ class PermaClickServiceTest {
         runtime.minimized = false;
         runtime.playerReady = true;
 
-        service.applyConfig(new PermaClickConfig(false, 292, true, "green", true, true, 1, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(false, 292, true, "green", true, 1, true, true, UpdateChannel.BETA));
         service.toggle(runtime);
         service.tick(runtime);
 
@@ -59,7 +59,7 @@ class PermaClickServiceTest {
         runtime.minimized = false;
         runtime.playerReady = true;
 
-        service.applyConfig(new PermaClickConfig(false, 292, true, "green", true, true, 90, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(false, 292, true, "green", true, 90, true, true, UpdateChannel.BETA));
         service.toggle(runtime);
         service.tick(runtime);
 
@@ -75,7 +75,7 @@ class PermaClickServiceTest {
         runtime.minimized = false;
         runtime.playerReady = true;
 
-        service.applyConfig(new PermaClickConfig(false, 292, true, "green", true, true, 1500, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(false, 292, true, "green", true, 1500, true, true, UpdateChannel.BETA));
         service.toggle(runtime);
         service.tick(runtime);
 
@@ -91,7 +91,7 @@ class PermaClickServiceTest {
         runtime.minimized = true;
         runtime.playerReady = true;
 
-        service.applyConfig(new PermaClickConfig(false, 292, true, "green", false, false, 0, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(false, 292, true, "green", false, 0, true, true, UpdateChannel.BETA));
         service.toggle(runtime);
         service.tick(runtime);
 
@@ -107,7 +107,7 @@ class PermaClickServiceTest {
         runtime.minimized = true;
         runtime.playerReady = true;
 
-        service.applyConfig(new PermaClickConfig(false, 292, true, "green", true, false, 0, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(false, 292, true, "green", true, 0, true, true, UpdateChannel.BETA));
         service.toggle(runtime);
         service.tick(runtime);
 
@@ -123,7 +123,7 @@ class PermaClickServiceTest {
         runtime.minimized = false;
         runtime.playerReady = true;
 
-        service.applyConfig(new PermaClickConfig(false, 292, true, "green", false, false, 0, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(false, 292, true, "green", false, 0, true, true, UpdateChannel.BETA));
         service.toggle(runtime);
         service.tick(runtime);
 
@@ -139,7 +139,7 @@ class PermaClickServiceTest {
         runtime.minimized = false;
         runtime.playerReady = true;
 
-        service.applyConfig(new PermaClickConfig(true, 292, true, "green", false, false, 0, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(true, 292, true, "green", false, 0, true, true, UpdateChannel.BETA));
         service.tick(runtime);
 
         assertTrue(service.isEnabled());
@@ -155,7 +155,7 @@ class PermaClickServiceTest {
         runtime.minimized = false;
         runtime.playerReady = true;
 
-        service.applyConfig(new PermaClickConfig(false, 292, true, "green", true, true, 1, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(false, 292, true, "green", true, 1, true, true, UpdateChannel.BETA));
         service.toggle(runtime);
 
         for (int i = 0; i < 1200; i++) {
@@ -171,7 +171,7 @@ class PermaClickServiceTest {
         PermaClickService service = new PermaClickService();
         RuntimeStub runtime = new RuntimeStub();
 
-        service.applyConfig(new PermaClickConfig(false, 292, true, "green", false, false, 0, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(false, 292, true, "green", false, 0, true, true, UpdateChannel.BETA));
         service.toggle(runtime);
 
         assertTrue(runtime.movementLockActive);
@@ -182,7 +182,7 @@ class PermaClickServiceTest {
         PermaClickService service = new PermaClickService();
         RuntimeStub runtime = new RuntimeStub();
 
-        service.applyConfig(new PermaClickConfig(false, 292, true, "green", false, false, 0, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(false, 292, true, "green", false, 0, true, true, UpdateChannel.BETA));
         service.toggle(runtime);
         service.shutdown(runtime);
 
@@ -195,7 +195,7 @@ class PermaClickServiceTest {
         PermaClickService service = new PermaClickService();
         RuntimeStub runtime = new RuntimeStub();
 
-        service.applyConfig(new PermaClickConfig(false, 292, true, "green", true, false, 0, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(false, 292, true, "green", true, 0, true, true, UpdateChannel.BETA));
         service.toggle(runtime);
         service.tick(runtime);
 
@@ -209,7 +209,7 @@ class PermaClickServiceTest {
         PermaClickService service = new PermaClickService();
         RuntimeStub runtime = new RuntimeStub();
 
-        service.applyConfig(new PermaClickConfig(false, 292, true, "green", false, false, 0, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(false, 292, true, "green", false, 0, true, true, UpdateChannel.BETA));
         service.toggle(runtime);
         service.tick(runtime);
 
@@ -226,7 +226,7 @@ class PermaClickServiceTest {
         runtime.minimized = false;
         runtime.playerReady = true;
 
-        service.applyConfig(new PermaClickConfig(false, 292, true, "green", false, false, 1, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(false, 292, true, "green", false, 1, true, true, UpdateChannel.BETA));
         service.toggle(runtime);
 
         for (int i = 0; i < 200; i++) {
@@ -248,7 +248,7 @@ class PermaClickServiceTest {
         runtime.playerReady = true;
         runtime.miningTickSucceeds = false;
 
-        service.applyConfig(new PermaClickConfig(false, 292, true, "green", true, false, 1, true, true, UpdateChannel.BETA));
+        service.applyConfig(new PermaClickConfig(false, 292, true, "green", true, 1, true, true, UpdateChannel.BETA));
         service.toggle(runtime);
 
         for (int i = 0; i < 200; i++) {

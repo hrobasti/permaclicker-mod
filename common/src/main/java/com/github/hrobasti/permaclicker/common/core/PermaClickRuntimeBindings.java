@@ -1,4 +1,4 @@
-package com.github.hrobasti.permaclicker.neoforge;
+package com.github.hrobasti.permaclicker.common.core;
 
 import java.util.Objects;
 import java.util.function.BooleanSupplier;
@@ -7,9 +7,9 @@ import java.util.function.Supplier;
 
 /**
  * Loader-side bindings that connect common PermaClick runtime operations
- * to NeoForge client implementations.
+ * to a client implementation. Shared verbatim between Fabric and NeoForge.
  */
-public record NeoForgeRuntimeBindings(
+public record PermaClickRuntimeBindings(
     Supplier<Boolean> focusedSupplier,
     Supplier<Boolean> minimizedSupplier,
     Supplier<Boolean> miningReadySupplier,
@@ -18,7 +18,7 @@ public record NeoForgeRuntimeBindings(
     Consumer<Boolean> movementLockAction,
     Consumer<Boolean> backgroundCursorFreeAction
 ) {
-    public NeoForgeRuntimeBindings {
+    public PermaClickRuntimeBindings {
         Objects.requireNonNull(focusedSupplier, "focusedSupplier");
         Objects.requireNonNull(minimizedSupplier, "minimizedSupplier");
         Objects.requireNonNull(miningReadySupplier, "miningReadySupplier");
@@ -28,8 +28,8 @@ public record NeoForgeRuntimeBindings(
         Objects.requireNonNull(backgroundCursorFreeAction, "backgroundCursorFreeAction");
     }
 
-    public static NeoForgeRuntimeBindings noop() {
-        return new NeoForgeRuntimeBindings(
+    public static PermaClickRuntimeBindings noop() {
+        return new PermaClickRuntimeBindings(
             () -> true,
             () -> false,
             () -> false,
@@ -54,4 +54,3 @@ public record NeoForgeRuntimeBindings(
     public record ActionBarPayload(String message, String colorName) {
     }
 }
-

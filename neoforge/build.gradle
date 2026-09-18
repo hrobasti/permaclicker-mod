@@ -1,5 +1,5 @@
 plugins {
-    id 'net.neoforged.moddev' version '2.0.140'
+    id 'net.neoforged.moddev' version '2.0.147'
 }
 
 def versionProperties = new Properties()
@@ -21,6 +21,7 @@ version = providers.gradleProperty('mod_version').orElse(versionFromFile ?: '0.1
 
 dependencies {
     implementation project(':permaclicker-common')
+    implementation project(':permaclicker-client')
     implementation project(':turtlelib-core')
     testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.1'
@@ -77,6 +78,7 @@ tasks.named('processResources', ProcessResources) {
 }
 
 def commonMainOutput = project(':permaclicker-common').sourceSets.main.output
+def clientMainOutput = project(':permaclicker-client').sourceSets.main.output
 def permaClickerDistDir = rootProject.layout.projectDirectory.dir('mods/permaclicker-mod/dist')
 def permaClickerDistSourcesDir = rootProject.layout.projectDirectory.dir('mods/permaclicker-mod/dist/sources')
 def modLicenseFile = file('../LICENSE')
@@ -97,6 +99,7 @@ tasks.test {
 
 tasks.named('jar') {
     from(commonMainOutput)
+    from(clientMainOutput)
     from(modLicenseFile) {
         into 'META-INF'
         rename { 'LICENSE' }

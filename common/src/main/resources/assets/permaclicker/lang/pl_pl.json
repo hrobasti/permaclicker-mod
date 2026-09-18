@@ -7,6 +7,7 @@
   "permaclicker.update.available": "[PermaClicker] Dostępna aktualizacja! %s -> %s",
   "permaclicker.update.provider.ok": "- %s: Wersja %s",
   "permaclicker.update.provider.error": "- %s: Nie udało się pobrać.",
+  "permaclicker.config.toggle_key_reset": "[PermaClicker] Twój klawisz przełączania został przywrócony do domyślnego, ponieważ Minecraft 26.3 zmienił sposób zapisywania klawiszy. W razie potrzeby przypisz go ponownie w ustawieniach PermaClicker.",
 
   "key.categories.permaclicker": "PermaClicker",
   "key.category.permaclicker": "PermaClicker",

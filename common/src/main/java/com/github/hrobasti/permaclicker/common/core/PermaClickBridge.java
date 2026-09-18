@@ -1,22 +1,21 @@
-package com.github.hrobasti.permaclicker.neoforge;
+package com.github.hrobasti.permaclicker.common.core;
 
 import com.github.hrobasti.permaclicker.common.config.PermaClickConfig;
-import com.github.hrobasti.permaclicker.common.core.PermaClickClientController;
-import com.github.hrobasti.permaclicker.common.core.PermaClickRuntime;
 
 /**
- * NeoForge-facing bridge used by loader event handlers.
+ * Loader-facing bridge used by client event handlers. Shared verbatim between Fabric and
+ * NeoForge; loader modules only ever supply {@link PermaClickRuntimeBindings}.
  */
-public final class NeoForgePermaClickBridge {
+public final class PermaClickBridge {
     private final PermaClickClientController controller;
     private PermaClickRuntime runtime;
 
-    public NeoForgePermaClickBridge(PermaClickClientController controller) {
+    public PermaClickBridge(PermaClickClientController controller) {
         this.controller = controller;
-        this.runtime = new BoundRuntime(NeoForgeRuntimeBindings.noop());
+        this.runtime = new BoundRuntime(PermaClickRuntimeBindings.noop());
     }
 
-    public void bind(NeoForgeRuntimeBindings bindings) {
+    public void bind(PermaClickRuntimeBindings bindings) {
         this.runtime = new BoundRuntime(bindings);
     }
 
@@ -57,9 +56,9 @@ public final class NeoForgePermaClickBridge {
     }
 
     private static final class BoundRuntime implements PermaClickRuntime {
-        private final NeoForgeRuntimeBindings bindings;
+        private final PermaClickRuntimeBindings bindings;
 
-        private BoundRuntime(NeoForgeRuntimeBindings bindings) {
+        private BoundRuntime(PermaClickRuntimeBindings bindings) {
             this.bindings = bindings;
         }
 
@@ -95,13 +94,12 @@ public final class NeoForgePermaClickBridge {
 
         @Override
         public void showActionBar(String message) {
-            bindings.actionBarMessage().accept(new NeoForgeRuntimeBindings.ActionBarPayload(message, null));
+            bindings.actionBarMessage().accept(new PermaClickRuntimeBindings.ActionBarPayload(message, null));
         }
 
         @Override
         public void showActionBarText(String message, String colorName) {
-            bindings.actionBarMessage().accept(new NeoForgeRuntimeBindings.ActionBarPayload(message, colorName));
+            bindings.actionBarMessage().accept(new PermaClickRuntimeBindings.ActionBarPayload(message, colorName));
         }
     }
 }
-

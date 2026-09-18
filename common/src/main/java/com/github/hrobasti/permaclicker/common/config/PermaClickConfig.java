@@ -11,14 +11,15 @@ public record PermaClickConfig(
     int toggleKeyCode,
     boolean overlayEnabled,
     String overlayColor,
-    boolean runWhenUnfocused,
-    boolean runWhenMinimized,
+    boolean runInBackground,
     int autoStopMinutes,
     boolean movementLockEnabled,
     boolean updateCheckEnabled,
     UpdateChannel updateChannel
 ) {
-    public static final int DEFAULT_TOGGLE_KEY_CODE = 296;
+    // SDL scancode for F7 (InputConstants.KEY_F7 in com.mojang.blaze3d.platform, MC 26.3+).
+    // Was 296 (GLFW keysym) before the 26.3 GLFW->SDL input backend migration.
+    public static final int DEFAULT_TOGGLE_KEY_CODE = 64;
     public static final String DEFAULT_OVERLAY_COLOR = "green";
     private static final Set<String> ALLOWED_OVERLAY_COLORS = Set.of(
         "black",
@@ -54,7 +55,6 @@ public record PermaClickConfig(
             true,
             DEFAULT_OVERLAY_COLOR,
             false,
-            false,
             0,
             true,
             true,
@@ -68,8 +68,7 @@ public record PermaClickConfig(
             toggleKeyCode,
             overlayEnabled,
             overlayColor,
-            runWhenUnfocused,
-            runWhenMinimized,
+            runInBackground,
             autoStopMinutes,
             movementLockEnabled,
             updateCheckEnabled,

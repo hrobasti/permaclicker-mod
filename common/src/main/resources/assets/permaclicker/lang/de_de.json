@@ -7,6 +7,7 @@
   "permaclicker.update.available": "[PermaClicker] Update verfügbar! %s -> %s",
   "permaclicker.update.provider.ok": "- %s: Version %s",
   "permaclicker.update.provider.error": "- %s: Abruf fehlgeschlagen.",
+  "permaclicker.config.toggle_key_reset": "[PermaClicker] Deine Umschalttaste wurde auf den Standard zurückgesetzt, da Minecraft 26.3 die Tastenspeicherung geändert hat. Bei Bedarf in den PermaClicker-Einstellungen neu belegen.",
 
   "key.categories.permaclicker": "PermaClicker",
   "key.category.permaclicker": "PermaClicker",

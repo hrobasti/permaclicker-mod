@@ -7,6 +7,7 @@
   "permaclicker.update.available": "[PermaClicker] Update beschikbaar! %s -> %s",
   "permaclicker.update.provider.ok": "- %s: Versie %s",
   "permaclicker.update.provider.error": "- %s: Ophalen mislukt.",
+  "permaclicker.config.toggle_key_reset": "[PermaClicker] Je schakeltoets is teruggezet naar de standaard omdat Minecraft 26.3 de manier waarop toetsen worden opgeslagen heeft veranderd. Wijs deze indien nodig opnieuw toe in de PermaClicker-instellingen.",
 
   "key.categories.permaclicker": "PermaClicker",
   "key.category.permaclicker": "PermaClicker",

@@ -7,6 +7,7 @@
   "permaclicker.update.available": "[PermaClicker] 업데이트 가능! %s -> %s",
   "permaclicker.update.provider.ok": "- %s: 버전 %s",
   "permaclicker.update.provider.error": "- %s: 가져오기 실패.",
+  "permaclicker.config.toggle_key_reset": "[PermaClicker] Minecraft 26.3에서 키 저장 방식이 변경되어 토글 키가 기본값으로 재설정되었습니다. 필요하면 PermaClicker 설정에서 다시 지정하세요.",
 
   "key.categories.permaclicker": "PermaClicker",
   "key.category.permaclicker": "PermaClicker",

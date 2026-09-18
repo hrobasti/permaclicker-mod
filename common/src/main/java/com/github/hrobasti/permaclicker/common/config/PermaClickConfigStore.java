@@ -17,25 +17,48 @@ import java.util.Objects;
 public final class PermaClickConfigStore {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+    /**
+     * Bumped from the implicit unversioned format to 2 when MC 26.3 switched the input backend
+     * from GLFW to SDL, which changed key-code numbering (see PermaClickConfig.DEFAULT_TOGGLE_KEY_CODE).
+     * A file with no configVersion predates that change, so its toggleKeyCode is stale.
+     */
+    static final int CURRENT_CONFIG_VERSION = 2;
+
     private final Path configFile;
 
     public PermaClickConfigStore(Path configFile) {
         this.configFile = Objects.requireNonNull(configFile, "configFile");
     }
 
-    public PermaClickConfig load() {
+    /**
+     * @param config the resolved, normalized config
+     * @param toggleKeyWasReset true if this file predated the 26.3 key-code migration and its
+     *                          toggle key was reset to the current default as a result
+     */
+    public record LoadResult(PermaClickConfig config, boolean toggleKeyWasReset) {
+    }
+
+    public LoadResult load() {
         if (!Files.exists(configFile)) {
-            return PermaClickConfig.defaults();
+            return new LoadResult(PermaClickConfig.defaults(), false);
         }
 
         try (Reader reader = Files.newBufferedReader(configFile, StandardCharsets.UTF_8)) {
             FileModel model = GSON.fromJson(reader, FileModel.class);
             if (model == null) {
-                return PermaClickConfig.defaults();
+                return new LoadResult(PermaClickConfig.defaults(), false);
             }
-            return model.toConfig();
+
+            boolean legacyToggleKeyFormat = model.configVersion() == null;
+            PermaClickConfig config = model.toConfig(legacyToggleKeyFormat);
+
+            if (legacyToggleKeyFormat) {
+                trySave(config);
+            }
+
+            return new LoadResult(config, legacyToggleKeyFormat);
         } catch (IOException | JsonSyntaxException ignored) {
-            return PermaClickConfig.defaults();
+            return new LoadResult(PermaClickConfig.defaults(), false);
         }
     }
 
@@ -49,7 +72,16 @@ public final class PermaClickConfigStore {
         }
     }
 
+    private void trySave(PermaClickConfig config) {
+        try {
+            save(config);
+        } catch (IOException ignored) {
+            // Best-effort persistence of the migrated config; it will simply migrate again next load.
+        }
+    }
+
     private record FileModel(
+        Integer configVersion,
         Boolean enabled,
         Integer toggleKeyCode,
         Boolean overlayEnabled,
@@ -62,11 +94,12 @@ public final class PermaClickConfigStore {
     ) {
         static FileModel fromConfig(PermaClickConfig config) {
             return new FileModel(
+                CURRENT_CONFIG_VERSION,
                 config.enabled(),
                 config.toggleKeyCode(),
                 config.overlayEnabled(),
                 config.overlayColor(),
-                config.runWhenUnfocused() || config.runWhenMinimized(),
+                config.runInBackground(),
                 config.autoStopMinutes(),
                 config.movementLockEnabled(),
                 config.updateCheckEnabled(),
@@ -74,12 +107,12 @@ public final class PermaClickConfigStore {
             );
         }
 
-        PermaClickConfig toConfig() {
+        PermaClickConfig toConfig(boolean legacyToggleKeyFormat) {
             PermaClickConfig defaults = PermaClickConfig.defaults();
 
             boolean resolvedEnabled = enabled == null ? defaults.enabled() : enabled;
 
-            int resolvedKeyCode = toggleKeyCode == null || toggleKeyCode <= 0
+            int resolvedKeyCode = legacyToggleKeyFormat || toggleKeyCode == null || toggleKeyCode <= 0
                 ? defaults.toggleKeyCode()
                 : toggleKeyCode;
 
@@ -87,8 +120,7 @@ public final class PermaClickConfigStore {
             String resolvedOverlayColor = PermaClickConfig.normalizeOverlayColor(
                 overlayColor == null ? defaults.overlayColor() : overlayColor
             );
-            boolean defaultRunInBackground = defaults.runWhenUnfocused() || defaults.runWhenMinimized();
-            boolean resolvedRunInBackground = runInBackground == null ? defaultRunInBackground : runInBackground;
+            boolean resolvedRunInBackground = runInBackground == null ? defaults.runInBackground() : runInBackground;
             int resolvedAutoStopMinutes = autoStopMinutes == null
                 ? defaults.autoStopMinutes()
                 : PermaClickConfig.clampAutoStopMinutes(autoStopMinutes);
@@ -105,7 +137,6 @@ public final class PermaClickConfigStore {
                 resolvedKeyCode,
                 resolvedOverlayEnabled,
                 resolvedOverlayColor,
-                resolvedRunInBackground,
                 resolvedRunInBackground,
                 resolvedAutoStopMinutes,
                 resolvedMovementLockEnabled,

@@ -4,6 +4,12 @@ import com.github.hrobasti.permaclicker.common.config.PermaClickConfig;
 
 /**
  * Core state machine for toggling and mining loop execution.
+ *
+ * <p>Client-thread-only: all fields are plain (non-volatile, unsynchronized) and assume every
+ * call comes from the client tick/render thread, like the existing loader entrypoints do. Do not
+ * touch this state from an async callback (e.g. a network response) without adding explicit
+ * synchronization or routing through a volatile hand-off field first — see how the loader
+ * entrypoints stage {@code pendingUpdateStatus} for the update-check background thread.</p>
  */
 public final class PermaClickService {
     private static final int TICKS_PER_SECOND = 20;
@@ -74,7 +80,7 @@ public final class PermaClickService {
             return;
         }
 
-        boolean runInBackground = config.runWhenUnfocused() || config.runWhenMinimized();
+        boolean runInBackground = config.runInBackground();
 
         overlayRefreshTicks++;
         showActiveOverlay(runtime, false);
@@ -129,7 +135,7 @@ public final class PermaClickService {
             movementLockActive = shouldMovementLock;
         }
 
-        boolean shouldFreeCursor = enabled && (config.runWhenUnfocused() || config.runWhenMinimized());
+        boolean shouldFreeCursor = enabled && config.runInBackground();
         if (shouldFreeCursor != backgroundCursorFreeActive) {
             runtime.setBackgroundCursorFree(shouldFreeCursor);
             backgroundCursorFreeActive = shouldFreeCursor;

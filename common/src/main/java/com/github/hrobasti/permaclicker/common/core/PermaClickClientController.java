@@ -7,7 +7,7 @@ import com.github.hrobasti.permaclicker.common.input.ToggleKeyBinding;
  * Coordinates runtime ticking and key toggle handling for client integrations.
  */
 public final class PermaClickClientController {
-    public static final int DEFAULT_TOGGLE_KEY_CODE = 296;
+    public static final int DEFAULT_TOGGLE_KEY_CODE = PermaClickConfig.DEFAULT_TOGGLE_KEY_CODE;
 
     private final PermaClickService service;
     private final ToggleKeyBinding toggleKeyBinding;
