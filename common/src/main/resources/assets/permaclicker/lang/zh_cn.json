@@ -9,9 +9,7 @@
   "permaclicker.update.provider.error": "- %s：获取失败。",
   "permaclicker.config.toggle_key_reset": "[PermaClicker] 由于 Minecraft 26.3 更改了按键存储方式，你的切换键已重置为默认值。如有需要，请在 PermaClicker 设置中重新绑定。",
 
-  "key.categories.permaclicker": "PermaClicker",
-  "key.category.permaclicker": "PermaClicker",
-  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "切换",
   "key.permaclicker.config": "设置",
 
@@ -30,6 +28,15 @@
   "permaclicker.config.runtime_mode.background": "后台",
   "permaclicker.config.runtime_mode.tooltip.focused.desc": "仅在游戏窗口处于活动状态时运行",
   "permaclicker.config.runtime_mode.tooltip.background.desc": "在失去焦点或最小化时可能继续在后台运行",
+
+  "permaclicker.config.click_mode": "点击模式",
+  "permaclicker.config.click_mode.mining": "挖掘",
+  "permaclicker.config.click_mode.mob_attack": "怪物与动物",
+  "permaclicker.config.click_mode.tooltip.mining.desc": "持续按住攻击，连续挖掘准星对准的方块",
+  "permaclicker.config.click_mode.tooltip.mob_attack.desc": "攻击冷却完全充满后，攻击准星对准的怪物或动物（不含跳跃暴击）",
+
+  "permaclicker.config.attack_buffer_ticks": "攻击缓冲（刻）",
+  "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "冷却充满后、攻击前额外等待的刻数（仅限“怪物与动物”模式，20 刻 = 1 秒）",
 
   "permaclicker.config.auto_stop_minutes": "自动停止（分钟）",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "禁用计时器",

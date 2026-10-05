@@ -90,7 +90,9 @@ public final class PermaClickConfigStore {
         Integer autoStopMinutes,
         Boolean movementLockEnabled,
         Boolean updateCheckEnabled,
-        String updateChannel
+        String updateChannel,
+        String clickMode,
+        Integer attackBufferTicks
     ) {
         static FileModel fromConfig(PermaClickConfig config) {
             return new FileModel(
@@ -103,7 +105,9 @@ public final class PermaClickConfigStore {
                 config.autoStopMinutes(),
                 config.movementLockEnabled(),
                 config.updateCheckEnabled(),
-                config.updateChannel().name()
+                config.updateChannel().name(),
+                config.clickMode().name(),
+                config.attackBufferTicks()
             );
         }
 
@@ -131,6 +135,10 @@ public final class PermaClickConfigStore {
                 ? defaults.updateCheckEnabled()
                 : updateCheckEnabled;
             UpdateChannel resolvedUpdateChannel = UpdateChannel.fromString(updateChannel, defaults.updateChannel());
+            ClickMode resolvedClickMode = ClickMode.fromString(clickMode, defaults.clickMode());
+            int resolvedAttackBufferTicks = attackBufferTicks == null
+                ? defaults.attackBufferTicks()
+                : PermaClickConfig.clampAttackBufferTicks(attackBufferTicks);
 
             return new PermaClickConfig(
                 resolvedEnabled,
@@ -141,7 +149,9 @@ public final class PermaClickConfigStore {
                 resolvedAutoStopMinutes,
                 resolvedMovementLockEnabled,
                 resolvedUpdateCheckEnabled,
-                resolvedUpdateChannel
+                resolvedUpdateChannel,
+                resolvedClickMode,
+                resolvedAttackBufferTicks
             );
         }
     }

@@ -9,9 +9,7 @@
   "permaclicker.update.provider.error": "- %s: 取得に失敗しました。",
   "permaclicker.config.toggle_key_reset": "[PermaClicker] Minecraft 26.3でキーの保存方法が変更されたため、トグルキーが初期設定にリセットされました。必要であればPermaClickerの設定で再設定してください。",
 
-  "key.categories.permaclicker": "PermaClicker",
-  "key.category.permaclicker": "PermaClicker",
-  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "切り替え",
   "key.permaclicker.config": "設定",
 
@@ -30,6 +28,15 @@
   "permaclicker.config.runtime_mode.background": "バックグラウンド",
   "permaclicker.config.runtime_mode.tooltip.focused.desc": "ゲームウィンドウがアクティブなときのみ動作します",
   "permaclicker.config.runtime_mode.tooltip.background.desc": "フォーカス外または最小化時でもバックグラウンドで動作を続ける場合があります",
+
+  "permaclicker.config.click_mode": "クリックモード",
+  "permaclicker.config.click_mode.mining": "採掘",
+  "permaclicker.config.click_mode.mob_attack": "モブと動物",
+  "permaclicker.config.click_mode.tooltip.mining.desc": "攻撃を押し続けて、狙ったブロックを連続で採掘します",
+  "permaclicker.config.click_mode.tooltip.mob_attack.desc": "攻撃のクールダウンが完全に溜まったら、狙ったモブや動物を攻撃します（ジャンプクリティカルなし）",
+
+  "permaclicker.config.attack_buffer_ticks": "攻撃バッファ（tick）",
+  "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "クールダウン完了後、攻撃までに追加で待つtick数（「モブと動物」のみ、20 tick = 1秒）",
 
   "permaclicker.config.auto_stop_minutes": "自動停止（分）",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "タイマーを無効にします",

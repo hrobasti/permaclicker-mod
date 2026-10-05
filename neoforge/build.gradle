@@ -15,7 +15,6 @@ def neoForgeVersionForFile = (neoforge_version as String).replace('.', '-')
 def resolvedMinecraftVersion = providers.gradleProperty('minecraft_version').get()
 def resolvedNeoForgeVersion = providers.gradleProperty('neoforge_version').get()
 def resolvedJavaLanguageVersion = providers.gradleProperty('java_language_version').orElse('25').get()
-def generatedUnobfJavaDir = layout.buildDirectory.dir('generated/sources/unobf/java')
 
 version = providers.gradleProperty('mod_version').orElse(versionFromFile ?: '0.1').get()
 
@@ -25,37 +24,6 @@ dependencies {
     implementation project(':turtlelib-core')
     testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.1'
-}
-
-sourceSets {
-    main {
-        java {
-            srcDir generatedUnobfJavaDir
-            exclude { details ->
-                details.file.absolutePath.replace('\\', '/').endsWith(
-                    '/src/main/java/com/github/hrobasti/permaclicker/neoforge/PermaClickNeoForgeConfigScreen.java'
-                )
-            }
-        }
-    }
-}
-
-def generateUnobfNeoForgeConfigScreen = tasks.register('generateUnobfNeoForgeConfigScreen', Copy) {
-    from('src/unobf/templates')
-    include('**/PermaClickNeoForgeConfigScreen.java.template')
-    eachFile { details ->
-        details.path = details.path.replace('.java.template', '.java')
-    }
-    includeEmptyDirs = false
-    into(generatedUnobfJavaDir)
-}
-
-tasks.named('compileJava') {
-    dependsOn(generateUnobfNeoForgeConfigScreen)
-}
-
-tasks.named('sourcesJar') {
-    dependsOn(generateUnobfNeoForgeConfigScreen)
 }
 
 tasks.named('processResources', ProcessResources) {

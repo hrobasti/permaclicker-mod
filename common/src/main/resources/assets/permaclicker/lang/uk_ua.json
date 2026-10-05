@@ -9,9 +9,7 @@
   "permaclicker.update.provider.error": "- %s: Не вдалося отримати.",
   "permaclicker.config.toggle_key_reset": "[PermaClicker] Вашу клавішу перемикання скинуто до стандартної, оскільки Minecraft 26.3 змінив спосіб зберігання клавіш. За потреби призначте її знову в налаштуваннях PermaClicker.",
 
-  "key.categories.permaclicker": "PermaClicker",
-  "key.category.permaclicker": "PermaClicker",
-  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "Перемкнути",
   "key.permaclicker.config": "Налаштування",
 
@@ -30,6 +28,15 @@
   "permaclicker.config.runtime_mode.background": "У тлі",
   "permaclicker.config.runtime_mode.tooltip.focused.desc": "Працює лише коли вікно гри активне",
   "permaclicker.config.runtime_mode.tooltip.background.desc": "Може продовжувати роботу у тлі, коли вікно не у фокусі або згорнуте",
+
+  "permaclicker.config.click_mode": "Режим кліку",
+  "permaclicker.config.click_mode.mining": "Видобування",
+  "permaclicker.config.click_mode.mob_attack": "Моби та тварини",
+  "permaclicker.config.click_mode.tooltip.mining.desc": "Утримує атаку, щоб безперервно видобувати блок у прицілі",
+  "permaclicker.config.click_mode.tooltip.mob_attack.desc": "Б'є моба або тварину в прицілі, щойно перезарядка атаки повністю заповнена (без критів у стрибку)",
+
+  "permaclicker.config.attack_buffer_ticks": "Буфер атаки (тіки)",
+  "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Додаткові тіки очікування після повної перезарядки перед ударом (лише «Моби та тварини», 20 тіків = 1 секунда)",
 
   "permaclicker.config.auto_stop_minutes": "Авто-зупинка (хвилини)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Вимикає таймер",

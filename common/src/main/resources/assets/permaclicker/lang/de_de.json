@@ -9,9 +9,7 @@
   "permaclicker.update.provider.error": "- %s: Abruf fehlgeschlagen.",
   "permaclicker.config.toggle_key_reset": "[PermaClicker] Deine Umschalttaste wurde auf den Standard zurückgesetzt, da Minecraft 26.3 die Tastenspeicherung geändert hat. Bei Bedarf in den PermaClicker-Einstellungen neu belegen.",
 
-  "key.categories.permaclicker": "PermaClicker",
-  "key.category.permaclicker": "PermaClicker",
-  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "Umschalten",
   "key.permaclicker.config": "Einstellungen",
 
@@ -30,6 +28,15 @@
   "permaclicker.config.runtime_mode.background": "Hintergrund",
   "permaclicker.config.runtime_mode.tooltip.focused.desc": "Läuft nur, solange das Spielfenster aktiv ist",
   "permaclicker.config.runtime_mode.tooltip.background.desc": "Läuft auch im unfokussierten oder minimierten Zustand im Hintergrund weiter",
+
+  "permaclicker.config.click_mode": "Klickmodus",
+  "permaclicker.config.click_mode.mining": "Abbauen",
+  "permaclicker.config.click_mode.mob_attack": "Mobs & Tiere",
+  "permaclicker.config.click_mode.tooltip.mining.desc": "Hält Angriff gedrückt, um den anvisierten Block dauerhaft abzubauen",
+  "permaclicker.config.click_mode.tooltip.mob_attack.desc": "Schlägt den anvisierten Mob oder das anvisierte Tier, sobald der Angriffs-Cooldown voll aufgeladen ist (keine Sprung-Crits)",
+
+  "permaclicker.config.attack_buffer_ticks": "Angriffspuffer (Ticks)",
+  "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Zusätzliche Ticks nach vollem Cooldown vor dem Schlag (nur Mobs & Tiere, 20 Ticks = 1 Sekunde)",
 
   "permaclicker.config.auto_stop_minutes": "Auto-Stopp (Minuten)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "kein Timer",

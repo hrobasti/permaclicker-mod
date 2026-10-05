@@ -9,9 +9,7 @@
   "permaclicker.update.provider.error": "- %s: Alınamadı.",
   "permaclicker.config.toggle_key_reset": "[PermaClicker] Minecraft 26.3 tuşların saklanma şeklini değiştirdiği için değiştirme tuşunuz varsayılana sıfırlandı. Gerekirse PermaClicker ayarlarından yeniden atayın.",
 
-  "key.categories.permaclicker": "PermaClicker",
-  "key.category.permaclicker": "PermaClicker",
-  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "Aç/Kapat",
   "key.permaclicker.config": "Ayarlar",
 
@@ -30,6 +28,15 @@
   "permaclicker.config.runtime_mode.background": "Arka plan",
   "permaclicker.config.runtime_mode.tooltip.focused.desc": "Yalnızca oyun penceresi etkin olduğunda çalışır",
   "permaclicker.config.runtime_mode.tooltip.background.desc": "Odak dışı veya simge durumunda arka planda çalışmaya devam edebilir",
+
+  "permaclicker.config.click_mode": "Tıklama modu",
+  "permaclicker.config.click_mode.mining": "Kazma",
+  "permaclicker.config.click_mode.mob_attack": "Yaratıklar ve hayvanlar",
+  "permaclicker.config.click_mode.tooltip.mining.desc": "Hedeflenen bloğu sürekli kazmak için saldırıyı basılı tutar",
+  "permaclicker.config.click_mode.tooltip.mob_attack.desc": "Saldırı bekleme süresi tamamen dolduğunda hedeflenen yaratığa veya hayvana vurur (zıplama kritiği yok)",
+
+  "permaclicker.config.attack_buffer_ticks": "Saldırı tamponu (tick)",
+  "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Tam bekleme süresinden sonra vurmadan önce beklenecek ek tick sayısı (yalnızca Yaratıklar ve hayvanlar, 20 tick = 1 saniye)",
 
   "permaclicker.config.auto_stop_minutes": "Otomatik durdurma (dakika)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Zamanlayıcıyı devre dışı bırakır",

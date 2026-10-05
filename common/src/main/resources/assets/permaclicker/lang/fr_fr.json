@@ -9,9 +9,7 @@
   "permaclicker.update.provider.error": "- %s : Échec de la récupération.",
   "permaclicker.config.toggle_key_reset": "[PermaClicker] Votre touche de basculement a été réinitialisée par défaut car Minecraft 26.3 a changé la façon dont les touches sont stockées. Réassignez-la dans les paramètres de PermaClicker si besoin.",
 
-  "key.categories.permaclicker": "PermaClicker",
-  "key.category.permaclicker": "PermaClicker",
-  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "Basculer",
   "key.permaclicker.config": "Paramètres",
 
@@ -30,6 +28,15 @@
   "permaclicker.config.runtime_mode.background": "En arrière-plan",
   "permaclicker.config.runtime_mode.tooltip.focused.desc": "S'exécute uniquement lorsque la fenêtre du jeu est active",
   "permaclicker.config.runtime_mode.tooltip.background.desc": "Peut continuer en arrière-plan lorsque la fenêtre est hors focus ou réduite",
+
+  "permaclicker.config.click_mode": "Mode de clic",
+  "permaclicker.config.click_mode.mining": "Minage",
+  "permaclicker.config.click_mode.mob_attack": "Créatures et animaux",
+  "permaclicker.config.click_mode.tooltip.mining.desc": "Maintient l'attaque pour miner en continu le bloc visé",
+  "permaclicker.config.click_mode.tooltip.mob_attack.desc": "Frappe la créature ou l'animal visé dès que la recharge de l'attaque est complète (pas de coups critiques sautés)",
+
+  "permaclicker.config.attack_buffer_ticks": "Marge d'attaque (ticks)",
+  "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Ticks supplémentaires à attendre après une recharge complète avant de frapper (Créatures et animaux uniquement, 20 ticks = 1 seconde)",
 
   "permaclicker.config.auto_stop_minutes": "Arrêt auto (minutes)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Désactive le minuteur",

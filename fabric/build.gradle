@@ -49,39 +49,6 @@ def clientMainOutput = project(':permaclicker-client').sourceSets.main.output
 def permaClickerDistDir = rootProject.layout.projectDirectory.dir('mods/permaclicker-mod/dist')
 def permaClickerDistSourcesDir = rootProject.layout.projectDirectory.dir('mods/permaclicker-mod/dist/sources')
 def modLicenseFile = file('../LICENSE')
-def generatedUnobfJavaDir = layout.buildDirectory.dir('generated/sources/unobf/java')
-
-sourceSets {
-    main {
-        java {
-            srcDir generatedUnobfJavaDir
-
-            exclude { details ->
-                details.file.absolutePath.replace('\\', '/').endsWith(
-                    '/src/main/java/com/github/hrobasti/permaclicker/fabric/PermaClickFabricConfigScreen.java'
-                )
-            }
-        }
-    }
-}
-
-def generateUnobfConfigScreen = tasks.register('generateUnobfConfigScreen', Copy) {
-    from('src/unobf/templates')
-    include('**/PermaClickFabricConfigScreen.java.template')
-    eachFile { details ->
-        details.path = details.path.replace('.java.template', '.java')
-    }
-    includeEmptyDirs = false
-    into(generatedUnobfJavaDir)
-}
-
-tasks.named('compileJava') {
-    dependsOn(generateUnobfConfigScreen)
-}
-
-tasks.named('sourcesJar') {
-    dependsOn(generateUnobfConfigScreen)
-}
 
 tasks.named('processResources', ProcessResources) {
     inputs.property('version', project.version)

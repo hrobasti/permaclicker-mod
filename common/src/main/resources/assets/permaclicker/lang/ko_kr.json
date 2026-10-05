@@ -9,9 +9,7 @@
   "permaclicker.update.provider.error": "- %s: 가져오기 실패.",
   "permaclicker.config.toggle_key_reset": "[PermaClicker] Minecraft 26.3에서 키 저장 방식이 변경되어 토글 키가 기본값으로 재설정되었습니다. 필요하면 PermaClicker 설정에서 다시 지정하세요.",
 
-  "key.categories.permaclicker": "PermaClicker",
-  "key.category.permaclicker": "PermaClicker",
-  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "전환",
   "key.permaclicker.config": "설정",
 
@@ -30,6 +28,15 @@
   "permaclicker.config.runtime_mode.background": "백그라운드",
   "permaclicker.config.runtime_mode.tooltip.focused.desc": "게임 창이 활성 상태일 때만 실행됩니다",
   "permaclicker.config.runtime_mode.tooltip.background.desc": "포커스를 잃거나 최소화되어도 백그라운드에서 계속 실행될 수 있습니다",
+
+  "permaclicker.config.click_mode": "클릭 모드",
+  "permaclicker.config.click_mode.mining": "채굴",
+  "permaclicker.config.click_mode.mob_attack": "몹 & 동물",
+  "permaclicker.config.click_mode.tooltip.mining.desc": "공격을 계속 눌러 조준한 블록을 연속으로 채굴합니다",
+  "permaclicker.config.click_mode.tooltip.mob_attack.desc": "공격 쿨다운이 완전히 충전되면 조준한 몹이나 동물을 공격합니다 (점프 치명타 없음)",
+
+  "permaclicker.config.attack_buffer_ticks": "공격 버퍼 (틱)",
+  "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "쿨다운 완료 후 공격 전에 추가로 기다릴 틱 수 (몹 & 동물 전용, 20틱 = 1초)",
 
   "permaclicker.config.auto_stop_minutes": "자동 중지(분)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "타이머를 비활성화합니다",

@@ -9,9 +9,7 @@
   "permaclicker.update.provider.error": "- %s: Nie udało się pobrać.",
   "permaclicker.config.toggle_key_reset": "[PermaClicker] Twój klawisz przełączania został przywrócony do domyślnego, ponieważ Minecraft 26.3 zmienił sposób zapisywania klawiszy. W razie potrzeby przypisz go ponownie w ustawieniach PermaClicker.",
 
-  "key.categories.permaclicker": "PermaClicker",
-  "key.category.permaclicker": "PermaClicker",
-  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "Przełącz",
   "key.permaclicker.config": "Ustawienia",
 
@@ -30,6 +28,15 @@
   "permaclicker.config.runtime_mode.background": "W tle",
   "permaclicker.config.runtime_mode.tooltip.focused.desc": "Działa tylko, gdy okno gry jest aktywne",
   "permaclicker.config.runtime_mode.tooltip.background.desc": "Może działać w tle, gdy okno jest nieaktywne lub zminimalizowane",
+
+  "permaclicker.config.click_mode": "Tryb klikania",
+  "permaclicker.config.click_mode.mining": "Kopanie",
+  "permaclicker.config.click_mode.mob_attack": "Moby i zwierzęta",
+  "permaclicker.config.click_mode.tooltip.mining.desc": "Przytrzymuje atak, aby stale kopać wskazany blok",
+  "permaclicker.config.click_mode.tooltip.mob_attack.desc": "Uderza wskazanego moba lub zwierzę, gdy odnowienie ataku jest w pełni naładowane (bez krytyków z wyskoku)",
+
+  "permaclicker.config.attack_buffer_ticks": "Bufor ataku (ticki)",
+  "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Dodatkowe ticki oczekiwania po pełnym odnowieniu przed uderzeniem (tylko Moby i zwierzęta, 20 ticków = 1 sekunda)",
 
   "permaclicker.config.auto_stop_minutes": "Auto-stop (minuty)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Wyłącza licznik czasu",

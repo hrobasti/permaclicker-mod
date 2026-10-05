@@ -9,9 +9,7 @@
   "permaclicker.update.provider.error": "- %s: Recupero non riuscito.",
   "permaclicker.config.toggle_key_reset": "[PermaClicker] Il tuo tasto di attivazione è stato ripristinato al valore predefinito perché Minecraft 26.3 ha cambiato il modo in cui i tasti vengono memorizzati. Riassegnalo nelle impostazioni di PermaClicker se necessario.",
 
-  "key.categories.permaclicker": "PermaClicker",
-  "key.category.permaclicker": "PermaClicker",
-  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "Attiva/Disattiva",
   "key.permaclicker.config": "Impostazioni",
 
@@ -30,6 +28,15 @@
   "permaclicker.config.runtime_mode.background": "In background",
   "permaclicker.config.runtime_mode.tooltip.focused.desc": "Funziona solo quando la finestra di gioco è attiva",
   "permaclicker.config.runtime_mode.tooltip.background.desc": "Può continuare in background quando non è in primo piano o è minimizzata",
+
+  "permaclicker.config.click_mode": "Modalità clic",
+  "permaclicker.config.click_mode.mining": "Scavo",
+  "permaclicker.config.click_mode.mob_attack": "Mob e animali",
+  "permaclicker.config.click_mode.tooltip.mining.desc": "Tiene premuto l'attacco per scavare continuamente il blocco mirato",
+  "permaclicker.config.click_mode.tooltip.mob_attack.desc": "Colpisce il mob o l'animale mirato quando la ricarica dell'attacco è completa (nessun colpo critico in salto)",
+
+  "permaclicker.config.attack_buffer_ticks": "Margine di attacco (tick)",
+  "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Tick extra di attesa dopo la ricarica completa prima di colpire (solo Mob e animali, 20 tick = 1 secondo)",
 
   "permaclicker.config.auto_stop_minutes": "Arresto automatico (minuti)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Disattiva il timer",

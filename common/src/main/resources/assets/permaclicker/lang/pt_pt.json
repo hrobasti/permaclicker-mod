@@ -9,9 +9,7 @@
   "permaclicker.update.provider.error": "- %s: Falha ao obter.",
   "permaclicker.config.toggle_key_reset": "[PermaClicker] A tua tecla de alternar foi reposta para a predefinição porque o Minecraft 26.3 alterou a forma como as teclas são guardadas. Reatribui-a nas definições do PermaClicker se necessário.",
 
-  "key.categories.permaclicker": "PermaClicker",
-  "key.category.permaclicker": "PermaClicker",
-  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "Alternar",
   "key.permaclicker.config": "Definições",
 
@@ -30,6 +28,15 @@
   "permaclicker.config.runtime_mode.background": "Em segundo plano",
   "permaclicker.config.runtime_mode.tooltip.focused.desc": "Executa apenas enquanto a janela do jogo estiver ativa",
   "permaclicker.config.runtime_mode.tooltip.background.desc": "Pode continuar em segundo plano quando estiver sem foco ou minimizada",
+
+  "permaclicker.config.click_mode": "Modo de clique",
+  "permaclicker.config.click_mode.mining": "Escavar",
+  "permaclicker.config.click_mode.mob_attack": "Criaturas e animais",
+  "permaclicker.config.click_mode.tooltip.mining.desc": "Mantém o ataque premido para escavar continuamente o bloco visado",
+  "permaclicker.config.click_mode.tooltip.mob_attack.desc": "Ataca a criatura ou o animal visado quando a recarga do ataque está completa (sem críticos de salto)",
+
+  "permaclicker.config.attack_buffer_ticks": "Margem de ataque (ticks)",
+  "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Ticks extra de espera após a recarga completa antes de atacar (apenas Criaturas e animais, 20 ticks = 1 segundo)",
 
   "permaclicker.config.auto_stop_minutes": "Paragem automática (minutos)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Desativa o temporizador",

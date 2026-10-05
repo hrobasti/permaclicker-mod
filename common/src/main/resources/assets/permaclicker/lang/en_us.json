@@ -9,9 +9,7 @@
   "permaclicker.update.provider.error": "- %s: Fetch failed.",
   "permaclicker.config.toggle_key_reset": "[PermaClicker] Your toggle key was reset to the default because Minecraft 26.3 changed how keys are stored. Rebind it in PermaClicker settings if needed.",
 
-  "key.categories.permaclicker": "PermaClicker",
-  "key.category.permaclicker": "PermaClicker",
-  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "Toggle",
   "key.permaclicker.config": "Settings",
 
@@ -30,6 +28,15 @@
   "permaclicker.config.runtime_mode.background": "Background",
   "permaclicker.config.runtime_mode.tooltip.focused.desc": "Runs only while the game window is active",
   "permaclicker.config.runtime_mode.tooltip.background.desc": "May continue in background while unfocused or minimized",
+
+  "permaclicker.config.click_mode": "Click mode",
+  "permaclicker.config.click_mode.mining": "Mining",
+  "permaclicker.config.click_mode.mob_attack": "Mobs & Animals",
+  "permaclicker.config.click_mode.tooltip.mining.desc": "Holds attack to continuously mine the targeted block",
+  "permaclicker.config.click_mode.tooltip.mob_attack.desc": "Hits the targeted mob or animal once the attack cooldown is fully charged (no jump crits)",
+
+  "permaclicker.config.attack_buffer_ticks": "Attack buffer (ticks)",
+  "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Extra ticks to wait after a full cooldown before hitting (Mobs & Animals only, 20 ticks = 1 second)",
 
   "permaclicker.config.auto_stop_minutes": "Auto-stop (minutes)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Disables the timer",

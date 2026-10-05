@@ -21,6 +21,7 @@ On many servers this may violate rules and can result in penalties such as kick/
 - in-game config screen for Fabric and NeoForge
 - overlay output
 - runtime mode: **Focused** or **Background**
+- click mode: **Mining** (hold attack on blocks) or **Mobs & Animals** (full-strength hits on mobs and animals)
 - auto-stop timer (`0..9999` minutes)
 - optional movement lock while active
 - optional update checks (Stable / Beta / Alpha)
@@ -30,6 +31,8 @@ On many servers this may violate rules and can result in penalties such as kick/
 - While PermaClicker is active, opening chat is intentionally blocked.
 - **Focused** mode: `ESC` stops PermaClicker and opens the pause menu.  `u` stops PermaClicker and opens the config screen.
 - **Background** mode: pause screen and PermaClicker's own config screen (`u`) stay blocked while active — even if the game window is currently focused. Disable PermaClicker (`F7`) first to change settings.
+- **Mining** click mode (default): keeps the attack key held to continuously mine the targeted block.
+- **Mobs & Animals** click mode: hits the mob or animal in your crosshair once the attack cooldown is fully charged, plus a configurable buffer (`0..20` ticks, default `2`). No block is mined and nothing happens while no mob or animal is targeted. These are full-strength hits, not jump crits.
 
 ## Tool durability
 

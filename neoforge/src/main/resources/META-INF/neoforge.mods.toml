@@ -39,3 +39,6 @@ side="CLIENT"
 
 [[mixins]]
 config="permaclicker.neoforge.mixins.json"
+
+[[mixins]]
+config="permaclicker.client.mixins.json"

@@ -1,5 +1,6 @@
 package com.github.hrobasti.permaclicker.client;
 
+import com.github.hrobasti.permaclicker.common.config.ClickMode;
 import com.github.hrobasti.permaclicker.common.config.PermaClickConfig;
 import com.github.hrobasti.permaclicker.common.core.PermaClickBridge;
 import com.mojang.blaze3d.platform.Window;
@@ -46,6 +47,11 @@ public final class PermaClickGameContext {
         }
 
         if (config == null || !config.enabled()) {
+            return false;
+        }
+
+        // Forcing continueAttack(true) while chat is open would break blocks; mob attack never mines.
+        if (config.clickMode() == ClickMode.MOB_ATTACK) {
             return false;
         }
 

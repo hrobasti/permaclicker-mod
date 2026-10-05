@@ -15,7 +15,9 @@ public record PermaClickConfig(
     int autoStopMinutes,
     boolean movementLockEnabled,
     boolean updateCheckEnabled,
-    UpdateChannel updateChannel
+    UpdateChannel updateChannel,
+    ClickMode clickMode,
+    int attackBufferTicks
 ) {
     // SDL scancode for F7 (InputConstants.KEY_F7 in com.mojang.blaze3d.platform, MC 26.3+).
     // Was 296 (GLFW keysym) before the 26.3 GLFW->SDL input backend migration.
@@ -41,11 +43,46 @@ public record PermaClickConfig(
     );
     public static final int MIN_AUTO_STOP_MINUTES = 0;
     public static final int MAX_AUTO_STOP_MINUTES = 9999;
+    public static final int MIN_ATTACK_BUFFER_TICKS = 0;
+    public static final int MAX_ATTACK_BUFFER_TICKS = 20;
+    public static final int DEFAULT_ATTACK_BUFFER_TICKS = 2;
 
     public PermaClickConfig {
         overlayColor = normalizeOverlayColor(overlayColor);
         autoStopMinutes = clampAutoStopMinutes(autoStopMinutes);
         updateChannel = updateChannel == null ? UpdateChannel.BETA : updateChannel;
+        clickMode = clickMode == null ? ClickMode.MINING : clickMode;
+        attackBufferTicks = clampAttackBufferTicks(attackBufferTicks);
+    }
+
+    /**
+     * Convenience constructor that keeps the click-mode fields at their defaults
+     * ({@link ClickMode#MINING}, {@link #DEFAULT_ATTACK_BUFFER_TICKS}).
+     */
+    public PermaClickConfig(
+        boolean enabled,
+        int toggleKeyCode,
+        boolean overlayEnabled,
+        String overlayColor,
+        boolean runInBackground,
+        int autoStopMinutes,
+        boolean movementLockEnabled,
+        boolean updateCheckEnabled,
+        UpdateChannel updateChannel
+    ) {
+        this(
+            enabled,
+            toggleKeyCode,
+            overlayEnabled,
+            overlayColor,
+            runInBackground,
+            autoStopMinutes,
+            movementLockEnabled,
+            updateCheckEnabled,
+            updateChannel,
+            ClickMode.MINING,
+            DEFAULT_ATTACK_BUFFER_TICKS
+        );
     }
 
     public static PermaClickConfig defaults() {
@@ -58,7 +95,9 @@ public record PermaClickConfig(
             0,
             true,
             true,
-            UpdateChannel.BETA
+            UpdateChannel.BETA,
+            ClickMode.MINING,
+            DEFAULT_ATTACK_BUFFER_TICKS
         );
     }
 
@@ -72,7 +111,9 @@ public record PermaClickConfig(
             autoStopMinutes,
             movementLockEnabled,
             updateCheckEnabled,
-            updateChannel
+            updateChannel,
+            clickMode,
+            attackBufferTicks
         );
     }
 
@@ -87,6 +128,10 @@ public record PermaClickConfig(
 
     public static int clampAutoStopMinutes(int minutes) {
         return Math.max(MIN_AUTO_STOP_MINUTES, Math.min(MAX_AUTO_STOP_MINUTES, minutes));
+    }
+
+    public static int clampAttackBufferTicks(int ticks) {
+        return Math.max(MIN_ATTACK_BUFFER_TICKS, Math.min(MAX_ATTACK_BUFFER_TICKS, ticks));
     }
 }
 

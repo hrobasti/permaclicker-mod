@@ -1,5 +1,6 @@
-package com.github.hrobasti.permaclicker.fabric;
+package com.github.hrobasti.permaclicker.neoforge;
 
+import com.github.hrobasti.permaclicker.common.config.ClickMode;
 import com.github.hrobasti.permaclicker.common.config.PermaClickConfig;
 import com.github.hrobasti.permaclicker.common.config.UpdateChannel;
 import com.github.hrobasti.permaclicker.common.core.PermaClickBridge;
@@ -7,14 +8,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -22,11 +21,12 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.neoforged.fml.loading.FMLPaths;
 
 /**
- * Dedicated unobfuscated-target config screen (e.g. MC 26.3) with vanilla options-layout styling.
+ * PermaClicker config screen with vanilla options-layout styling.
  */
-public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
+public final class PermaClickNeoForgeConfigScreen extends OptionsSubScreen {
     private static final int ROW_HEIGHT = 20;
     private static final int LABEL_WIDTH = 150;
     private static final int CONTROL_WIDTH = 150;
@@ -57,28 +57,39 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
     private boolean overlayEnabled;
     private String overlayColor;
     private boolean runInBackground;
+    private ClickMode clickMode;
+    private int attackBufferTicks;
     private int autoStopMinutes;
     private boolean movementLockEnabled;
     private boolean updateCheckEnabled;
     private UpdateChannel updateChannel;
 
     private Button runtimeModeButton;
+    private Button clickModeButton;
     private Button movementLockButton;
     private Button overlayEnabledButton;
     private Button overlayColorButton;
     private Button updateCheckButton;
     private Button updateChannelButton;
     private EditBox autoStopInputField;
+    private EditBox attackBufferInputField;
     private OptionsList optionsList;
 
-    public PermaClickFabricConfigScreen(Screen parent) {
+    public PermaClickNeoForgeConfigScreen(Screen parent) {
         super(parent, Minecraft.getInstance().options, Component.translatable("permaclicker.config.title"));
         this.parent = parent;
 
-        PermaClickConfig config = PermaClickFabricEntrypoint.bridge().currentConfig();
+        PermaClickBridge bridge = PermaClickNeoForgeEntrypoint.bridge();
+        PermaClickConfig config = bridge != null ? bridge.currentConfig() : null;
+        if (config == null) {
+            config = PermaClickConfig.defaults();
+        }
+
         this.overlayEnabled = config.overlayEnabled();
         this.overlayColor = config.overlayColor();
         this.runInBackground = config.runInBackground();
+        this.clickMode = config.clickMode();
+        this.attackBufferTicks = config.attackBufferTicks();
         this.autoStopMinutes = config.autoStopMinutes();
         this.movementLockEnabled = config.movementLockEnabled();
         this.updateCheckEnabled = config.updateCheckEnabled();
@@ -110,6 +121,40 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
                 tooltipLine(Component.translatable("permaclicker.config.runtime_mode.background"), "permaclicker.config.runtime_mode.tooltip.background.desc")
             ),
             this.runtimeModeButton
+        );
+
+        this.clickModeButton = this.createToggleButton(clickModeValue(), button -> {
+            clickMode = clickMode == ClickMode.MOB_ATTACK ? ClickMode.MINING : ClickMode.MOB_ATTACK;
+            refreshButtonMessages();
+        });
+        addLabeledRow(
+            Component.translatable("permaclicker.config.click_mode"),
+            tooltipLines(
+                tooltipLine(Component.translatable("permaclicker.config.click_mode.mining"), "permaclicker.config.click_mode.tooltip.mining.desc"),
+                tooltipLine(Component.translatable("permaclicker.config.click_mode.mob_attack"), "permaclicker.config.click_mode.tooltip.mob_attack.desc")
+            ),
+            this.clickModeButton
+        );
+
+        this.attackBufferInputField = new EditBox(
+            this.font,
+            0,
+            0,
+            CONTROL_WIDTH,
+            ROW_HEIGHT,
+            Component.translatable("permaclicker.config.attack_buffer_ticks")
+        );
+        this.attackBufferInputField.setMaxLength(2);
+        this.attackBufferInputField.setValue(Integer.toString(attackBufferTicks));
+        addLabeledRow(
+            Component.translatable("permaclicker.config.attack_buffer_ticks"),
+            tooltipLines(
+                tooltipLine(
+                    Component.literal(PermaClickConfig.MIN_ATTACK_BUFFER_TICKS + "-" + PermaClickConfig.MAX_ATTACK_BUFFER_TICKS),
+                    "permaclicker.config.attack_buffer_ticks.tooltip.range.desc"
+                )
+            ),
+            this.attackBufferInputField
         );
 
         this.autoStopInputField = new EditBox(
@@ -229,6 +274,15 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
         if (runtimeModeButton != null) {
             runtimeModeButton.setMessage(runtimeModeValue());
         }
+        if (clickModeButton != null) {
+            clickModeButton.setMessage(clickModeValue());
+        }
+        if (attackBufferInputField != null) {
+            // The buffer only affects mob-attack mode; grey it out while mining.
+            boolean bufferRelevant = clickMode == ClickMode.MOB_ATTACK;
+            attackBufferInputField.active = bufferRelevant;
+            attackBufferInputField.setEditable(bufferRelevant);
+        }
         if (movementLockButton != null) {
             movementLockButton.setMessage(toggleValue(movementLockEnabled));
         }
@@ -295,18 +349,18 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
         @Override
         protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
             int textY = this.getY() + (this.height - 9) / 2;
-            guiGraphics.text(PermaClickFabricConfigScreen.this.font, this.getMessage(), this.getX(), textY, 0xFFFFFFFF, true);
+            guiGraphics.text(PermaClickNeoForgeConfigScreen.this.font, this.getMessage(), this.getX(), textY, 0xFFFFFFFF, true);
 
             int iconX = this.getX() + this.width - INFO_ICON_SIZE;
             int iconY = this.getY() + (this.height - INFO_ICON_SIZE) / 2;
             guiGraphics.fill(iconX, iconY, iconX + INFO_ICON_SIZE, iconY + INFO_ICON_SIZE, INFO_ICON_BG_COLOR);
-            guiGraphics.text(PermaClickFabricConfigScreen.this.font, Component.literal("i"), iconX + 3, iconY + 1, INFO_ICON_TEXT_COLOR, false);
+            guiGraphics.text(PermaClickNeoForgeConfigScreen.this.font, Component.literal("i"), iconX + 3, iconY + 1, INFO_ICON_TEXT_COLOR, false);
 
             boolean hoveredIcon = mouseX >= iconX && mouseX < iconX + INFO_ICON_SIZE
                 && mouseY >= iconY && mouseY < iconY + INFO_ICON_SIZE;
             if (hoveredIcon && !this.infoTooltipLines.isEmpty()) {
                 guiGraphics.setComponentTooltipForNextFrame(
-                    PermaClickFabricConfigScreen.this.font,
+                    PermaClickNeoForgeConfigScreen.this.font,
                     this.infoTooltipLines,
                     mouseX,
                     mouseY
@@ -327,9 +381,9 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
 
         @Override
         protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-            int centeredX = PermaClickFabricConfigScreen.this.width / 2 - PermaClickFabricConfigScreen.this.font.width(this.getMessage()) / 2;
+            int centeredX = PermaClickNeoForgeConfigScreen.this.width / 2 - PermaClickNeoForgeConfigScreen.this.font.width(this.getMessage()) / 2;
             int textY = this.getY() + (this.height - 9) / 2;
-            guiGraphics.text(PermaClickFabricConfigScreen.this.font, this.getMessage(), centeredX, textY, 0xFFE7E7E7, true);
+            guiGraphics.text(PermaClickNeoForgeConfigScreen.this.font, this.getMessage(), centeredX, textY, 0xFFE7E7E7, true);
         }
 
         @Override
@@ -360,6 +414,12 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
             : "permaclicker.config.runtime_mode.focused");
     }
 
+    private Component clickModeValue() {
+        return Component.translatable(clickMode == ClickMode.MOB_ATTACK
+            ? "permaclicker.config.click_mode.mob_attack"
+            : "permaclicker.config.click_mode.mining");
+    }
+
     private Component overlayColorValue() {
         ChatFormatting color = resolveOverlayColor(overlayColor);
         String label = overlayColor.replace('_', ' ');
@@ -386,27 +446,43 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
     }
 
     private void saveAndClose() {
-        PermaClickBridge bridge = PermaClickFabricEntrypoint.bridge();
+        PermaClickBridge bridge = PermaClickNeoForgeEntrypoint.bridge();
+        if (bridge == null) {
+            onClose();
+            return;
+        }
+
+        PermaClickConfig current = bridge.currentConfig();
+        if (current == null) {
+            current = PermaClickConfig.defaults();
+        }
+
         int parsedAutoStop = autoStopMinutes;
         if (autoStopInputField != null) {
-            parsedAutoStop = parseAutoStopInput(autoStopInputField.getValue(), autoStopMinutes);
+            parsedAutoStop = parseIntInput(autoStopInputField.getValue(), autoStopMinutes);
+        }
+        int parsedAttackBuffer = attackBufferTicks;
+        if (attackBufferInputField != null) {
+            parsedAttackBuffer = parseIntInput(attackBufferInputField.getValue(), attackBufferTicks);
         }
 
         PermaClickConfig updated = new PermaClickConfig(
-            bridge.currentConfig().enabled(),
-            bridge.currentConfig().toggleKeyCode(),
+            current.enabled(),
+            current.toggleKeyCode(),
             overlayEnabled,
             overlayColor,
             runInBackground,
             PermaClickConfig.clampAutoStopMinutes(parsedAutoStop),
             movementLockEnabled,
             updateCheckEnabled,
-            updateChannel
+            updateChannel,
+            clickMode,
+            PermaClickConfig.clampAttackBufferTicks(parsedAttackBuffer)
         );
 
         bridge.applyConfig(updated);
         try {
-            new FabricConfigLifecycle().saveCurrent(bridge, FabricLoader.getInstance().getGameDir());
+            new NeoForgeConfigLifecycle().saveCurrent(bridge, FMLPaths.GAMEDIR.get());
         } catch (IOException ignored) {
             // best effort
         }
@@ -421,7 +497,7 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
         }
     }
 
-    private static int parseAutoStopInput(String raw, int fallback) {
+    private static int parseIntInput(String raw, int fallback) {
         if (raw == null || raw.isBlank()) {
             return fallback;
         }

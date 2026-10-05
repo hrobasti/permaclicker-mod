@@ -38,7 +38,9 @@ class PermaClickConfigStoreTest {
             42,
             false,
             false,
-            UpdateChannel.ALPHA
+            UpdateChannel.ALPHA,
+            ClickMode.MOB_ATTACK,
+            7
         );
         store.save(original);
 
@@ -71,9 +73,11 @@ class PermaClickConfigStoreTest {
               "overlayColor": "invalid",
               "runInBackground": false,
               "autoStopMinutes": 12000,
-                            "movementLockEnabled": false,
-                            "updateCheckEnabled": false,
-                            "updateChannel": "invalid"
+              "movementLockEnabled": false,
+              "updateCheckEnabled": false,
+              "updateChannel": "invalid",
+              "clickMode": "invalid",
+              "attackBufferTicks": 99
             }
             """);
 
@@ -91,6 +95,52 @@ class PermaClickConfigStoreTest {
         assertFalse(loaded.movementLockEnabled());
         assertFalse(loaded.updateCheckEnabled());
         assertEquals(UpdateChannel.BETA, loaded.updateChannel());
+        assertEquals(ClickMode.MINING, loaded.clickMode());
+        assertEquals(PermaClickConfig.MAX_ATTACK_BUFFER_TICKS, loaded.attackBufferTicks());
+    }
+
+    @Test
+    void loadDefaultsClickModeFieldsWhenMissingFromExistingConfig() throws IOException {
+        Path file = tempDir.resolve("permaclick.json");
+        Files.writeString(file, """
+            {
+              "configVersion": 2,
+              "enabled": false,
+              "toggleKeyCode": 64,
+              "overlayEnabled": true,
+              "overlayColor": "green",
+              "runInBackground": false,
+              "autoStopMinutes": 0,
+              "movementLockEnabled": true,
+              "updateCheckEnabled": true,
+              "updateChannel": "BETA"
+            }
+            """);
+        PermaClickConfigStore store = new PermaClickConfigStore(file);
+
+        PermaClickConfigStore.LoadResult result = store.load();
+
+        assertFalse(result.toggleKeyWasReset());
+        assertEquals(ClickMode.MINING, result.config().clickMode());
+        assertEquals(PermaClickConfig.DEFAULT_ATTACK_BUFFER_TICKS, result.config().attackBufferTicks());
+    }
+
+    @Test
+    void loadClampsNegativeAttackBufferAndParsesClickModeCaseInsensitively() throws IOException {
+        Path file = tempDir.resolve("permaclick.json");
+        Files.writeString(file, """
+            {
+              "configVersion": 2,
+              "clickMode": "mob_attack",
+              "attackBufferTicks": -5
+            }
+            """);
+        PermaClickConfigStore store = new PermaClickConfigStore(file);
+
+        PermaClickConfig loaded = store.load().config();
+
+        assertEquals(ClickMode.MOB_ATTACK, loaded.clickMode());
+        assertEquals(PermaClickConfig.MIN_ATTACK_BUFFER_TICKS, loaded.attackBufferTicks());
     }
 
     @Test

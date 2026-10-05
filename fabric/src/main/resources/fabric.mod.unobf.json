@@ -22,7 +22,8 @@
     ]
   },
   "mixins": [
-    "permaclicker.fabric.mixins.json"
+    "permaclicker.fabric.mixins.json",
+    "permaclicker.client.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",

@@ -9,9 +9,7 @@
   "permaclicker.update.provider.error": "- %s: Ophalen mislukt.",
   "permaclicker.config.toggle_key_reset": "[PermaClicker] Je schakeltoets is teruggezet naar de standaard omdat Minecraft 26.3 de manier waarop toetsen worden opgeslagen heeft veranderd. Wijs deze indien nodig opnieuw toe in de PermaClicker-instellingen.",
 
-  "key.categories.permaclicker": "PermaClicker",
-  "key.category.permaclicker": "PermaClicker",
-  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "Schakelen",
   "key.permaclicker.config": "Instellingen",
 
@@ -30,6 +28,15 @@
   "permaclicker.config.runtime_mode.background": "Achtergrond",
   "permaclicker.config.runtime_mode.tooltip.focused.desc": "Werkt alleen wanneer het spelvenster actief is",
   "permaclicker.config.runtime_mode.tooltip.background.desc": "Kan op de achtergrond doorgaan wanneer het venster niet gefocust of geminimaliseerd is",
+
+  "permaclicker.config.click_mode": "Klikmodus",
+  "permaclicker.config.click_mode.mining": "Delven",
+  "permaclicker.config.click_mode.mob_attack": "Mobs & dieren",
+  "permaclicker.config.click_mode.tooltip.mining.desc": "Houdt aanvallen ingedrukt om het geselecteerde blok continu te delven",
+  "permaclicker.config.click_mode.tooltip.mob_attack.desc": "Slaat de geselecteerde mob of het geselecteerde dier zodra de aanvalscooldown volledig is opgeladen (geen sprong-crits)",
+
+  "permaclicker.config.attack_buffer_ticks": "Aanvalsbuffer (ticks)",
+  "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Extra ticks wachten na een volledige cooldown voordat er wordt geslagen (alleen Mobs & dieren, 20 ticks = 1 seconde)",
 
   "permaclicker.config.auto_stop_minutes": "Auto-stop (minuten)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Schakelt de timer uit",

@@ -1,5 +1,6 @@
 package com.github.hrobasti.permaclicker.common.core;
 
+import com.github.hrobasti.permaclicker.common.config.ClickMode;
 import com.github.hrobasti.permaclicker.common.config.PermaClickConfig;
 
 /**
@@ -18,6 +19,8 @@ public final class PermaClickService {
     private static final int HOURS_PER_DAY = 24;
     private static final String STATUS_ACTIVE = "PermaClicker active";
     private static final String STATUS_INACTIVE = "PermaClicker inactive";
+    private static final String MODE_LABEL_MINING = "Mining";
+    private static final String MODE_LABEL_MOB_ATTACK = "Mobs & Animals";
 
     private boolean enabled;
     private PermaClickConfig config;
@@ -98,7 +101,10 @@ public final class PermaClickService {
         }
 
         boolean miningPerformed = runtime.performMiningTick();
-        if (!miningPerformed) {
+        // Mob-attack mode spends most ticks waiting for the cooldown or a target, so every
+        // active, non-suppressed tick counts towards auto-stop; mining counts successful ticks only.
+        boolean countsTowardsAutoStop = miningPerformed || config.clickMode() == ClickMode.MOB_ATTACK;
+        if (!countsTowardsAutoStop) {
             return;
         }
 
@@ -166,7 +172,8 @@ public final class PermaClickService {
         String timer = formatTimerText();
         boolean dueByCadence = force || overlayRefreshTicks >= TICKS_PER_SECOND;
 
-        String message = timer == null ? STATUS_ACTIVE : STATUS_ACTIVE + " (" + timer + ")";
+        String status = STATUS_ACTIVE + " - " + modeLabel();
+        String message = timer == null ? status : status + " (" + timer + ")";
         boolean changed = !message.equals(lastActionBarMessage);
         if (!dueByCadence && !changed) {
             return;
@@ -175,6 +182,10 @@ public final class PermaClickService {
         runtime.showActionBarText(message, config.overlayColor());
         overlayRefreshTicks = 0;
         lastActionBarMessage = message;
+    }
+
+    private String modeLabel() {
+        return config.clickMode() == ClickMode.MOB_ATTACK ? MODE_LABEL_MOB_ATTACK : MODE_LABEL_MINING;
     }
 
     private String formatTimerText() {

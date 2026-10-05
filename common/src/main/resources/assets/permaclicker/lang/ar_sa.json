@@ -9,9 +9,7 @@
   "permaclicker.update.provider.error": "- %s: فشل الجلب.",
   "permaclicker.config.toggle_key_reset": "[PermaClicker] تمت إعادة تعيين مفتاح التبديل إلى الافتراضي لأن ماينكرافت 26.3 غيّر طريقة تخزين المفاتيح. أعد ربطه في إعدادات PermaClicker إذا لزم الأمر.",
 
-  "key.categories.permaclicker": "PermaClicker",
-  "key.category.permaclicker": "PermaClicker",
-  "key.category.minecraft.permaclicker": "PermaClicker",
+  "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "تبديل",
   "key.permaclicker.config": "الإعدادات",
 
@@ -30,6 +28,15 @@
   "permaclicker.config.runtime_mode.background": "في الخلفية",
   "permaclicker.config.runtime_mode.tooltip.focused.desc": "يعمل فقط عندما تكون نافذة اللعبة نشطة",
   "permaclicker.config.runtime_mode.tooltip.background.desc": "قد يستمر في الخلفية عند فقدان التركيز أو التصغير",
+
+  "permaclicker.config.click_mode": "وضع النقر",
+  "permaclicker.config.click_mode.mining": "التعدين",
+  "permaclicker.config.click_mode.mob_attack": "المخلوقات والحيوانات",
+  "permaclicker.config.click_mode.tooltip.mining.desc": "يبقي الهجوم مضغوطًا لتعدين الكتلة المستهدفة باستمرار",
+  "permaclicker.config.click_mode.tooltip.mob_attack.desc": "يضرب المخلوق أو الحيوان المستهدف عند امتلاء فترة تهدئة الهجوم بالكامل (بدون ضربات حرجة بالقفز)",
+
+  "permaclicker.config.attack_buffer_ticks": "مهلة الهجوم (تكات)",
+  "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "تكات إضافية للانتظار بعد امتلاء التهدئة قبل الضرب (لوضع المخلوقات والحيوانات فقط، 20 تكة = ثانية واحدة)",
 
   "permaclicker.config.auto_stop_minutes": "إيقاف تلقائي (دقائق)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "يعطّل المؤقت",

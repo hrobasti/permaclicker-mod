@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.github.hrobasti.permaclicker.common.config.ClickMode;
 import com.github.hrobasti.permaclicker.common.config.PermaClickConfig;
 import com.github.hrobasti.permaclicker.common.config.UpdateChannel;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ class PermaClickServiceTest {
 
         assertTrue(service.isEnabled());
         assertTrue(runtime.actionBarShown);
-        assertEquals("PermaClicker active", runtime.lastActionBarMessage);
+        assertEquals("PermaClicker active - Mining", runtime.lastActionBarMessage);
         assertEquals("green", runtime.lastActionBarColor);
     }
 
@@ -47,7 +48,7 @@ class PermaClickServiceTest {
         service.toggle(runtime);
         service.tick(runtime);
 
-        assertEquals("PermaClicker active (00:01:00)", runtime.lastActionBarMessage);
+        assertEquals("PermaClicker active - Mining (00:01:00)", runtime.lastActionBarMessage);
     }
 
     @Test
@@ -63,7 +64,7 @@ class PermaClickServiceTest {
         service.toggle(runtime);
         service.tick(runtime);
 
-        assertEquals("PermaClicker active (01:30:00)", runtime.lastActionBarMessage);
+        assertEquals("PermaClicker active - Mining (01:30:00)", runtime.lastActionBarMessage);
     }
 
     @Test
@@ -79,7 +80,7 @@ class PermaClickServiceTest {
         service.toggle(runtime);
         service.tick(runtime);
 
-        assertEquals("PermaClicker active (01:01:00:00)", runtime.lastActionBarMessage);
+        assertEquals("PermaClicker active - Mining (01:01:00:00)", runtime.lastActionBarMessage);
     }
 
     @Test
@@ -235,7 +236,7 @@ class PermaClickServiceTest {
 
         assertTrue(service.isEnabled());
         assertFalse(runtime.miningPerformed);
-        assertEquals("PermaClicker active (00:01:00)", runtime.lastActionBarMessage);
+        assertEquals("PermaClicker active - Mining (00:01:00)", runtime.lastActionBarMessage);
     }
 
     @Test
@@ -257,7 +258,76 @@ class PermaClickServiceTest {
 
         assertTrue(service.isEnabled());
         assertFalse(runtime.miningPerformed);
-        assertEquals("PermaClicker active (00:01:00)", runtime.lastActionBarMessage);
+        assertEquals("PermaClicker active - Mining (00:01:00)", runtime.lastActionBarMessage);
+    }
+
+    @Test
+    void overlayShowsMobAttackMode() {
+        PermaClickService service = new PermaClickService();
+        RuntimeStub runtime = new RuntimeStub();
+
+        service.applyConfig(mobAttackConfig(false, 0));
+        service.toggle(runtime);
+
+        assertEquals("PermaClicker active - Mobs & Animals", runtime.lastActionBarMessage);
+    }
+
+    @Test
+    void mobAttackTimerCountsActiveTicksEvenWithoutHits() {
+        PermaClickService service = new PermaClickService();
+        RuntimeStub runtime = new RuntimeStub();
+
+        runtime.focused = true;
+        runtime.minimized = false;
+        runtime.playerReady = true;
+        // Mob-attack ticks report false while waiting for the cooldown or a target.
+        runtime.miningTickSucceeds = false;
+
+        service.applyConfig(mobAttackConfig(false, 1));
+        service.toggle(runtime);
+
+        for (int i = 0; i < 1200; i++) {
+            service.tick(runtime);
+        }
+
+        assertFalse(service.isEnabled());
+    }
+
+    @Test
+    void mobAttackTimerFreezesWhileSuppressedByRuntimeConditions() {
+        PermaClickService service = new PermaClickService();
+        RuntimeStub runtime = new RuntimeStub();
+
+        runtime.focused = false;
+        runtime.minimized = false;
+        runtime.playerReady = true;
+        runtime.miningTickSucceeds = false;
+
+        service.applyConfig(mobAttackConfig(false, 1));
+        service.toggle(runtime);
+
+        for (int i = 0; i < 200; i++) {
+            service.tick(runtime);
+        }
+
+        assertTrue(service.isEnabled());
+        assertEquals("PermaClicker active - Mobs & Animals (00:01:00)", runtime.lastActionBarMessage);
+    }
+
+    private static PermaClickConfig mobAttackConfig(boolean runInBackground, int autoStopMinutes) {
+        return new PermaClickConfig(
+            false,
+            292,
+            true,
+            "green",
+            runInBackground,
+            autoStopMinutes,
+            true,
+            true,
+            UpdateChannel.BETA,
+            ClickMode.MOB_ATTACK,
+            PermaClickConfig.DEFAULT_ATTACK_BUFFER_TICKS
+        );
     }
 
     private static final class RuntimeStub implements PermaClickRuntime {

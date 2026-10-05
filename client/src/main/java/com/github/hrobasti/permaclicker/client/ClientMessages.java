@@ -9,8 +9,7 @@ import net.minecraft.network.chat.MutableComponent;
 
 /**
  * Shared chat-message helpers used by both loader entrypoints for update-check and other
- * player-facing notices, including a version-compat dispatcher for sending a client message
- * across Minecraft API shapes.
+ * player-facing notices.
  */
 public final class ClientMessages {
     private ClientMessages() {
@@ -26,27 +25,13 @@ public final class ClientMessages {
             return;
         }
 
-        if (ReflectionCompat.invokeCompatibleMethod(player, "displayClientMessage", message, actionBar)) {
-            return;
+        // 26.2+: displayClientMessage was split into sendOverlayMessage (action bar) and
+        // sendSystemMessage (chat). Direct calls are compile-checked against the current mapping.
+        if (actionBar) {
+            player.sendOverlayMessage(message);
+        } else {
+            player.sendSystemMessage(message);
         }
-
-        if (ReflectionCompat.invokeCompatibleMethod(player, "sendSystemMessage", message, actionBar)) {
-            return;
-        }
-
-        if (ReflectionCompat.invokeCompatibleMethod(player, "sendMessage", message, actionBar)) {
-            return;
-        }
-
-        if (ReflectionCompat.invokeCompatibleMethodByShape(player, new Object[] { message, actionBar })) {
-            return;
-        }
-
-        if (ReflectionCompat.invokeCompatibleMethod(player, "sendSystemMessage", message)) {
-            return;
-        }
-
-        ReflectionCompat.invokeCompatibleMethodByShape(player, new Object[] { message });
     }
 
     public static void displayProviderLine(

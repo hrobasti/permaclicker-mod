@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.github.hrobasti.permaclicker.client.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "MinecraftAttackInvoker",
+    "MinecraftContinueAttackGuardMixin",
+    "MultiPlayerGameModeAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
