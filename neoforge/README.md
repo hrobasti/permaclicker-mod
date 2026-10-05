@@ -4,9 +4,9 @@
 
 - Matrix targets are provided through the build configuration for this module.
 - For NeoForge, the authoritative fields are:
-  - `minecraft`
-  - `neoforge`
-  - `java`
+    - `minecraft`
+    - `neoforge`
+    - `java`
 
 ## Pipeline strategy
 

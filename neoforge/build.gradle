@@ -26,6 +26,7 @@ dependencies {
 }
 
 tasks.named('processResources', ProcessResources) {
+    inputs.property('version', project.version)
     inputs.property('mod_id', modInfo.id)
     inputs.property('mod_name', modInfo.name)
     inputs.property('minecraft_version', resolvedMinecraftVersion)
@@ -80,7 +81,7 @@ tasks.named('jar') {
         attributes(
             'Implementation-Title': modInfo.name,
             'Implementation-Version': project.version,
-            'Implementation-Vendor': 'hrobasti'
+            'Implementation-Vendor': 'kroet.net'
         )
     }
 }

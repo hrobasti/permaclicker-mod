@@ -3,18 +3,18 @@
 ## Authoritative sources
 
 - `config/matrix-targets.json`
-  - Authoritative per target values:
-    - `minecraft`
-    - `java`
-    - `neoforge`
-    - `fabricLoader`
-    - `fabricApi`
-    - `modmenu`
+    - Authoritative per target values:
+        - `minecraft`
+        - `java`
+        - `neoforge`
+        - `fabricLoader`
+        - `fabricApi`
+        - `modmenu`
 - `version.properties`
-  - Authoritative mod version (`version`).
-  - Required TurtleLib release (`turtlelib_dependency_version`). This is the core jar compiled against in standalone builds and the minimum TurtleLib version in `fabric.mod.json` / `neoforge.mods.toml`.
+    - Authoritative mod version (`version`).
+    - Required TurtleLib release (`turtlelib_dependency_version`). This is the core jar compiled against in standalone builds and the minimum TurtleLib version in `fabric.mod.json` / `neoforge.mods.toml`.
 - `config/mod.properties`
-  - Mod identity (`mod_id`, `mod_name`, `mod_group`).
+    - Mod identity (`mod_id`, `mod_name`, `mod_group`).
 
 ## Derived locations
 

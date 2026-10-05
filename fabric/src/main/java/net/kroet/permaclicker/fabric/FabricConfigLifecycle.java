@@ -1,0 +1,30 @@
+package net.kroet.permaclicker.fabric;
+
+import net.kroet.permaclicker.common.config.PermaClickConfigStore;
+import net.kroet.permaclicker.common.core.PermaClickBridge;
+import java.io.IOException;
+import java.nio.file.Path;
+
+/**
+ * Handles Fabric-side startup loading and persistence of PermaClick config.
+ */
+public final class FabricConfigLifecycle {
+    public static final String CONFIG_RELATIVE_PATH = "config/permaclicker.json";
+
+    public Path resolveConfigPath(Path gameDirectory) {
+        return gameDirectory.resolve(CONFIG_RELATIVE_PATH);
+    }
+
+    public PermaClickConfigStore.LoadResult loadAndApply(PermaClickBridge bridge, Path gameDirectory) {
+        PermaClickConfigStore store = new PermaClickConfigStore(resolveConfigPath(gameDirectory));
+        PermaClickConfigStore.LoadResult result = store.load();
+        bridge.applyConfig(result.config());
+        return result;
+    }
+
+    public void saveCurrent(PermaClickBridge bridge, Path gameDirectory) throws IOException {
+        PermaClickConfigStore store = new PermaClickConfigStore(resolveConfigPath(gameDirectory));
+        store.save(bridge.currentConfig());
+    }
+}
+

@@ -97,7 +97,7 @@ tasks.named('jar') {
         attributes(
             'Implementation-Title': modInfo.name,
             'Implementation-Version': project.version,
-            'Implementation-Vendor': 'hrobasti'
+            'Implementation-Vendor': 'kroet.net'
         )
     }
 }

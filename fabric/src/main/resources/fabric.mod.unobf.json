@@ -5,21 +5,15 @@
   "name": "PermaClicker",
   "icon": "assets/permaclicker/icon.png",
   "description": "PermaClicker keeps mining active while enabled.",
-  "authors": [
-    "hrobasti"
-  ],
-  "license": "Apache-2.0",
+  "authors": ["kroet.net"],
+  "license": "MIT",
   "contact": {
     "homepage": "https://github.com/hrobasti/permaclicker-mod"
   },
   "environment": "client",
   "entrypoints": {
-    "client": [
-      "com.github.hrobasti.permaclicker.fabric.PermaClickerFabricBootstrap"
-    ],
-    "modmenu": [
-      "com.github.hrobasti.permaclicker.fabric.PermaClickerModMenuApi"
-    ]
+    "client": ["net.kroet.permaclicker.fabric.PermaClickerFabricBootstrap"],
+    "modmenu": ["net.kroet.permaclicker.fabric.PermaClickerModMenuApi"]
   },
   "mixins": [
     "permaclicker.fabric.mixins.json",

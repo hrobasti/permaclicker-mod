@@ -4,10 +4,10 @@
 
 - Matrix targets are provided through the build configuration for this module.
 - For Fabric, the authoritative fields are:
-  - `minecraft`
-  - `fabricLoader`
-  - `fabricApi`
-  - `java`
+    - `minecraft`
+    - `fabricLoader`
+    - `fabricApi`
+    - `java`
 
 ## Pipeline strategy
 

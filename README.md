@@ -12,7 +12,7 @@ On many servers this may violate rules and can result in penalties such as kick/
 
 1. Put `PermaClicker` and `TurtleLib` (required dependency) in the `mods` folder.
 2. Start the game.
-3. Configure Hotkeys in Minecraft key binds. Defaults:  `u` for Options, `F7` toggle on/off.
+3. Configure Hotkeys in Minecraft key binds. Defaults: `u` for Options, `F7` toggle on/off.
 4. Configure PermaClicker in-game via the config screen.
 
 ## What PermaClicker provides ✨
@@ -96,7 +96,7 @@ Direct TurtleLib imports are intentionally limited to these integration points.
 
 ## License 📄
 
-Apache-2.0
+MIT
 
 Full license text:
 
