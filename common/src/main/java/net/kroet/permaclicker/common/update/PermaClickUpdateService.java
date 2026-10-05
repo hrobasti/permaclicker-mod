@@ -1,9 +1,5 @@
 package net.kroet.permaclicker.common.update;
 
-import net.kroet.permaclicker.common.config.UpdateChannel;
-import net.kroet.permaclicker.common.facade.UpdateFacade;
-import net.kroet.permaclicker.common.facade.UpdateFacade.UpdateCheckResult;
-import net.kroet.permaclicker.common.facade.VersionFacade;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -11,6 +7,10 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
+import net.kroet.permaclicker.common.config.UpdateChannel;
+import net.kroet.permaclicker.common.facade.UpdateFacade;
+import net.kroet.permaclicker.common.facade.UpdateFacade.UpdateCheckResult;
+import net.kroet.permaclicker.common.facade.VersionFacade;
 
 /**
  * Integrates TurtleLib update + locale helpers for PermaClick.
@@ -24,10 +24,9 @@ public final class PermaClickUpdateService {
     }
 
     public static UpdateStatus checkForUpdates(
-        String currentVersion,
-        String minecraftVersion,
-        UpdateChannel updateChannel
-    ) {
+            String currentVersion,
+            String minecraftVersion,
+            UpdateChannel updateChannel) {
         UpdateSources sources = loadBundledSources();
         String modrinthProjectId = sources.modrinthProjectId();
         String curseforgeProjectId = sources.curseforgeProjectId();
@@ -36,37 +35,32 @@ public final class PermaClickUpdateService {
         }
 
         UpdateCheckResult result = UpdateFacade.check(
-            currentVersion,
-            minecraftVersion,
-            updateChannel,
-            modrinthProjectId,
-            curseforgeProjectId
-        );
+                currentVersion,
+                minecraftVersion,
+                updateChannel,
+                modrinthProjectId,
+                curseforgeProjectId);
         boolean hasUpdate = hasActualUpdate(result);
         if (!hasUpdate) {
             return UpdateStatus.noUpdate(result.providerVersions());
         }
 
         return new UpdateStatus(
-            true,
-            safeVersion(currentVersion),
-            result.latestVersion(),
-            normalizeProviderVersions(result.providerVersions()),
-            providerMap(
-                PROVIDER_MODRINTH,
-                buildProviderVersionUrl(
-                    PROVIDER_MODRINTH,
-                    sources.modrinthUrl(),
-                    safeToNullableString(result.providerVersions().get(PROVIDER_MODRINTH))
-                ),
-                PROVIDER_CURSEFORGE,
-                buildProviderVersionUrl(
-                    PROVIDER_CURSEFORGE,
-                    sources.curseforgeUrl(),
-                    safeToNullableString(result.providerVersions().get(PROVIDER_CURSEFORGE))
-                )
-            )
-        );
+                true,
+                safeVersion(currentVersion),
+                result.latestVersion(),
+                normalizeProviderVersions(result.providerVersions()),
+                providerMap(
+                        PROVIDER_MODRINTH,
+                        buildProviderVersionUrl(
+                                PROVIDER_MODRINTH,
+                                sources.modrinthUrl(),
+                                safeToNullableString(result.providerVersions().get(PROVIDER_MODRINTH))),
+                        PROVIDER_CURSEFORGE,
+                        buildProviderVersionUrl(
+                                PROVIDER_CURSEFORGE,
+                                sources.curseforgeUrl(),
+                                safeToNullableString(result.providerVersions().get(PROVIDER_CURSEFORGE)))));
     }
 
     public static boolean hasActualUpdate(UpdateCheckResult result) {
@@ -121,11 +115,10 @@ public final class PermaClickUpdateService {
 
     private static Map<String, String> normalizeProviderVersions(Map<?, ?> rawVersions) {
         return Map.of(
-            PROVIDER_MODRINTH,
-            safeToNullableString(rawVersions.get(PROVIDER_MODRINTH)),
-            PROVIDER_CURSEFORGE,
-            safeToNullableString(rawVersions.get(PROVIDER_CURSEFORGE))
-        );
+                PROVIDER_MODRINTH,
+                safeToNullableString(rawVersions.get(PROVIDER_MODRINTH)),
+                PROVIDER_CURSEFORGE,
+                safeToNullableString(rawVersions.get(PROVIDER_CURSEFORGE)));
     }
 
     private static String safeToNullableString(Object value) {
@@ -155,11 +148,10 @@ public final class PermaClickUpdateService {
         }
 
         return new UpdateSources(
-            props.getProperty("modrinth.url"),
-            props.getProperty("modrinth.projectId"),
-            props.getProperty("curseforge.url"),
-            props.getProperty("curseforge.projectId")
-        );
+                props.getProperty("modrinth.url"),
+                props.getProperty("modrinth.projectId"),
+                props.getProperty("curseforge.url"),
+                props.getProperty("curseforge.projectId"));
     }
 
     private record UpdateSources(String modrinthUrl, String modrinthProjectId, String curseforgeUrl, String curseforgeProjectId) {
@@ -169,31 +161,27 @@ public final class PermaClickUpdateService {
     }
 
     public record UpdateStatus(
-        boolean hasUpdate,
-        String currentVersion,
-        String latestVersion,
-        Map<String, String> providerVersions,
-        Map<String, String> providerVersionUrls
-    ) {
+            boolean hasUpdate,
+            String currentVersion,
+            String latestVersion,
+            Map<String, String> providerVersions,
+            Map<String, String> providerVersionUrls) {
         public static UpdateStatus noUpdate(Map<?, ?> providerVersions) {
             return new UpdateStatus(
-                false,
-                null,
-                null,
-                normalizeProviderVersions(providerVersions),
-                providerMap(PROVIDER_MODRINTH, null, PROVIDER_CURSEFORGE, null)
-            );
+                    false,
+                    null,
+                    null,
+                    normalizeProviderVersions(providerVersions),
+                    providerMap(PROVIDER_MODRINTH, null, PROVIDER_CURSEFORGE, null));
         }
 
         public static UpdateStatus notConfigured() {
             return new UpdateStatus(
-                false,
-                null,
-                null,
-                providerMap(PROVIDER_MODRINTH, null, PROVIDER_CURSEFORGE, null),
-                providerMap(PROVIDER_MODRINTH, null, PROVIDER_CURSEFORGE, null)
-            );
+                    false,
+                    null,
+                    null,
+                    providerMap(PROVIDER_MODRINTH, null, PROVIDER_CURSEFORGE, null),
+                    providerMap(PROVIDER_MODRINTH, null, PROVIDER_CURSEFORGE, null));
         }
     }
 }
-

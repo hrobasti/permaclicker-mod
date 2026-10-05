@@ -2,8 +2,8 @@ package net.kroet.permaclicker.common.i18n;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import net.kroet.permaclicker.common.facade.LocaleFacade;
 import java.util.List;
+import net.kroet.permaclicker.common.facade.LocaleFacade;
 import org.junit.jupiter.api.Test;
 
 class PermaClickLocaleServiceTest {
@@ -22,4 +22,3 @@ class PermaClickLocaleServiceTest {
         assertEquals(LocaleFacade.defaultLocale(), defaultLocale);
     }
 }
-

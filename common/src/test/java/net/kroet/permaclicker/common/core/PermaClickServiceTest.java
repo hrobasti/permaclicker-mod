@@ -1,7 +1,7 @@
 package net.kroet.permaclicker.common.core;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import net.kroet.permaclicker.common.config.ClickMode;
@@ -316,18 +316,17 @@ class PermaClickServiceTest {
 
     private static PermaClickConfig mobAttackConfig(boolean runInBackground, int autoStopMinutes) {
         return new PermaClickConfig(
-            false,
-            292,
-            true,
-            "green",
-            runInBackground,
-            autoStopMinutes,
-            true,
-            true,
-            UpdateChannel.BETA,
-            ClickMode.MOB_ATTACK,
-            PermaClickConfig.DEFAULT_ATTACK_BUFFER_TICKS
-        );
+                false,
+                292,
+                true,
+                "green",
+                runInBackground,
+                autoStopMinutes,
+                true,
+                true,
+                UpdateChannel.BETA,
+                ClickMode.MOB_ATTACK,
+                PermaClickConfig.DEFAULT_ATTACK_BUFFER_TICKS);
     }
 
     private static final class RuntimeStub implements PermaClickRuntime {
@@ -389,4 +388,3 @@ class PermaClickServiceTest {
         }
     }
 }
-

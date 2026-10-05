@@ -1,10 +1,10 @@
 package net.kroet.permaclicker.common.facade;
 
-import net.kroet.turtlelib.LangLoader.LangLoader;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import net.kroet.turtlelib.LangLoader.LangLoader;
 
 /**
  * Single facade for all locale operations delegated to TurtleLib LangLoader.

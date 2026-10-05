@@ -13,20 +13,19 @@ class PermaClickBridgeEventLoopTest {
 
         AtomicInteger miningCalls = new AtomicInteger();
         bridge.bind(new PermaClickRuntimeBindings(
-            () -> true,
-            () -> false,
-            () -> true,
-            () -> {
-                miningCalls.incrementAndGet();
-                return true;
-            },
-            ignored -> {
-            },
-            ignored -> {
-            },
-            ignored -> {
-            }
-        ));
+                () -> true,
+                () -> false,
+                () -> true,
+                () -> {
+                    miningCalls.incrementAndGet();
+                    return true;
+                },
+                ignored -> {
+                },
+                ignored -> {
+                },
+                ignored -> {
+                }));
 
         loop.onKeyInput(bridge.boundKeyCode(), true);
         loop.onClientTick();
@@ -41,20 +40,19 @@ class PermaClickBridgeEventLoopTest {
 
         AtomicInteger miningCalls = new AtomicInteger();
         bridge.bind(new PermaClickRuntimeBindings(
-            () -> true,
-            () -> false,
-            () -> true,
-            () -> {
-                miningCalls.incrementAndGet();
-                return true;
-            },
-            ignored -> {
-            },
-            ignored -> {
-            },
-            ignored -> {
-            }
-        ));
+                () -> true,
+                () -> false,
+                () -> true,
+                () -> {
+                    miningCalls.incrementAndGet();
+                    return true;
+                },
+                ignored -> {
+                },
+                ignored -> {
+                },
+                ignored -> {
+                }));
 
         int key = bridge.boundKeyCode();
 

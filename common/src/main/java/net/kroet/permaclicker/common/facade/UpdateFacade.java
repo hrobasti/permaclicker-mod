@@ -1,13 +1,14 @@
 package net.kroet.permaclicker.common.facade;
 
+import java.util.Map;
 import net.kroet.permaclicker.common.config.UpdateChannel;
 import net.kroet.turtlelib.UpdateChecker.UpdateChecker;
 import net.kroet.turtlelib.UpdateChecker.UpdateReleaseChannel;
 import net.kroet.turtlelib.UpdateChecker.UpdateResult;
-import java.util.Map;
 
 /**
- * Single facade for update-check operations delegated to TurtleLib UpdateChecker.
+ * Single facade for update-check operations delegated to TurtleLib
+ * UpdateChecker.
  */
 public final class UpdateFacade {
     private static final String USER_AGENT_SUFFIX = " (+https://kroet.net)";
@@ -21,21 +22,19 @@ public final class UpdateFacade {
     }
 
     public static UpdateCheckResult check(
-        String currentVersion,
-        String minecraftVersion,
-        UpdateChannel updateChannel,
-        String modrinthProjectId,
-        String curseforgeProjectId
-    ) {
+            String currentVersion,
+            String minecraftVersion,
+            UpdateChannel updateChannel,
+            String modrinthProjectId,
+            String curseforgeProjectId) {
         try {
             UpdateChecker checker = new UpdateChecker(
-                userAgent(currentVersion),
-                emptyToNull(modrinthProjectId),
-                emptyToNull(curseforgeProjectId),
-                mapChannel(updateChannel),
-                true,
-                minecraftVersion
-            );
+                    userAgent(currentVersion),
+                    emptyToNull(modrinthProjectId),
+                    emptyToNull(curseforgeProjectId),
+                    mapChannel(updateChannel),
+                    true,
+                    minecraftVersion);
 
             UpdateResult result = checker.check(currentVersion);
             return new UpdateCheckResult(result.currentVersion(), result.latestVersion(), result.providerVersions());

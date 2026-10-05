@@ -30,18 +30,17 @@ class PermaClickConfigStoreTest {
         PermaClickConfigStore store = new PermaClickConfigStore(file);
 
         PermaClickConfig original = new PermaClickConfig(
-            true,
-            293,
-            false,
-            "red",
-            true,
-            42,
-            false,
-            false,
-            UpdateChannel.ALPHA,
-            ClickMode.MOB_ATTACK,
-            7
-        );
+                true,
+                293,
+                false,
+                "red",
+                true,
+                42,
+                false,
+                false,
+                UpdateChannel.ALPHA,
+                ClickMode.MOB_ATTACK,
+                7);
         store.save(original);
 
         PermaClickConfigStore.LoadResult result = store.load();
@@ -65,21 +64,21 @@ class PermaClickConfigStoreTest {
     void loadNormalizesInvalidFields() throws IOException {
         Path file = tempDir.resolve("permaclick.json");
         Files.writeString(file, """
-            {
-              "configVersion": 2,
-              "enabled": true,
-              "toggleKeyCode": -1,
-              "overlayEnabled": false,
-              "overlayColor": "invalid",
-              "runInBackground": false,
-              "autoStopMinutes": 12000,
-              "movementLockEnabled": false,
-              "updateCheckEnabled": false,
-              "updateChannel": "invalid",
-              "clickMode": "invalid",
-              "attackBufferTicks": 99
-            }
-            """);
+                {
+                  "configVersion": 2,
+                  "enabled": true,
+                  "toggleKeyCode": -1,
+                  "overlayEnabled": false,
+                  "overlayColor": "invalid",
+                  "runInBackground": false,
+                  "autoStopMinutes": 12000,
+                  "movementLockEnabled": false,
+                  "updateCheckEnabled": false,
+                  "updateChannel": "invalid",
+                  "clickMode": "invalid",
+                  "attackBufferTicks": 99
+                }
+                """);
 
         PermaClickConfigStore store = new PermaClickConfigStore(file);
         PermaClickConfigStore.LoadResult result = store.load();
@@ -103,19 +102,19 @@ class PermaClickConfigStoreTest {
     void loadDefaultsClickModeFieldsWhenMissingFromExistingConfig() throws IOException {
         Path file = tempDir.resolve("permaclick.json");
         Files.writeString(file, """
-            {
-              "configVersion": 2,
-              "enabled": false,
-              "toggleKeyCode": 64,
-              "overlayEnabled": true,
-              "overlayColor": "green",
-              "runInBackground": false,
-              "autoStopMinutes": 0,
-              "movementLockEnabled": true,
-              "updateCheckEnabled": true,
-              "updateChannel": "BETA"
-            }
-            """);
+                {
+                  "configVersion": 2,
+                  "enabled": false,
+                  "toggleKeyCode": 64,
+                  "overlayEnabled": true,
+                  "overlayColor": "green",
+                  "runInBackground": false,
+                  "autoStopMinutes": 0,
+                  "movementLockEnabled": true,
+                  "updateCheckEnabled": true,
+                  "updateChannel": "BETA"
+                }
+                """);
         PermaClickConfigStore store = new PermaClickConfigStore(file);
 
         PermaClickConfigStore.LoadResult result = store.load();
@@ -129,12 +128,12 @@ class PermaClickConfigStoreTest {
     void loadClampsNegativeAttackBufferAndParsesClickModeCaseInsensitively() throws IOException {
         Path file = tempDir.resolve("permaclick.json");
         Files.writeString(file, """
-            {
-              "configVersion": 2,
-              "clickMode": "mob_attack",
-              "attackBufferTicks": -5
-            }
-            """);
+                {
+                  "configVersion": 2,
+                  "clickMode": "mob_attack",
+                  "attackBufferTicks": -5
+                }
+                """);
         PermaClickConfigStore store = new PermaClickConfigStore(file);
 
         PermaClickConfig loaded = store.load().config();
@@ -147,18 +146,18 @@ class PermaClickConfigStoreTest {
     void loadMigratesLegacyToggleKeyToDefaultOnce() throws IOException {
         Path file = tempDir.resolve("permaclick.json");
         Files.writeString(file, """
-            {
-              "enabled": true,
-              "toggleKeyCode": 298,
-              "overlayEnabled": true,
-              "overlayColor": "green",
-              "runInBackground": false,
-              "autoStopMinutes": 0,
-              "movementLockEnabled": true,
-              "updateCheckEnabled": true,
-              "updateChannel": "BETA"
-            }
-            """);
+                {
+                  "enabled": true,
+                  "toggleKeyCode": 298,
+                  "overlayEnabled": true,
+                  "overlayColor": "green",
+                  "runInBackground": false,
+                  "autoStopMinutes": 0,
+                  "movementLockEnabled": true,
+                  "updateCheckEnabled": true,
+                  "updateChannel": "BETA"
+                }
+                """);
         PermaClickConfigStore store = new PermaClickConfigStore(file);
 
         PermaClickConfigStore.LoadResult firstLoad = store.load();
@@ -172,4 +171,3 @@ class PermaClickConfigStoreTest {
         assertEquals(PermaClickConfig.DEFAULT_TOGGLE_KEY_CODE, secondLoad.config().toggleKeyCode());
     }
 }
-

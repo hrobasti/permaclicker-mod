@@ -3,8 +3,8 @@ package net.kroet.permaclicker.client;
 import net.minecraft.client.Minecraft;
 
 /**
- * Freezes player movement input and view direction while active. Shared between Fabric and
- * NeoForge; each loader entrypoint owns one instance.
+ * Freezes player movement input and view direction while active. Shared between
+ * Fabric and NeoForge; each loader entrypoint owns one instance.
  */
 public final class MovementLockController {
     private boolean active;

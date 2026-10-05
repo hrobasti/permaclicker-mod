@@ -1,17 +1,18 @@
 package net.kroet.permaclicker.client;
 
+import com.mojang.blaze3d.platform.Window;
+import java.util.Locale;
 import net.kroet.permaclicker.common.config.ClickMode;
 import net.kroet.permaclicker.common.config.PermaClickConfig;
 import net.kroet.permaclicker.common.core.PermaClickBridge;
-import com.mojang.blaze3d.platform.Window;
-import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 
 /**
- * Shared game-context predicates and small helpers used by both loader entrypoints to decide
- * when background-mode blocking (pause screen, PermaClicker's own settings screen, chat) applies.
+ * Shared game-context predicates and small helpers used by both loader
+ * entrypoints to decide when background-mode blocking (pause screen,
+ * PermaClicker's own settings screen, chat) applies.
  */
 public final class PermaClickGameContext {
     private PermaClickGameContext() {
@@ -50,7 +51,8 @@ public final class PermaClickGameContext {
             return false;
         }
 
-        // Forcing continueAttack(true) while chat is open would break blocks; mob attack never mines.
+        // Forcing continueAttack(true) while chat is open would break blocks; mob
+        // attack never mines.
         if (config.clickMode() == ClickMode.MOB_ATTACK) {
             return false;
         }
@@ -72,10 +74,10 @@ public final class PermaClickGameContext {
 
     public static boolean isInGameHotkeyContext(Minecraft minecraft) {
         return minecraft != null
-            && minecraft.player != null
-            && minecraft.level != null
-            && minecraft.gameMode != null
-            && minecraft.gui.screen() == null;
+                && minecraft.player != null
+                && minecraft.level != null
+                && minecraft.gameMode != null
+                && minecraft.gui.screen() == null;
     }
 
     public static boolean isMiningAllowedScreen(Minecraft minecraft) {

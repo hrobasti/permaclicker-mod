@@ -6,8 +6,8 @@ import net.kroet.permaclicker.common.core.PermaClickService;
 /**
  * Loader-neutral key toggle helper.
  *
- * It toggles only on rising-edge key presses to prevent repeated toggles
- * while a key is held down.
+ * It toggles only on rising-edge key presses to prevent repeated toggles while
+ * a key is held down.
  */
 public final class ToggleKeyBinding {
     private int boundKeyCode;
@@ -39,4 +39,3 @@ public final class ToggleKeyBinding {
         currentlyPressed = pressed;
     }
 }
-

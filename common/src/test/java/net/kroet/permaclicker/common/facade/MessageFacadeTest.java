@@ -17,11 +17,10 @@ class MessageFacadeTest {
     @Test
     void formatsAndPlainRendersMessagesViaFacade() throws IOException {
         Files.writeString(
-            tempDir.resolve("en_US.properties"),
-            "ui.prefix=[<prefix_label>]\n"
-                + "greet=<prefix> Hello <name>\n"
-                + "tagged=<red>Hi</red> {name}\n"
-        );
+                tempDir.resolve("en_US.properties"),
+                "ui.prefix=[<prefix_label>]\n"
+                        + "greet=<prefix> Hello <name>\n"
+                        + "tagged=<red>Hi</red> {name}\n");
 
         MessageFacade facade = new MessageFacade(MessageFacadeTest.class, tempDir, "[<prefix_label>]", "PermaClick");
         facade.load("en_US");

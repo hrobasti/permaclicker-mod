@@ -6,9 +6,15 @@ import java.util.Locale;
  * What PermaClicker's held attack input is used for while active.
  */
 public enum ClickMode {
-    /** Keep the attack key held to continuously mine the targeted block (original behavior). */
+    /**
+     * Keep the attack key held to continuously mine the targeted block (original
+     * behavior).
+     */
     MINING,
-    /** Hit the targeted mob once per fully recharged attack cooldown (plus a configurable buffer). */
+    /**
+     * Hit the targeted mob once per fully recharged attack cooldown (plus a
+     * configurable buffer).
+     */
     MOB_ATTACK;
 
     public static ClickMode fromString(String raw, ClickMode fallback) {

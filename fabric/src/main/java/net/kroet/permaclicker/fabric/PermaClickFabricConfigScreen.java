@@ -1,21 +1,20 @@
 package net.kroet.permaclicker.fabric;
 
-import net.kroet.permaclicker.common.config.ClickMode;
-import net.kroet.permaclicker.common.config.PermaClickConfig;
-import net.kroet.permaclicker.common.config.UpdateChannel;
-import net.kroet.permaclicker.common.core.PermaClickBridge;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import net.fabricmc.loader.api.FabricLoader;
+import net.kroet.permaclicker.common.config.ClickMode;
+import net.kroet.permaclicker.common.config.PermaClickConfig;
+import net.kroet.permaclicker.common.config.UpdateChannel;
+import net.kroet.permaclicker.common.core.PermaClickBridge;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -35,23 +34,22 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
     private static final int INFO_ICON_BG_COLOR = 0xAA2E5A88;
     private static final int INFO_ICON_TEXT_COLOR = 0xFFFFFFFF;
     private static final List<String> OVERLAY_COLORS = List.of(
-        "black",
-        "dark_blue",
-        "dark_green",
-        "dark_aqua",
-        "dark_red",
-        "dark_purple",
-        "gold",
-        "gray",
-        "dark_gray",
-        "blue",
-        "green",
-        "aqua",
-        "red",
-        "light_purple",
-        "yellow",
-        "white"
-    );
+            "black",
+            "dark_blue",
+            "dark_green",
+            "dark_aqua",
+            "dark_red",
+            "dark_purple",
+            "gold",
+            "gray",
+            "dark_gray",
+            "blue",
+            "green",
+            "aqua",
+            "red",
+            "light_purple",
+            "yellow",
+            "white");
 
     private final Screen parent;
 
@@ -111,79 +109,66 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
             refreshButtonMessages();
         });
         addLabeledRow(
-            Component.translatable("permaclicker.config.runtime_mode"),
-            tooltipLines(
-                tooltipLine(Component.translatable("permaclicker.config.runtime_mode.focused"), "permaclicker.config.runtime_mode.tooltip.focused.desc"),
-                tooltipLine(Component.translatable("permaclicker.config.runtime_mode.background"), "permaclicker.config.runtime_mode.tooltip.background.desc")
-            ),
-            this.runtimeModeButton
-        );
+                Component.translatable("permaclicker.config.runtime_mode"),
+                tooltipLines(
+                        tooltipLine(Component.translatable("permaclicker.config.runtime_mode.focused"), "permaclicker.config.runtime_mode.tooltip.focused.desc"),
+                        tooltipLine(Component.translatable("permaclicker.config.runtime_mode.background"), "permaclicker.config.runtime_mode.tooltip.background.desc")),
+                this.runtimeModeButton);
 
         this.clickModeButton = this.createToggleButton(clickModeValue(), button -> {
             clickMode = clickMode == ClickMode.MOB_ATTACK ? ClickMode.MINING : ClickMode.MOB_ATTACK;
             refreshButtonMessages();
         });
         addLabeledRow(
-            Component.translatable("permaclicker.config.click_mode"),
-            tooltipLines(
-                tooltipLine(Component.translatable("permaclicker.config.click_mode.mining"), "permaclicker.config.click_mode.tooltip.mining.desc"),
-                tooltipLine(Component.translatable("permaclicker.config.click_mode.mob_attack"), "permaclicker.config.click_mode.tooltip.mob_attack.desc")
-            ),
-            this.clickModeButton
-        );
+                Component.translatable("permaclicker.config.click_mode"),
+                tooltipLines(
+                        tooltipLine(Component.translatable("permaclicker.config.click_mode.mining"), "permaclicker.config.click_mode.tooltip.mining.desc"),
+                        tooltipLine(Component.translatable("permaclicker.config.click_mode.mob_attack"), "permaclicker.config.click_mode.tooltip.mob_attack.desc")),
+                this.clickModeButton);
 
         this.attackBufferInputField = new EditBox(
-            this.font,
-            0,
-            0,
-            CONTROL_WIDTH,
-            ROW_HEIGHT,
-            Component.translatable("permaclicker.config.attack_buffer_ticks")
-        );
+                this.font,
+                0,
+                0,
+                CONTROL_WIDTH,
+                ROW_HEIGHT,
+                Component.translatable("permaclicker.config.attack_buffer_ticks"));
         this.attackBufferInputField.setMaxLength(2);
         this.attackBufferInputField.setValue(Integer.toString(attackBufferTicks));
         addLabeledRow(
-            Component.translatable("permaclicker.config.attack_buffer_ticks"),
-            tooltipLines(
-                tooltipLine(
-                    Component.literal(PermaClickConfig.MIN_ATTACK_BUFFER_TICKS + "-" + PermaClickConfig.MAX_ATTACK_BUFFER_TICKS),
-                    "permaclicker.config.attack_buffer_ticks.tooltip.range.desc"
-                )
-            ),
-            this.attackBufferInputField
-        );
+                Component.translatable("permaclicker.config.attack_buffer_ticks"),
+                tooltipLines(
+                        tooltipLine(
+                                Component.literal(PermaClickConfig.MIN_ATTACK_BUFFER_TICKS + "-" + PermaClickConfig.MAX_ATTACK_BUFFER_TICKS),
+                                "permaclicker.config.attack_buffer_ticks.tooltip.range.desc")),
+                this.attackBufferInputField);
 
         this.autoStopInputField = new EditBox(
-            this.font,
-            0,
-            0,
-            CONTROL_WIDTH,
-            ROW_HEIGHT,
-            Component.translatable("permaclicker.config.auto_stop_minutes")
-        );
+                this.font,
+                0,
+                0,
+                CONTROL_WIDTH,
+                ROW_HEIGHT,
+                Component.translatable("permaclicker.config.auto_stop_minutes"));
         this.autoStopInputField.setMaxLength(4);
         this.autoStopInputField.setValue(Integer.toString(autoStopMinutes));
         addLabeledRow(
-            Component.translatable("permaclicker.config.auto_stop_minutes"),
-            tooltipLines(
-                tooltipLine(Component.literal("0"), "permaclicker.config.auto_stop_minutes.tooltip.off.desc"),
-                tooltipLine(Component.literal("1-9999"), "permaclicker.config.auto_stop_minutes.tooltip.range.desc")
-            ),
-            this.autoStopInputField
-        );
+                Component.translatable("permaclicker.config.auto_stop_minutes"),
+                tooltipLines(
+                        tooltipLine(Component.literal("0"), "permaclicker.config.auto_stop_minutes.tooltip.off.desc"),
+                        tooltipLine(Component.literal("1-9999"), "permaclicker.config.auto_stop_minutes.tooltip.range.desc")),
+                this.autoStopInputField);
 
         this.movementLockButton = this.createToggleButton(toggleValue(movementLockEnabled), button -> {
             movementLockEnabled = !movementLockEnabled;
             refreshButtonMessages();
         });
         addLabeledRow(
-            Component.translatable("permaclicker.config.cursor_lock"),
-            tooltipLines(
-                tooltipLine(Component.translatable("permaclicker.config.value.on"), "permaclicker.config.cursor_lock.tooltip.on.desc"),
-                tooltipLine(Component.translatable("permaclicker.config.value.off"), "permaclicker.config.cursor_lock.tooltip.off.desc")
-            ),
-            this.movementLockButton
-        );
+                Component.translatable("permaclicker.config.cursor_lock"),
+                tooltipLines(
+                        tooltipLine(Component.translatable("permaclicker.config.value.on"), "permaclicker.config.cursor_lock.tooltip.on.desc"),
+                        tooltipLine(Component.translatable("permaclicker.config.value.off"), "permaclicker.config.cursor_lock.tooltip.off.desc")),
+                this.movementLockButton);
 
         addSectionRow(Component.translatable("permaclicker.config.section.overlay"));
         this.overlayEnabledButton = this.createToggleButton(toggleValue(overlayEnabled), button -> {
@@ -191,28 +176,23 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
             refreshButtonMessages();
         });
         addLabeledRow(
-            Component.translatable("permaclicker.config.overlay.enabled"),
-            tooltipLines(
-                tooltipLine(Component.translatable("permaclicker.config.value.on"), "permaclicker.config.overlay.enabled.tooltip.on.desc"),
-                tooltipLine(Component.translatable("permaclicker.config.value.off"), "permaclicker.config.overlay.enabled.tooltip.off.desc")
-            ),
-            this.overlayEnabledButton
-        );
+                Component.translatable("permaclicker.config.overlay.enabled"),
+                tooltipLines(
+                        tooltipLine(Component.translatable("permaclicker.config.value.on"), "permaclicker.config.overlay.enabled.tooltip.on.desc"),
+                        tooltipLine(Component.translatable("permaclicker.config.value.off"), "permaclicker.config.overlay.enabled.tooltip.off.desc")),
+                this.overlayEnabledButton);
 
         this.overlayColorButton = this.createToggleButton(overlayColorValue(), button -> {
             overlayColor = nextOverlayColor(overlayColor);
             refreshButtonMessages();
         });
         addLabeledRow(
-            Component.translatable("permaclicker.config.overlay.color"),
-            tooltipLines(
-                tooltipLine(
-                    Component.translatable("permaclicker.config.overlay.color.tooltip.any.label"),
-                    "permaclicker.config.overlay.color.tooltip.any.desc"
-                )
-            ),
-            this.overlayColorButton
-        );
+                Component.translatable("permaclicker.config.overlay.color"),
+                tooltipLines(
+                        tooltipLine(
+                                Component.translatable("permaclicker.config.overlay.color.tooltip.any.label"),
+                                "permaclicker.config.overlay.color.tooltip.any.desc")),
+                this.overlayColorButton);
 
         addSectionRow(Component.translatable("permaclicker.config.section.updates"));
         this.updateCheckButton = this.createToggleButton(toggleValue(updateCheckEnabled), button -> {
@@ -220,27 +200,23 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
             refreshButtonMessages();
         });
         addLabeledRow(
-            Component.translatable("permaclicker.config.update.enabled"),
-            tooltipLines(
-                tooltipLine(Component.translatable("permaclicker.config.value.on"), "permaclicker.config.update.enabled.tooltip.on.desc"),
-                tooltipLine(Component.translatable("permaclicker.config.value.off"), "permaclicker.config.update.enabled.tooltip.off.desc")
-            ),
-            this.updateCheckButton
-        );
+                Component.translatable("permaclicker.config.update.enabled"),
+                tooltipLines(
+                        tooltipLine(Component.translatable("permaclicker.config.value.on"), "permaclicker.config.update.enabled.tooltip.on.desc"),
+                        tooltipLine(Component.translatable("permaclicker.config.value.off"), "permaclicker.config.update.enabled.tooltip.off.desc")),
+                this.updateCheckButton);
 
         this.updateChannelButton = this.createToggleButton(updateChannelValue(), button -> {
             updateChannel = nextChannel(updateChannel);
             refreshButtonMessages();
         });
         addLabeledRow(
-            Component.translatable("permaclicker.config.update.channel"),
-            tooltipLines(
-                tooltipLine(Component.translatable("permaclicker.config.update.channel.stable"), "permaclicker.config.update.channel.tooltip.stable.desc"),
-                tooltipLine(Component.translatable("permaclicker.config.update.channel.beta"), "permaclicker.config.update.channel.tooltip.beta.desc"),
-                tooltipLine(Component.translatable("permaclicker.config.update.channel.alpha"), "permaclicker.config.update.channel.tooltip.alpha.desc")
-            ),
-            this.updateChannelButton
-        );
+                Component.translatable("permaclicker.config.update.channel"),
+                tooltipLines(
+                        tooltipLine(Component.translatable("permaclicker.config.update.channel.stable"), "permaclicker.config.update.channel.tooltip.stable.desc"),
+                        tooltipLine(Component.translatable("permaclicker.config.update.channel.beta"), "permaclicker.config.update.channel.tooltip.beta.desc"),
+                        tooltipLine(Component.translatable("permaclicker.config.update.channel.alpha"), "permaclicker.config.update.channel.tooltip.alpha.desc")),
+                this.updateChannelButton);
 
         refreshButtonMessages();
     }
@@ -250,15 +226,13 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
         LinearLayout footerButtons = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
 
         footerButtons.addChild(
-            Button.builder(Component.translatable("permaclicker.config.button.cancel"), btn -> onClose())
-                .width(150)
-                .build()
-        );
+                Button.builder(Component.translatable("permaclicker.config.button.cancel"), btn -> onClose())
+                        .width(150)
+                        .build());
         footerButtons.addChild(
-            Button.builder(Component.translatable("permaclicker.config.button.save_close"), btn -> saveAndClose())
-                .width(150)
-                .build()
-        );
+                Button.builder(Component.translatable("permaclicker.config.button.save_close"), btn -> saveAndClose())
+                        .width(150)
+                        .build());
     }
 
     @Override
@@ -299,8 +273,8 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
 
     private Button createToggleButton(Component initialText, Button.OnPress onPress) {
         return Button.builder(initialText, onPress)
-            .bounds(0, 0, CONTROL_WIDTH, ROW_HEIGHT)
-            .build();
+                .bounds(0, 0, CONTROL_WIDTH, ROW_HEIGHT)
+                .build();
     }
 
     private void addLabeledRow(Component labelText, List<Component> infoTooltipLines, AbstractWidget controlWidget) {
@@ -353,14 +327,13 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
             guiGraphics.text(PermaClickFabricConfigScreen.this.font, Component.literal("i"), iconX + 3, iconY + 1, INFO_ICON_TEXT_COLOR, false);
 
             boolean hoveredIcon = mouseX >= iconX && mouseX < iconX + INFO_ICON_SIZE
-                && mouseY >= iconY && mouseY < iconY + INFO_ICON_SIZE;
+                    && mouseY >= iconY && mouseY < iconY + INFO_ICON_SIZE;
             if (hoveredIcon && !this.infoTooltipLines.isEmpty()) {
                 guiGraphics.setComponentTooltipForNextFrame(
-                    PermaClickFabricConfigScreen.this.font,
-                    this.infoTooltipLines,
-                    mouseX,
-                    mouseY
-                );
+                        PermaClickFabricConfigScreen.this.font,
+                        this.infoTooltipLines,
+                        mouseX,
+                        mouseY);
             }
         }
 
@@ -406,22 +379,22 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
 
     private Component runtimeModeValue() {
         return Component.translatable(runInBackground
-            ? "permaclicker.config.runtime_mode.background"
-            : "permaclicker.config.runtime_mode.focused");
+                ? "permaclicker.config.runtime_mode.background"
+                : "permaclicker.config.runtime_mode.focused");
     }
 
     private Component clickModeValue() {
         return Component.translatable(clickMode == ClickMode.MOB_ATTACK
-            ? "permaclicker.config.click_mode.mob_attack"
-            : "permaclicker.config.click_mode.mining");
+                ? "permaclicker.config.click_mode.mob_attack"
+                : "permaclicker.config.click_mode.mining");
     }
 
     private Component overlayColorValue() {
         ChatFormatting color = resolveOverlayColor(overlayColor);
         String label = overlayColor.replace('_', ' ');
         label = label.isEmpty()
-            ? PermaClickConfig.DEFAULT_OVERLAY_COLOR
-            : Character.toUpperCase(label.charAt(0)) + label.substring(1).toLowerCase(Locale.ROOT);
+                ? PermaClickConfig.DEFAULT_OVERLAY_COLOR
+                : Character.toUpperCase(label.charAt(0)) + label.substring(1).toLowerCase(Locale.ROOT);
         return Component.literal(label).withStyle(color);
     }
 
@@ -433,8 +406,8 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
         };
 
         return updateCheckEnabled
-            ? Component.translatable(channelKey)
-            : Component.translatable("permaclicker.config.update.channel.disabled");
+                ? Component.translatable(channelKey)
+                : Component.translatable("permaclicker.config.update.channel.disabled");
     }
 
     private static Component toggleValue(boolean value) {
@@ -453,18 +426,17 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
         }
 
         PermaClickConfig updated = new PermaClickConfig(
-            bridge.currentConfig().enabled(),
-            bridge.currentConfig().toggleKeyCode(),
-            overlayEnabled,
-            overlayColor,
-            runInBackground,
-            PermaClickConfig.clampAutoStopMinutes(parsedAutoStop),
-            movementLockEnabled,
-            updateCheckEnabled,
-            updateChannel,
-            clickMode,
-            PermaClickConfig.clampAttackBufferTicks(parsedAttackBuffer)
-        );
+                bridge.currentConfig().enabled(),
+                bridge.currentConfig().toggleKeyCode(),
+                overlayEnabled,
+                overlayColor,
+                runInBackground,
+                PermaClickConfig.clampAutoStopMinutes(parsedAutoStop),
+                movementLockEnabled,
+                updateCheckEnabled,
+                updateChannel,
+                clickMode,
+                PermaClickConfig.clampAttackBufferTicks(parsedAttackBuffer));
 
         bridge.applyConfig(updated);
         try {

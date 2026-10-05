@@ -6,18 +6,17 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * Loader-side bindings that connect common PermaClick runtime operations
- * to a client implementation. Shared verbatim between Fabric and NeoForge.
+ * Loader-side bindings that connect common PermaClick runtime operations to a
+ * client implementation. Shared verbatim between Fabric and NeoForge.
  */
 public record PermaClickRuntimeBindings(
-    Supplier<Boolean> focusedSupplier,
-    Supplier<Boolean> minimizedSupplier,
-    Supplier<Boolean> miningReadySupplier,
-    BooleanSupplier miningTickAction,
-    Consumer<ActionBarPayload> actionBarMessage,
-    Consumer<Boolean> movementLockAction,
-    Consumer<Boolean> backgroundCursorFreeAction
-) {
+        Supplier<Boolean> focusedSupplier,
+        Supplier<Boolean> minimizedSupplier,
+        Supplier<Boolean> miningReadySupplier,
+        BooleanSupplier miningTickAction,
+        Consumer<ActionBarPayload> actionBarMessage,
+        Consumer<Boolean> movementLockAction,
+        Consumer<Boolean> backgroundCursorFreeAction) {
     public PermaClickRuntimeBindings {
         Objects.requireNonNull(focusedSupplier, "focusedSupplier");
         Objects.requireNonNull(minimizedSupplier, "minimizedSupplier");
@@ -30,17 +29,16 @@ public record PermaClickRuntimeBindings(
 
     public static PermaClickRuntimeBindings noop() {
         return new PermaClickRuntimeBindings(
-            () -> true,
-            () -> false,
-            () -> false,
-            () -> false,
-            ignored -> {
-            },
-            ignored -> {
-            },
-            ignored -> {
-            }
-        );
+                () -> true,
+                () -> false,
+                () -> false,
+                () -> false,
+                ignored -> {
+                },
+                ignored -> {
+                },
+                ignored -> {
+                });
     }
 
     public void applyMovementLock(boolean active) {

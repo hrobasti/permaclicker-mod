@@ -35,4 +35,3 @@ public interface PermaClickRuntime {
         showActionBar(message);
     }
 }
-

@@ -1,28 +1,28 @@
 package net.kroet.permaclicker.fabric;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.kroet.permaclicker.common.config.PermaClickConfigStore;
-import net.kroet.permaclicker.common.core.PermaClickBridge;
-import net.kroet.permaclicker.common.core.PermaClickClientController;
-import net.kroet.permaclicker.common.core.PermaClickClientEventLoop;
-import net.kroet.permaclicker.common.core.PermaClickRuntimeBindings;
 import java.io.IOException;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
 import net.kroet.permaclicker.client.MiningRuntimeState;
 import net.kroet.permaclicker.client.MovementLockController;
 import net.kroet.permaclicker.client.PauseOnLostFocusOverride;
 import net.kroet.permaclicker.client.PermaClickGameContext;
 import net.kroet.permaclicker.client.PermaClickKeyMappings;
 import net.kroet.permaclicker.client.UpdateNoticeController;
+import net.kroet.permaclicker.common.config.PermaClickConfigStore;
+import net.kroet.permaclicker.common.core.PermaClickBridge;
+import net.kroet.permaclicker.common.core.PermaClickClientController;
+import net.kroet.permaclicker.common.core.PermaClickClientEventLoop;
+import net.kroet.permaclicker.common.core.PermaClickRuntimeBindings;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 /**
  * Fabric entrypoint and client event wiring for PermaClick.
@@ -62,45 +62,47 @@ public final class PermaClickFabricEntrypoint implements ClientModInitializer {
         try {
             ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> onClientDisconnect());
         } catch (Throwable ignored) {
-            // Keep core functionality active even if this optional hook differs across runtime variants.
+            // Keep core functionality active even if this optional hook differs across
+            // runtime variants.
         }
     }
 
     private PermaClickRuntimeBindings createBindings() {
         return new PermaClickRuntimeBindings(
-            () -> {
-                Minecraft minecraft = Minecraft.getInstance();
-                return minecraft != null && minecraft.isWindowActive();
-            },
-            () -> {
-                Minecraft minecraft = Minecraft.getInstance();
-                return PermaClickGameContext.isWindowMinimized(minecraft);
-            },
-            () -> {
-                Minecraft minecraft = Minecraft.getInstance();
-                return minecraft != null
-                    && minecraft.player != null
-                    && minecraft.gameMode != null
-                    && PermaClickGameContext.isMiningAllowedScreen(minecraft)
-                    && !MINING_STATE.isBackgroundPauseSuppressedThisTick();
-            },
-            () -> {
-                Minecraft minecraft = Minecraft.getInstance();
-                return MINING_STATE.performClickTick(minecraft, BRIDGE.currentConfig());
-            },
-            payload -> {
-                Minecraft minecraft = Minecraft.getInstance();
-                if (minecraft != null && minecraft.player != null) {
-                    ChatFormatting overlayColor = PermaClickGameContext.resolveOverlayColor(payload.colorName());
-                    Component overlayMessage = Component.literal(payload.message()).withStyle(overlayColor);
-                    // 26.2: action-bar text is LocalPlayer.sendOverlayMessage(Component). Call it directly
-                    // so the loader toolchain remaps it; reflection by Mojang name is unreliable on Fabric.
-                    minecraft.player.sendOverlayMessage(overlayMessage);
-                }
-            },
-            active -> MOVEMENT_LOCK.setActive(Minecraft.getInstance(), active),
-            active -> MINING_STATE.setBackgroundCursorFreeActive(Minecraft.getInstance(), active, PAUSE_OVERRIDE)
-        );
+                () -> {
+                    Minecraft minecraft = Minecraft.getInstance();
+                    return minecraft != null && minecraft.isWindowActive();
+                },
+                () -> {
+                    Minecraft minecraft = Minecraft.getInstance();
+                    return PermaClickGameContext.isWindowMinimized(minecraft);
+                },
+                () -> {
+                    Minecraft minecraft = Minecraft.getInstance();
+                    return minecraft != null
+                            && minecraft.player != null
+                            && minecraft.gameMode != null
+                            && PermaClickGameContext.isMiningAllowedScreen(minecraft)
+                            && !MINING_STATE.isBackgroundPauseSuppressedThisTick();
+                },
+                () -> {
+                    Minecraft minecraft = Minecraft.getInstance();
+                    return MINING_STATE.performClickTick(minecraft, BRIDGE.currentConfig());
+                },
+                payload -> {
+                    Minecraft minecraft = Minecraft.getInstance();
+                    if (minecraft != null && minecraft.player != null) {
+                        ChatFormatting overlayColor = PermaClickGameContext.resolveOverlayColor(payload.colorName());
+                        Component overlayMessage = Component.literal(payload.message()).withStyle(overlayColor);
+                        // 26.2: action-bar text is LocalPlayer.sendOverlayMessage(Component). Call it
+                        // directly
+                        // so the loader toolchain remaps it; reflection by Mojang name is unreliable on
+                        // Fabric.
+                        minecraft.player.sendOverlayMessage(overlayMessage);
+                    }
+                },
+                active -> MOVEMENT_LOCK.setActive(Minecraft.getInstance(), active),
+                active -> MINING_STATE.setBackgroundCursorFreeActive(Minecraft.getInstance(), active, PAUSE_OVERRIDE));
     }
 
     private void onClientTick(Minecraft client) {

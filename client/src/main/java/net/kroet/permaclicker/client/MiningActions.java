@@ -10,14 +10,18 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.BlockHitResult;
 
 /**
- * Block-mining primitives shared by the focused- and background-mode executors: vanilla attack
- * entry points (via compile-checked mixin invokers), a cached destroy target that survives brief
- * crosshair/hit-result gaps, and detection of whether a call advanced mining. Each executor owns
- * one instance because the cached target is per-executor state.
+ * Block-mining primitives shared by the focused- and background-mode executors:
+ * vanilla attack entry points (via compile-checked mixin invokers), a cached
+ * destroy target that survives brief crosshair/hit-result gaps, and detection
+ * of whether a call advanced mining. Each executor owns one instance because
+ * the cached target is per-executor state.
  *
- * <p>Every method returns whether mining advanced this tick: destroy progress grew, destroying
- * started, the block broke, or the post-break destroy delay counted down. Executors stop after the
- * first advancing call so mining advances at most once per tick (see {@link MiningTickGuard}).</p>
+ * <p>
+ * Every method returns whether mining advanced this tick: destroy progress
+ * grew, destroying started, the block broke, or the post-break destroy delay
+ * counted down. Executors stop after the first advancing call so mining
+ * advances at most once per tick (see {@link MiningTickGuard}).
+ * </p>
  */
 final class MiningActions {
     private BlockPos cachedDestroyPos;
@@ -120,11 +124,10 @@ final class MiningActions {
                 return new DestroySnapshot(false, Integer.MIN_VALUE, Float.NaN, Integer.MIN_VALUE);
             }
             return new DestroySnapshot(
-                gameMode.isDestroying(),
-                gameMode.getDestroyStage(),
-                destroyProgress(gameMode),
-                destroyDelay(gameMode)
-            );
+                    gameMode.isDestroying(),
+                    gameMode.getDestroyStage(),
+                    destroyProgress(gameMode),
+                    destroyDelay(gameMode));
         }
 
         boolean hasAdvancedIn(MultiPlayerGameMode gameMode) {
@@ -132,8 +135,10 @@ final class MiningActions {
                 return false;
             }
 
-            // The destroy delay counts down once per continueDestroyBlock call after a block broke,
-            // and is re-armed when a block breaks; either change means this call used up the tick.
+            // The destroy delay counts down once per continueDestroyBlock call after a
+            // block broke,
+            // and is re-armed when a block breaks; either change means this call used up
+            // the tick.
             int currentDelay = destroyDelay(gameMode);
             if (delay != Integer.MIN_VALUE && currentDelay != Integer.MIN_VALUE && currentDelay != delay) {
                 return true;

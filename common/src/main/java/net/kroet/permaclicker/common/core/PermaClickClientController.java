@@ -54,4 +54,3 @@ public final class PermaClickClientController {
         service.shutdown(runtime);
     }
 }
-

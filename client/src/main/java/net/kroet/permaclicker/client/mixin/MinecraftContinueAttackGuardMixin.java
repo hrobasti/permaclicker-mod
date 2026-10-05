@@ -8,9 +8,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Skips vanilla's per-tick {@code continueAttack} once PermaClicker has already advanced mining in
- * the current tick (see {@link MiningTickGuard}). PermaClicker's own invoker call runs before the
- * guard is armed, so it is never skipped. Shared between Fabric and NeoForge via
+ * Skips vanilla's per-tick {@code continueAttack} once PermaClicker has already
+ * advanced mining in the current tick (see {@link MiningTickGuard}).
+ * PermaClicker's own invoker call runs before the guard is armed, so it is
+ * never skipped. Shared between Fabric and NeoForge via
  * {@code permaclicker.client.mixins.json}.
  */
 @Mixin(Minecraft.class)

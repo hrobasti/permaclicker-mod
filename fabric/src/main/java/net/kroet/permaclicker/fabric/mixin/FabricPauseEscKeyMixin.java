@@ -1,7 +1,7 @@
 package net.kroet.permaclicker.fabric.mixin;
 
-import net.kroet.permaclicker.fabric.PermaClickFabricEntrypoint;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.kroet.permaclicker.fabric.PermaClickFabricEntrypoint;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.input.KeyEvent;

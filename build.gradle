@@ -2,6 +2,13 @@
 // Works as the root project of a standalone checkout and as project ':permaclicker-mod'
 // inside the hrobasti-mods workspace (the workspace root only aggregates these tasks).
 
+plugins {
+    // Java formatting gate, configured at the end of this file.
+    id 'com.diffplug.spotless' version '8.10.2'
+}
+
+// Provides check/build at repository level, so `./gradlew build` also runs spotlessCheck.
+apply plugin: 'base'
 // Provides the javaToolchains service used to locate a JDK for the nested matrix builds.
 apply plugin: 'jvm-toolchains'
 apply from: 'gradle/matrix-defaults.gradle'
@@ -86,6 +93,7 @@ def verifyMatrixTargets = tasks.register('verifyMatrixTargets') {
 }
 
 tasks.register('testPermaClicker') {
+    dependsOn('spotlessCheck')
     group = 'verification'
     description = 'Runs all PermaClicker unit tests (common + client + Fabric + NeoForge).'
     dependsOn(
@@ -171,6 +179,7 @@ tasks.register('buildPermaClickerFabricMatrix') {
 
 // The loader jars land in dist directly (destinationDirectory), so no collect/copy step is needed.
 tasks.register('releasePermaClicker') {
+    dependsOn('spotlessCheck')
     group = 'build'
     description = 'Clean release build: all PermaClicker NeoForge + Fabric matrix jars into dist.'
     dependsOn(cleanPermaClickerRelease)
@@ -179,4 +188,33 @@ tasks.register('releasePermaClicker') {
 
 ([neoForgeMatrixBuildTasks, fabricMatrixBuildTasks].flatten() + ['buildPermaClickerNeoForgeMatrix', 'buildPermaClickerFabricMatrix']).each { name ->
     tasks.named(name) { mustRunAfter(cleanPermaClickerRelease) }
+}
+
+// Enforced Java formatting (Eclipse JDT formatter via Spotless), identical to hrobasti-plugins.
+// spotlessCheck runs with check/build, testPermaClicker and releasePermaClicker; fix with `./gradlew spotlessApply`.
+// Spotless resolves its formatter artifacts through the repositories of this project.
+repositories {
+    mavenCentral()
+}
+
+spotless {
+    // All files use LF (.gitattributes), enforced here in check and apply.
+    lineEndings = com.diffplug.spotless.LineEnding.UNIX
+    java {
+        target '*/src/**/*.java'
+        // Import steps run first so the Eclipse formatter has the last word on layout.
+        removeUnusedImports()
+        importOrder()
+        forbidWildcardImports()
+        eclipse().configFile('config/spotless-eclipse-formatter.properties')
+        toggleOffOn()
+        trimTrailingWhitespace()
+        endWithNewline()
+        leadingTabsToSpaces(4)
+    }
+    format 'resources', {
+        target '*/src/**/*.properties', '*/src/**/*.txt', '*/src/**/*.toml', '*.properties'
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }

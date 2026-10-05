@@ -1,9 +1,9 @@
 package net.kroet.permaclicker.common.i18n;
 
-import net.kroet.permaclicker.common.facade.LocaleFacade;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Properties;
+import net.kroet.permaclicker.common.facade.LocaleFacade;
 
 /**
  * Locale helpers for PermaClick based on TurtleLib LangLoader.
@@ -24,4 +24,3 @@ public final class PermaClickLocaleService {
         return LocaleFacade.normalizeGameLocale(gameLocaleTag);
     }
 }
-

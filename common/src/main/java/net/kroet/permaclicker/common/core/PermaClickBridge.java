@@ -3,8 +3,9 @@ package net.kroet.permaclicker.common.core;
 import net.kroet.permaclicker.common.config.PermaClickConfig;
 
 /**
- * Loader-facing bridge used by client event handlers. Shared verbatim between Fabric and
- * NeoForge; loader modules only ever supply {@link PermaClickRuntimeBindings}.
+ * Loader-facing bridge used by client event handlers. Shared verbatim between
+ * Fabric and NeoForge; loader modules only ever supply
+ * {@link PermaClickRuntimeBindings}.
  */
 public final class PermaClickBridge {
     private final PermaClickClientController controller;

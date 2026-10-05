@@ -1,32 +1,32 @@
 package net.kroet.permaclicker.neoforge;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.kroet.permaclicker.common.config.PermaClickConfigStore;
-import net.kroet.permaclicker.common.core.PermaClickBridge;
-import net.kroet.permaclicker.common.core.PermaClickClientController;
-import net.kroet.permaclicker.common.core.PermaClickClientEventLoop;
-import net.kroet.permaclicker.common.core.PermaClickRuntimeBindings;
 import java.io.IOException;
-import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.loading.FMLPaths;
-import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import net.neoforged.neoforge.common.NeoForge;
 import net.kroet.permaclicker.client.MiningRuntimeState;
 import net.kroet.permaclicker.client.MovementLockController;
 import net.kroet.permaclicker.client.PauseOnLostFocusOverride;
 import net.kroet.permaclicker.client.PermaClickGameContext;
 import net.kroet.permaclicker.client.PermaClickKeyMappings;
 import net.kroet.permaclicker.client.UpdateNoticeController;
+import net.kroet.permaclicker.common.config.PermaClickConfigStore;
+import net.kroet.permaclicker.common.core.PermaClickBridge;
+import net.kroet.permaclicker.common.core.PermaClickClientController;
+import net.kroet.permaclicker.common.core.PermaClickClientEventLoop;
+import net.kroet.permaclicker.common.core.PermaClickRuntimeBindings;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.common.NeoForge;
 
 /**
  * NeoForge entrypoint and client event wiring for PermaClick.
@@ -57,9 +57,8 @@ public final class PermaClickNeoForgeEntrypoint {
         }
         UPDATE_NOTICE.scheduleUpdateCheck(BRIDGE);
         ModLoadingContext.get().registerExtensionPoint(
-            IConfigScreenFactory.class,
-            () -> (modContainer, parent) -> new PermaClickNeoForgeConfigScreen(parent)
-        );
+                IConfigScreenFactory.class,
+                () -> (modContainer, parent) -> new PermaClickNeoForgeConfigScreen(parent));
 
         modEventBus.addListener(this::onRegisterKeyMappings);
 
@@ -70,39 +69,40 @@ public final class PermaClickNeoForgeEntrypoint {
 
     private PermaClickRuntimeBindings createBindings() {
         return new PermaClickRuntimeBindings(
-            () -> {
-                Minecraft minecraft = Minecraft.getInstance();
-                return minecraft != null && minecraft.isWindowActive();
-            },
-            () -> {
-                Minecraft minecraft = Minecraft.getInstance();
-                return PermaClickGameContext.isWindowMinimized(minecraft);
-            },
-            () -> {
-                Minecraft minecraft = Minecraft.getInstance();
-                return minecraft != null
-                    && minecraft.player != null
-                    && minecraft.gameMode != null
-                    && PermaClickGameContext.isMiningAllowedScreen(minecraft)
-                    && !MINING_STATE.isBackgroundPauseSuppressedThisTick();
-            },
-            () -> {
-                Minecraft minecraft = Minecraft.getInstance();
-                return MINING_STATE.performClickTick(minecraft, BRIDGE.currentConfig());
-            },
-            payload -> {
-                Minecraft minecraft = Minecraft.getInstance();
-                if (minecraft != null && minecraft.player != null) {
-                    ChatFormatting overlayColor = PermaClickGameContext.resolveOverlayColor(payload.colorName());
-                    Component overlayMessage = Component.literal(payload.message()).withStyle(overlayColor);
-                    // 26.2: action-bar text is LocalPlayer.sendOverlayMessage(Component). Call it directly
-                    // so the loader toolchain remaps it; reflection by Mojang name is unreliable on Fabric.
-                    minecraft.player.sendOverlayMessage(overlayMessage);
-                }
-            },
-            active -> MOVEMENT_LOCK.setActive(Minecraft.getInstance(), active),
-            active -> MINING_STATE.setBackgroundCursorFreeActive(Minecraft.getInstance(), active, PAUSE_OVERRIDE)
-        );
+                () -> {
+                    Minecraft minecraft = Minecraft.getInstance();
+                    return minecraft != null && minecraft.isWindowActive();
+                },
+                () -> {
+                    Minecraft minecraft = Minecraft.getInstance();
+                    return PermaClickGameContext.isWindowMinimized(minecraft);
+                },
+                () -> {
+                    Minecraft minecraft = Minecraft.getInstance();
+                    return minecraft != null
+                            && minecraft.player != null
+                            && minecraft.gameMode != null
+                            && PermaClickGameContext.isMiningAllowedScreen(minecraft)
+                            && !MINING_STATE.isBackgroundPauseSuppressedThisTick();
+                },
+                () -> {
+                    Minecraft minecraft = Minecraft.getInstance();
+                    return MINING_STATE.performClickTick(minecraft, BRIDGE.currentConfig());
+                },
+                payload -> {
+                    Minecraft minecraft = Minecraft.getInstance();
+                    if (minecraft != null && minecraft.player != null) {
+                        ChatFormatting overlayColor = PermaClickGameContext.resolveOverlayColor(payload.colorName());
+                        Component overlayMessage = Component.literal(payload.message()).withStyle(overlayColor);
+                        // 26.2: action-bar text is LocalPlayer.sendOverlayMessage(Component). Call it
+                        // directly
+                        // so the loader toolchain remaps it; reflection by Mojang name is unreliable on
+                        // Fabric.
+                        minecraft.player.sendOverlayMessage(overlayMessage);
+                    }
+                },
+                active -> MOVEMENT_LOCK.setActive(Minecraft.getInstance(), active),
+                active -> MINING_STATE.setBackgroundCursorFreeActive(Minecraft.getInstance(), active, PAUSE_OVERRIDE));
     }
 
     private void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {

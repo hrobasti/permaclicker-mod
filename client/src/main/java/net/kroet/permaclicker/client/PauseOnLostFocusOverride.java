@@ -3,9 +3,10 @@ package net.kroet.permaclicker.client;
 import net.minecraft.client.Minecraft;
 
 /**
- * Temporarily forces Minecraft's "pause on lost focus" option off while background mode is
- * active, restoring the player's original setting once background mode ends. Shared between
- * Fabric and NeoForge; each loader entrypoint owns one instance.
+ * Temporarily forces Minecraft's "pause on lost focus" option off while
+ * background mode is active, restoring the player's original setting once
+ * background mode ends. Shared between Fabric and NeoForge; each loader
+ * entrypoint owns one instance.
  */
 public final class PauseOnLostFocusOverride {
     private Boolean originalValue;

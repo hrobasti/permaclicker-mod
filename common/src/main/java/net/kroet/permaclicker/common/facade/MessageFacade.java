@@ -1,13 +1,14 @@
 package net.kroet.permaclicker.common.facade;
 
-import net.kroet.turtlelib.MessageService.MessageService;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import net.kroet.turtlelib.MessageService.MessageService;
 
 /**
- * Single facade for localized message rendering delegated to TurtleLib MessageService.
+ * Single facade for localized message rendering delegated to TurtleLib
+ * MessageService.
  */
 public final class MessageFacade {
     private final MessageService delegate;

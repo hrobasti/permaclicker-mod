@@ -6,11 +6,14 @@ import net.kroet.permaclicker.common.config.PermaClickConfig;
 /**
  * Core state machine for toggling and mining loop execution.
  *
- * <p>Client-thread-only: all fields are plain (non-volatile, unsynchronized) and assume every
- * call comes from the client tick/render thread, like the existing loader entrypoints do. Do not
- * touch this state from an async callback (e.g. a network response) without adding explicit
- * synchronization or routing through a volatile hand-off field first — see how the loader
- * entrypoints stage {@code pendingUpdateStatus} for the update-check background thread.</p>
+ * <p>
+ * Client-thread-only: all fields are plain (non-volatile, unsynchronized) and
+ * assume every call comes from the client tick/render thread, like the existing
+ * loader entrypoints do. Do not touch this state from an async callback (e.g. a
+ * network response) without adding explicit synchronization or routing through
+ * a volatile hand-off field first — see how the loader entrypoints stage
+ * {@code pendingUpdateStatus} for the update-check background thread.
+ * </p>
  */
 public final class PermaClickService {
     private static final int TICKS_PER_SECOND = 20;
@@ -101,8 +104,10 @@ public final class PermaClickService {
         }
 
         boolean miningPerformed = runtime.performMiningTick();
-        // Mob-attack mode spends most ticks waiting for the cooldown or a target, so every
-        // active, non-suppressed tick counts towards auto-stop; mining counts successful ticks only.
+        // Mob-attack mode spends most ticks waiting for the cooldown or a target, so
+        // every
+        // active, non-suppressed tick counts towards auto-stop; mining counts
+        // successful ticks only.
         boolean countsTowardsAutoStop = miningPerformed || config.clickMode() == ClickMode.MOB_ATTACK;
         if (!countsTowardsAutoStop) {
             return;
@@ -147,7 +152,6 @@ public final class PermaClickService {
             backgroundCursorFreeActive = shouldFreeCursor;
         }
     }
-
 
     private void showToggleMessage(PermaClickRuntime runtime) {
         if (!config.overlayEnabled()) {
@@ -215,4 +219,3 @@ public final class PermaClickService {
         lastActionBarMessage = null;
     }
 }
-

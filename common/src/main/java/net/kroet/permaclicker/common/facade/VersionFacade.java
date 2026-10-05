@@ -3,7 +3,8 @@ package net.kroet.permaclicker.common.facade;
 import net.kroet.turtlelib.VersionComparator.VersionComparator;
 
 /**
- * Single facade for semantic version comparisons delegated to TurtleLib VersionComparator.
+ * Single facade for semantic version comparisons delegated to TurtleLib
+ * VersionComparator.
  */
 public final class VersionFacade {
     private VersionFacade() {

@@ -1,9 +1,9 @@
 package net.kroet.permaclicker.fabric;
 
-import net.kroet.permaclicker.common.config.PermaClickConfigStore;
-import net.kroet.permaclicker.common.core.PermaClickBridge;
 import java.io.IOException;
 import java.nio.file.Path;
+import net.kroet.permaclicker.common.config.PermaClickConfigStore;
+import net.kroet.permaclicker.common.core.PermaClickBridge;
 
 /**
  * Handles Fabric-side startup loading and persistence of PermaClick config.
@@ -27,4 +27,3 @@ public final class FabricConfigLifecycle {
         store.save(bridge.currentConfig());
     }
 }
-

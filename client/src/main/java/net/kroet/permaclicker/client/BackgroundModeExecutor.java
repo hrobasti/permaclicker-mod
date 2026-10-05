@@ -4,8 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.PauseScreen;
 
 /**
- * Background-mode execution path based on aggressive pause suppression, without cursor/focus-
- * detach hacks. Shared between Fabric and NeoForge.
+ * Background-mode execution path based on aggressive pause suppression, without
+ * cursor/focus- detach hacks. Shared between Fabric and NeoForge.
  */
 public final class BackgroundModeExecutor {
     private static final int UNFOCUSED_REPRIME_INTERVAL_TICKS = 1;
@@ -25,7 +25,8 @@ public final class BackgroundModeExecutor {
         actions.updateCachedDestroyTarget(minecraft);
         minecraft.options.keyAttack.setDown(true);
 
-        // Stop at the first call that advances mining: at most one destroy step per tick.
+        // Stop at the first call that advances mining: at most one destroy step per
+        // tick.
         if (actions.continueAttack(minecraft) || actions.continueDestroyWithCachedTarget(minecraft)) {
             unfocusedMissTicks = 0;
             return true;
@@ -34,8 +35,8 @@ public final class BackgroundModeExecutor {
         unfocusedMissTicks++;
         if (unfocusedMissTicks >= UNFOCUSED_REPRIME_INTERVAL_TICKS) {
             boolean reprimeInvoked = actions.startAttack(minecraft)
-                || actions.startDestroyWithCachedTarget(minecraft)
-                || actions.clickAttackKey(minecraft);
+                    || actions.startDestroyWithCachedTarget(minecraft)
+                    || actions.clickAttackKey(minecraft);
             unfocusedMissTicks = 0;
             if (reprimeInvoked) {
                 return true;
