@@ -1,0 +1,44 @@
+pluginManagement {
+    repositories {
+        maven { url = 'https://maven.fabricmc.net/' }
+        maven { url = 'https://maven.neoforged.net/releases' }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
+    repositories {
+        maven { url = 'https://maven.fabricmc.net/' }
+        mavenCentral()
+        maven { url = 'https://maven.neoforged.net/releases' }
+        maven { url = 'https://libraries.minecraft.net' }
+    }
+}
+
+rootProject.name = 'permaclicker-mod'
+
+// Same project names as in the hrobasti-mods workspace, so the module build scripts
+// run unchanged in a standalone checkout and inside the workspace.
+include 'permaclicker-common'
+include 'permaclicker-client'
+include 'permaclicker-neoforge'
+include 'permaclicker-fabric'
+
+project(':permaclicker-common').projectDir = file('common')
+project(':permaclicker-client').projectDir = file('client')
+project(':permaclicker-neoforge').projectDir = file('neoforge')
+project(':permaclicker-fabric').projectDir = file('fabric')
+
+// Default: TurtleLib core is resolved from its GitHub release assets (see
+// gradle/turtlelib-dependency.gradle). Pass -PuseLocalTurtleLib=true to build against a
+// sibling ../turtle-lib-mod checkout instead.
+if (Boolean.parseBoolean(providers.gradleProperty('useLocalTurtleLib').getOrElse('false'))) {
+    include 'turtlelib-core'
+    project(':turtlelib-core').projectDir = file('../turtle-lib-mod/core')
+}

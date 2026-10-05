@@ -1,0 +1,31 @@
+// TurtleLib dependency for the calling module. Requires gradle/mod-info.gradle to be applied first.
+//
+// - Default (standalone checkout): the loader-neutral core jar attached to the TurtleLib GitHub
+//   release, e.g. .../releases/download/1.3.0/TurtleLib_1.3.0_core.jar. Only the group 'turtlelib'
+//   is read from there, and nothing else is.
+// - useLocalTurtleLib=true (hrobasti-mods workspace, or -P with a sibling checkout): the local
+//   ':turtlelib-core' source project.
+//
+// Players install TurtleLib as its own mod, so the loader jars never bundle these classes.
+
+repositories {
+    exclusiveContent {
+        forRepository {
+            ivy {
+                name = 'TurtleLibGitHubReleases'
+                url = uri('https://github.com/hrobasti/turtle-lib-mod/releases/download')
+                patternLayout {
+                    // Tag and asset name must match exactly (GitHub asset names are case-sensitive).
+                    artifact '[revision]/[artifact]_[revision]_core(-[classifier]).[ext]'
+                }
+                metadataSources { artifact() }
+            }
+        }
+        filter { includeGroup 'turtlelib' }
+    }
+}
+
+ext.useLocalTurtleLib = Boolean.parseBoolean(providers.gradleProperty('useLocalTurtleLib').getOrElse('false'))
+ext.turtleLibDependency = useLocalTurtleLib
+    ? project(':turtlelib-core')
+    : "turtlelib:TurtleLib:${modInfo.turtleLibDependencyVersion}"

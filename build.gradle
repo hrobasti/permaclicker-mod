@@ -1,0 +1,182 @@
+// Repository-level tasks for PermaClicker: matrix validation, tests and the release matrix.
+// Works as the root project of a standalone checkout and as project ':permaclicker-mod'
+// inside the hrobasti-mods workspace (the workspace root only aggregates these tasks).
+
+// Provides the javaToolchains service used to locate a JDK for the nested matrix builds.
+apply plugin: 'jvm-toolchains'
+apply from: 'gradle/matrix-defaults.gradle'
+
+def matrixTargets = loadMatrixTargets()
+
+def isWindows = System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')
+// The nested builds run the wrapper of the build this project belongs to (the repository
+// itself when standalone, the workspace root inside hrobasti-mods); both define the same
+// PermaClicker project paths.
+def wrapperCommand = isWindows
+    ? ['cmd', '/c', new File(rootDir, 'gradlew.bat').absolutePath]
+    : [new File(rootDir, 'gradlew').absolutePath]
+
+def expandEnvironmentPlaceholders = { String rawValue ->
+    rawValue.replaceAll(/%([^%]+)%/) { String fullMatch, String variableName ->
+        def envValue = System.getenv(variableName)
+        return envValue != null ? envValue : fullMatch
+    }
+}
+
+// JDK for the nested builds of one Java version. An explicit jdk_<n>_home property or
+// JDK_<n>_HOME environment variable wins; otherwise Gradle's toolchain detection picks an
+// installed JDK of that version (or downloads one via the foojay resolver), so no
+// machine-specific path has to be configured anywhere.
+def resolveJdkHomeForVersion = { int javaVersion ->
+    def propertyName = "jdk_${javaVersion}_home"
+    def environmentName = "JDK_${javaVersion}_HOME"
+    def configuredPath = providers.gradleProperty(propertyName)
+        .orElse(providers.environmentVariable(environmentName))
+        .getOrNull()
+    if (configuredPath == null || configuredPath.isBlank()) {
+        def launcher = javaToolchains.launcherFor {
+            languageVersion = JavaLanguageVersion.of(javaVersion)
+        }
+        return launcher.get().metadata.installationPath.asFile.absolutePath
+    }
+
+    def expandedPath = expandEnvironmentPlaceholders(configuredPath)
+    if (expandedPath =~ /%[^%]+%/) {
+        throw new GradleException("Unresolved environment placeholder in '${propertyName}'.")
+    }
+
+    def jdkDirectory = file(expandedPath)
+    if (!jdkDirectory.exists()) {
+        throw new GradleException("Configured JDK for Java ${javaVersion} not found at '${expandedPath}'. Check '${propertyName}' or ${environmentName}.")
+    }
+    jdkDirectory.absolutePath
+}
+
+def nestedBuildCommand = { int javaVersion, List<String> arguments ->
+    def command = new ArrayList<String>(wrapperCommand)
+    command << "-Dorg.gradle.java.home=${resolveJdkHomeForVersion(javaVersion)}".toString()
+    command.addAll(arguments)
+    command
+}
+
+// MC 26+ ships unobfuscated, so Fabric builds use the plain jar instead of remapJar.
+def isUnobfuscatedFabricTarget = { String minecraftVersion ->
+    def matcher = (minecraftVersion =~ /^(\d+).*/)
+    matcher.matches() && Integer.parseInt(matcher.group(1)) >= 26
+}
+
+def verifyMatrixTargets = tasks.register('verifyMatrixTargets') {
+    group = 'verification'
+    description = 'Validates the PermaClicker matrix targets in config/matrix-targets.json.'
+
+    doLast {
+        def duplicateMinecraftTargets = matrixTargets
+            .groupBy { it.minecraft }
+            .findAll { _, entries -> entries.size() > 1 }
+            .keySet()
+        if (!duplicateMinecraftTargets.isEmpty()) {
+            throw new GradleException("Duplicate PermaClicker matrix targets for minecraft versions: ${duplicateMinecraftTargets.join(', ')}")
+        }
+
+        def invalidFabricApiTargets = matrixTargets.findAll { !it.fabricApi.contains("+${it.minecraft}") }
+        if (!invalidFabricApiTargets.isEmpty()) {
+            throw new GradleException("Fabric API entries must include '+<minecraft>' suffix. Invalid PermaClicker matrix entries: ${invalidFabricApiTargets.collect { it.minecraft }.join(', ')}")
+        }
+    }
+}
+
+tasks.register('testPermaClicker') {
+    group = 'verification'
+    description = 'Runs all PermaClicker unit tests (common + client + Fabric + NeoForge).'
+    dependsOn(
+        ':permaclicker-common:test',
+        ':permaclicker-client:test',
+        ':permaclicker-fabric:test',
+        ':permaclicker-neoforge:test'
+    )
+}
+
+def neoForgeMatrixBuildTasks = matrixTargets.collect { target ->
+    def normalizedMc = target.minecraft.replace('.', '_')
+    def normalizedNeo = target.neoforge.replace('.', '_').replace('-', '_')
+    def taskName = "buildPermaClickerNeoForgeMc${normalizedMc}Nf${normalizedNeo}"
+
+    tasks.register(taskName, Exec) {
+        group = 'build'
+        description = "Builds the isolated PermaClicker NeoForge jar for MC ${target.minecraft} with NeoForge ${target.neoforge} and Java ${target.java}."
+        workingDir = rootDir
+        commandLine nestedBuildCommand(target.java, [
+            ':permaclicker-neoforge:jar',
+            ':permaclicker-neoforge:sourcesJar',
+            '--console=plain',
+            "--gradle-user-home=${file("neoforge/isolated/gradle-user-home/mc${target.minecraft}-neoforge${target.neoforge}").absolutePath}",
+            "-Pjava_language_version=${target.java}",
+            "-Pminecraft_version=${target.minecraft}",
+            "-Pneoforge_version=${target.neoforge}",
+            "-Pfabric_loader_version=${target.fabricLoader}",
+            "-Pfabric_api_version=${target.fabricApi}",
+            "-Pmodmenu_version=${target.modmenu}"
+        ].collect { it.toString() })
+    }
+    taskName
+}
+
+def fabricMatrixBuildTasks = matrixTargets.collect { target ->
+    def normalizedMc = target.minecraft.replace('.', '_')
+    def normalizedLoader = target.fabricLoader.replace('.', '_').replace('-', '_').replace('+', '_')
+    def normalizedApi = target.fabricApi.replace('.', '_').replace('-', '_').replace('+', '_')
+    def taskName = "buildPermaClickerFabricMc${normalizedMc}Loader${normalizedLoader}Api${normalizedApi}"
+    def unobfuscated = isUnobfuscatedFabricTarget(target.minecraft)
+
+    tasks.register(taskName, Exec) {
+        group = 'build'
+        description = "Builds the isolated PermaClicker Fabric jar for MC ${target.minecraft} (${unobfuscated ? 'unobfuscated' : 'remap'} flow) with loader ${target.fabricLoader}, Fabric API ${target.fabricApi}, ModMenu ${target.modmenu} and Java ${target.java}."
+        workingDir = rootDir
+        commandLine nestedBuildCommand(target.java, [
+            unobfuscated ? ':permaclicker-fabric:jar' : ':permaclicker-fabric:remapJar',
+            ':permaclicker-fabric:sourcesJar',
+            '--console=plain',
+            "--gradle-user-home=${file("fabric/isolated/gradle-user-home/mc${target.minecraft}-loader${target.fabricLoader}-api${target.fabricApi}").absolutePath}",
+            "-Pjava_language_version=${target.java}",
+            "-Pminecraft_version=${target.minecraft}",
+            "-Pfabric_loader_version=${target.fabricLoader}",
+            "-Pfabric_api_version=${target.fabricApi}",
+            "-Pmodmenu_version=${target.modmenu}"
+        ].collect { it.toString() })
+    }
+    taskName
+}
+
+def cleanPermaClickerRelease = tasks.register('cleanPermaClickerRelease', Delete) {
+    group = 'build'
+    description = 'Deletes PermaClicker release output folders (dist + loader build libs) before a new release build.'
+    delete layout.projectDirectory.dir('dist')
+    delete layout.projectDirectory.dir('neoforge/build/libs')
+    delete layout.projectDirectory.dir('fabric/build/libs')
+}
+
+tasks.register('buildPermaClickerNeoForgeMatrix') {
+    group = 'build'
+    description = 'Builds isolated NeoForge matrix jars for all configured targets (stable-first, beta fallback per MC branch).'
+    dependsOn(verifyMatrixTargets)
+    dependsOn(neoForgeMatrixBuildTasks)
+}
+
+tasks.register('buildPermaClickerFabricMatrix') {
+    group = 'build'
+    description = 'Builds isolated Fabric Loom matrix jars for all configured targets.'
+    dependsOn(verifyMatrixTargets)
+    dependsOn(fabricMatrixBuildTasks)
+}
+
+// The loader jars land in dist directly (destinationDirectory), so no collect/copy step is needed.
+tasks.register('releasePermaClicker') {
+    group = 'build'
+    description = 'Clean release build: all PermaClicker NeoForge + Fabric matrix jars into dist.'
+    dependsOn(cleanPermaClickerRelease)
+    dependsOn('buildPermaClickerNeoForgeMatrix', 'buildPermaClickerFabricMatrix')
+}
+
+([neoForgeMatrixBuildTasks, fabricMatrixBuildTasks].flatten() + ['buildPermaClickerNeoForgeMatrix', 'buildPermaClickerFabricMatrix']).each { name ->
+    tasks.named(name) { mustRunAfter(cleanPermaClickerRelease) }
+}

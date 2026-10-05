@@ -1,6 +1,6 @@
 # PermaClicker ⛏️
 
-PermaClicker keeps client-side mining/click input active while the mod is enabled, e. g. to provide a cobblestone farm while you're AFK. It is intended for single-player or explicitly allowed environments, with configurable safety limits.
+PermaClicker keeps your attack input going while you're AFK: it mines continuously for block farms such as a cobblestone generator, or hits mobs and animals at full strength for mob and animal farms. It is intended for single-player or explicitly allowed environments, with configurable safety limits.
 
 ## Anti-cheat notice ⚠️
 
@@ -17,56 +17,63 @@ On many servers this may violate rules and can result in penalties such as kick/
 
 ## What PermaClicker provides ✨
 
-- configurable toggle key
-- in-game config screen for Fabric and NeoForge
-- overlay output
+- click mode: **Mining** (holds attack to mine the targeted block) or **Mobs & Animals** (hits the targeted mob or animal whenever the attack cooldown is fully charged; never attacks players)
+- configurable attack buffer for **Mobs & Animals** (`0..20` ticks, default `2`) as a safety margin against server lag
 - runtime mode: **Focused** or **Background**
-- click mode: **Mining** (hold attack on blocks) or **Mobs & Animals** (full-strength hits on mobs and animals)
 - auto-stop timer (`0..9999` minutes)
 - optional movement lock while active
-- optional update checks (Stable / Beta / Alpha)
+- status overlay in the action bar showing the active mode and remaining auto-stop time (can be disabled, configurable color)
+- rebindable hotkeys and an in-game config screen for Fabric and NeoForge
+- optional update checks via Modrinth and CurseForge (Stable / Beta / Alpha)
 
 ## Runtime behavior 🧭
 
 - While PermaClicker is active, opening chat is intentionally blocked.
-- **Focused** mode: `ESC` stops PermaClicker and opens the pause menu.  `u` stops PermaClicker and opens the config screen.
-- **Background** mode: pause screen and PermaClicker's own config screen (`u`) stay blocked while active — even if the game window is currently focused. Disable PermaClicker (`F7`) first to change settings.
-- **Mining** click mode (default): keeps the attack key held to continuously mine the targeted block.
-- **Mobs & Animals** click mode: hits the mob or animal in your crosshair once the attack cooldown is fully charged, plus a configurable buffer (`0..20` ticks, default `2`). No block is mined and nothing happens while no mob or animal is targeted. These are full-strength hits, not jump crits.
+- In **Focused** mode, PermaClicker only runs while the game window is focused. `ESC` stops PermaClicker and opens the pause menu, `U` stops it and opens the settings.
+- In **Background** mode, PermaClicker keeps running while the game window is unfocused or minimized. The pause menu and PermaClicker's own settings stay blocked while it is active; press `F7` to stop it first.
+- The auto-stop timer only counts down while PermaClicker is actually working, so it pauses instead of running out in the background (e.g. Focused mode with an unfocused window).
+- **Mobs & Animals** never jumps for you: hits land at full strength, but they are not jump critical hits.
 
 ## Tool durability
 
-If you care about tool durability (breaking while PermaCLickers runs), you can use [Inventory Profiles Next](https://inventory-profiles-next.github.io/en/downloads/) to replace them before they break or after they're broken.
+If you care about tool or weapon durability (they can break while PermaClicker runs), you can use [Inventory Profiles Next](https://inventory-profiles-next.github.io/en/downloads/) to replace them before they break or after they're broken.
 
 ## Configuration ⚙️
 
-Most settings are managed directly in the in-game config screen.
+All settings are managed directly in the in-game config screen. Hotkeys are rebound in Minecraft's controls menu.
 
 ## Supported languages 🌍
 
 PermaClicker bundles each locale as a JSON file. Included languages:
 
-- 🇺🇸 English (en_us)
-- 🇩🇪 German (de_de)
-- 🇸🇦 Arabic (ar_sa)
-- 🇪🇸 Spanish (es_es)
-- 🇫🇷 French (fr_fr)
-- 🇮🇹 Italian (it_it)
-- 🇯🇵 Japanese (ja_jp)
-- 🇰🇷 Korean (ko_kr)
-- 🇳🇱 Dutch (nl_nl)
-- 🇵🇱 Polish (pl_pl)
-- 🇵🇹 Portuguese (pt_pt)
-- 🇹🇷 Turkish (tr_tr)
-- 🇺🇦 Ukrainian (uk_ua)
-- 🇨🇳 Simplified Chinese (zh_cn)
+- 🇺🇸 English (en\_US)
+- 🇩🇪 German (de\_DE)
+- 🇸🇦 Arabic (ar\_SA)
+- 🇪🇸 Spanish (es\_ES)
+- 🇫🇷 French (fr\_FR)
+- 🇮🇹 Italian (it\_IT)
+- 🇯🇵 Japanese (ja\_JP)
+- 🇰🇷 Korean (ko\_KR)
+- 🇳🇱 Dutch (nl\_NL)
+- 🇵🇱 Polish (pl\_PL)
+- 🇵🇹 Portuguese (pt\_PT)
+- 🇹🇷 Turkish (tr\_TR)
+- 🇺🇦 Ukrainian (uk\_UA)
+- 🇨🇳 Simplified Chinese (zh\_CN)
 
 ## Quick start for devs 🛠️
 
-Use the workspace root wrapper for all build/test tasks.
+This repository is a standalone Gradle build. Clone it and use its own wrapper; no other repository is needed. A JDK 17+ must be installed to start Gradle. The Java toolchain required for compiling is detected automatically or downloaded.
 
-- PermaClicker full matrix build: `./gradlew releasePermaClicker`
-- Typical checks: `./gradlew verifyMatrixTargets`, `./gradlew tasks`
+- Build and test: `./gradlew build`, `./gradlew testPermaClicker`
+- Validate the build matrix: `./gradlew verifyMatrixTargets`
+- Full release build (all matrix targets, Fabric + NeoForge) into `dist/`: `./gradlew releasePermaClicker`
+
+Minecraft, Java and loader versions come from [`config/matrix-targets.json`](config/matrix-targets.json). Without parameters, builds use the first target in that file.
+
+**TurtleLib:** the build downloads the [TurtleLib](https://github.com/hrobasti/turtle-lib-mod) core jar from its GitHub release. The version is set by `turtlelib_dependency_version` in [`version.properties`](version.properties).
+
+To work on both at once, clone TurtleLib next to this repository (`../turtle-lib-mod`) and add `-PuseLocalTurtleLib=true`.
 
 ## AI support & privacy transparency 🤖
 

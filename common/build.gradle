@@ -2,8 +2,22 @@ plugins {
     id 'java-library'
 }
 
+apply from: file('../gradle/matrix-defaults.gradle')
+apply from: file('../gradle/java-conventions.gradle')
+apply from: file('../gradle/mod-info.gradle')
+apply from: file('../gradle/turtlelib-dependency.gradle')
+applyJavaConventions(resolveMatrixTarget('minecraft_version'))
+
+repositories {
+    // Declaring project repositories (TurtleLib above) disables the settings-level ones here.
+    mavenCentral()
+}
+
 dependencies {
-    api project(':turtlelib-core')
+    api turtleLibDependency
+    // Used directly (config store); no longer only a transitive TurtleLib dependency, because
+    // the release-asset jar carries no dependency metadata.
+    implementation 'com.google.code.gson:gson:2.10.1'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.1'
 }

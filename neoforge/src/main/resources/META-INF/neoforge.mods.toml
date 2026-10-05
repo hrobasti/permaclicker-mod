@@ -33,7 +33,7 @@ side="CLIENT"
 [[dependencies.permaclicker]]
 modId="turtlelib"
 type="required"
-versionRange="[1.0.0,)"
+versionRange="[${turtlelib_version},)"
 ordering="AFTER"
 side="CLIENT"
 

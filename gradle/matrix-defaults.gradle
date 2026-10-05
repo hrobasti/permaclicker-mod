@@ -1,0 +1,61 @@
+import groovy.json.JsonSlurper
+
+// Resolves build targets from config/matrix-targets.json, the single source of truth for
+// Minecraft/Java/loader versions. Applied by the repository root project and every module;
+// works the same in a standalone checkout and inside the hrobasti-mods workspace.
+
+def repoDir = buildscript.sourceFile.parentFile.parentFile
+def matrixFile = new File(repoDir, 'config/matrix-targets.json')
+def requiredKeys = ['minecraft', 'java', 'neoforge', 'fabricLoader', 'fabricApi', 'modmenu']
+
+// Returns all targets in file order, validated and normalized (strings trimmed, java as int).
+ext.loadMatrixTargets = { ->
+    if (!matrixFile.exists()) {
+        throw new GradleException("Missing matrix definition file: ${matrixFile}")
+    }
+
+    def parsed = new JsonSlurper().parse(matrixFile)
+    if (!(parsed instanceof Map) || !(parsed.targets instanceof List) || parsed.targets.isEmpty()) {
+        throw new GradleException("Matrix definition '${matrixFile}' must contain a non-empty 'targets' array.")
+    }
+
+    def targets = []
+    parsed.targets.eachWithIndex { rawTarget, index ->
+        if (!(rawTarget instanceof Map)) {
+            throw new GradleException("Matrix target #${index + 1} in '${matrixFile}' is not an object.")
+        }
+
+        def missingKeys = requiredKeys.findAll { key ->
+            !rawTarget.containsKey(key) || rawTarget[key] == null || rawTarget[key].toString().isBlank()
+        }
+        if (!missingKeys.isEmpty()) {
+            throw new GradleException("Matrix target #${index + 1} in '${matrixFile}' is missing required keys: ${missingKeys.join(', ')}")
+        }
+
+        targets << [
+            minecraft   : rawTarget.minecraft.toString().trim(),
+            java        : Integer.parseInt(rawTarget.java.toString().trim()),
+            neoforge    : rawTarget.neoforge.toString().trim(),
+            fabricLoader: rawTarget.fabricLoader.toString().trim(),
+            fabricApi   : rawTarget.fabricApi.toString().trim(),
+            modmenu     : rawTarget.modmenu.toString().trim()
+        ]
+    }
+    targets
+}
+
+// Returns the target selected via the given Minecraft-version Gradle property (e.g. passed by
+// the matrix release builds), or the first target in the file when the property is not set.
+ext.resolveMatrixTarget = { String minecraftProperty ->
+    def targets = loadMatrixTargets()
+    def requested = providers.gradleProperty(minecraftProperty).getOrNull()
+    if (requested == null || requested.isBlank()) {
+        return targets.first()
+    }
+
+    def match = targets.find { it.minecraft == requested.trim() }
+    if (match == null) {
+        throw new GradleException("No matrix target for ${minecraftProperty}=${requested} in '${matrixFile}'.")
+    }
+    match
+}

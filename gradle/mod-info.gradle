@@ -1,0 +1,37 @@
+// Mod identity and versions for all modules of this repository, read from version.properties
+// and config/mod.properties. Sets the calling project's group/version and exposes the values
+// as `modInfo`. Every key can be overridden via -P<key>=<value> (e.g. -Pmod_version=...).
+
+def repoDir = buildscript.sourceFile.parentFile.parentFile
+
+def loadProperties = { String relativePath ->
+    def properties = new Properties()
+    def propertiesFile = new File(repoDir, relativePath)
+    if (!propertiesFile.exists()) {
+        throw new GradleException("Missing ${propertiesFile}")
+    }
+    propertiesFile.withInputStream { properties.load(it) }
+    properties
+}
+
+def versionProperties = loadProperties('version.properties')
+def modProperties = loadProperties('config/mod.properties')
+
+def resolve = { String gradleProperty, Properties source, String fileKey ->
+    def value = providers.gradleProperty(gradleProperty).getOrElse(source.getProperty(fileKey))
+    if (value == null || value.isBlank()) {
+        throw new GradleException("Missing '${fileKey}' (or -P${gradleProperty}) for ${project.path}.")
+    }
+    value.trim()
+}
+
+ext.modInfo = [
+    id                        : resolve('mod_id', modProperties, 'mod_id'),
+    name                      : resolve('mod_name', modProperties, 'mod_name'),
+    group                     : resolve('mod_group', modProperties, 'mod_group'),
+    version                   : resolve('mod_version', versionProperties, 'version'),
+    turtleLibDependencyVersion: resolve('turtlelib_dependency_version', versionProperties, 'turtlelib_dependency_version')
+]
+
+group = modInfo.group
+version = modInfo.version

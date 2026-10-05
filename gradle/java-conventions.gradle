@@ -1,0 +1,26 @@
+// Java toolchain and compiler settings shared by all modules of this repository. These used
+// to come only from the workspace root build, which left standalone checkouts unconfigured.
+
+apply plugin: 'eclipse'
+
+// Configures the calling module for the given matrix target and returns the effective Java
+// version (an explicit -Pjava_language_version wins over the target's 'java' value).
+ext.applyJavaConventions = { Map matrixTarget ->
+    int javaVersion = Integer.parseInt(
+        providers.gradleProperty('java_language_version').getOrElse(matrixTarget.java.toString())
+    )
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(javaVersion)
+        }
+        withSourcesJar()
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        options.release = javaVersion
+    }
+
+    javaVersion
+}

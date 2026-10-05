@@ -38,9 +38,6 @@ run/
 logs/
 crash-reports/
 
-# Local wiki editing artifacts
-/wiki/
-
 # Loader-local work directories (generated)
 **/isolated/
 **/loom-cache/

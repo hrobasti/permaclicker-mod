@@ -2,57 +2,58 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.147'
 }
 
-def versionProperties = new Properties()
-def versionFile = file('../version.properties')
-if (versionFile.exists()) {
-    versionFile.withInputStream { versionProperties.load(it) }
-}
-def versionFromFile = versionProperties.getProperty('version')
+apply from: file('../gradle/matrix-defaults.gradle')
+apply from: file('../gradle/java-conventions.gradle')
+apply from: file('../gradle/mod-info.gradle')
+apply from: file('../gradle/turtlelib-dependency.gradle')
+def matrixTarget = resolveMatrixTarget('minecraft_version')
+def resolvedJavaLanguageVersion = applyJavaConventions(matrixTarget).toString()
 
-def pluginNameForFile = (providers.gradleProperty('mod_name').getOrElse('PermaClick') as String).replaceAll(/[^A-Za-z0-9]/, '')
-def mcVersionForFile = (minecraft_version as String).replace('.', '-')
-def neoForgeVersionForFile = (neoforge_version as String).replace('.', '-')
-def resolvedMinecraftVersion = providers.gradleProperty('minecraft_version').get()
-def resolvedNeoForgeVersion = providers.gradleProperty('neoforge_version').get()
-def resolvedJavaLanguageVersion = providers.gradleProperty('java_language_version').orElse('25').get()
+// Explicit -P values (passed per target by the matrix release builds) win over the matrix defaults.
+def resolvedMinecraftVersion = matrixTarget.minecraft
+def resolvedNeoForgeVersion = providers.gradleProperty('neoforge_version').getOrElse(matrixTarget.neoforge)
 
-version = providers.gradleProperty('mod_version').orElse(versionFromFile ?: '0.1').get()
+def pluginNameForFile = (modInfo.name as String).replaceAll(/[^A-Za-z0-9]/, '')
+def mcVersionForFile = (resolvedMinecraftVersion as String).replace('.', '-')
+def neoForgeVersionForFile = (resolvedNeoForgeVersion as String).replace('.', '-')
 
 dependencies {
     implementation project(':permaclicker-common')
     implementation project(':permaclicker-client')
-    implementation project(':turtlelib-core')
+    implementation turtleLibDependency
     testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.1'
 }
 
 tasks.named('processResources', ProcessResources) {
-    inputs.property('mod_id', providers.gradleProperty('mod_id').get())
-    inputs.property('mod_name', providers.gradleProperty('mod_name').get())
+    inputs.property('mod_id', modInfo.id)
+    inputs.property('mod_name', modInfo.name)
     inputs.property('minecraft_version', resolvedMinecraftVersion)
     inputs.property('neoforge_version', resolvedNeoForgeVersion)
     inputs.property('java_language_version', resolvedJavaLanguageVersion)
+    inputs.property('turtlelib_version', modInfo.turtleLibDependencyVersion)
 
     filesMatching('META-INF/neoforge.mods.toml') {
         expand([
             file                  : [jarVersion: project.version],
-            mod_id                : providers.gradleProperty('mod_id').get(),
-            mod_name              : providers.gradleProperty('mod_name').get(),
+            mod_id                : modInfo.id,
+            mod_name              : modInfo.name,
             minecraft_version     : resolvedMinecraftVersion,
             neoforge_version      : resolvedNeoForgeVersion,
-            java_language_version : resolvedJavaLanguageVersion
+            java_language_version : resolvedJavaLanguageVersion,
+            turtlelib_version     : modInfo.turtleLibDependencyVersion
         ])
     }
 }
 
 def commonMainOutput = project(':permaclicker-common').sourceSets.main.output
 def clientMainOutput = project(':permaclicker-client').sourceSets.main.output
-def permaClickerDistDir = rootProject.layout.projectDirectory.dir('mods/permaclicker-mod/dist')
-def permaClickerDistSourcesDir = rootProject.layout.projectDirectory.dir('mods/permaclicker-mod/dist/sources')
+def permaClickerDistDir = layout.projectDirectory.dir('../dist')
+def permaClickerDistSourcesDir = layout.projectDirectory.dir('../dist/sources')
 def modLicenseFile = file('../LICENSE')
 
 neoForge {
-    version = neoforge_version
+    version = resolvedNeoForgeVersion
 
     mods {
         permaclicker {
@@ -77,7 +78,7 @@ tasks.named('jar') {
     archiveFileName = "${pluginNameForFile}_${project.version}_MC-${mcVersionForFile}_NEOFORGE_${neoForgeVersionForFile}.jar"
     manifest {
         attributes(
-            'Implementation-Title': providers.gradleProperty('mod_name').get(),
+            'Implementation-Title': modInfo.name,
             'Implementation-Version': project.version,
             'Implementation-Vendor': 'hrobasti'
         )

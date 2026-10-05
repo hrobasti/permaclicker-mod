@@ -3,12 +3,22 @@ plugins {
     id 'java-library'
 }
 
+apply from: file('../gradle/matrix-defaults.gradle')
+apply from: file('../gradle/java-conventions.gradle')
+apply from: file('../gradle/mod-info.gradle')
+apply from: file('../gradle/turtlelib-dependency.gradle')
+def matrixTarget = resolveMatrixTarget('minecraft_version')
+applyJavaConventions(matrixTarget)
+
 // Loader-neutral client-side runtime code that genuinely needs Minecraft classes (unlike
 // :permaclicker-common, which stays Minecraft-free by design). Compiled here against a
 // Fabric-shaped Minecraft classpath and bundled as plain classes into both the Fabric and
 // NeoForge loader jars — see mods/permaclicker-mod/TODO-architecture-review.md (F1) for why
 // Fabric's (narrower) classpath is the safe compile target for code shared with NeoForge.
-def resolvedMinecraftVersion = providers.gradleProperty('minecraft_version').orElse('26.3').get()
+// Explicit -P values (passed per target by the matrix release builds) win over the matrix defaults.
+def resolvedMinecraftVersion = matrixTarget.minecraft
+def resolvedFabricLoaderVersion = providers.gradleProperty('fabric_loader_version').getOrElse(matrixTarget.fabricLoader)
+def resolvedFabricApiVersion = providers.gradleProperty('fabric_api_version').getOrElse(matrixTarget.fabricApi)
 
 dependencies {
     minecraft "com.mojang:minecraft:${resolvedMinecraftVersion}"
@@ -16,8 +26,8 @@ dependencies {
     // compileOnly: only needed so Loom's compile-time classpath fully resolves (Fabric API
     // injects interfaces into vanilla classes at compile time); this module makes no direct
     // Fabric API calls and must not leak these as transitive runtime deps to NeoForge consumers.
-    compileOnly "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    compileOnly "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
+    compileOnly "net.fabricmc:fabric-loader:${resolvedFabricLoaderVersion}"
+    compileOnly "net.fabricmc.fabric-api:fabric-api:${resolvedFabricApiVersion}"
 
     api project(':permaclicker-common')
 

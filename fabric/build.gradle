@@ -3,22 +3,22 @@ plugins {
     id 'java'
 }
 
-def versionProperties = new Properties()
-def versionFile = file('../version.properties')
-if (versionFile.exists()) {
-    versionFile.withInputStream { versionProperties.load(it) }
-}
-def versionFromFile = versionProperties.getProperty('version')
+apply from: file('../gradle/matrix-defaults.gradle')
+apply from: file('../gradle/java-conventions.gradle')
+apply from: file('../gradle/mod-info.gradle')
+apply from: file('../gradle/turtlelib-dependency.gradle')
+def matrixTarget = resolveMatrixTarget('minecraft_version')
+def resolvedJavaLanguageVersion = applyJavaConventions(matrixTarget).toString()
 
-def resolvedMinecraftVersion = providers.gradleProperty('minecraft_version').orElse('26.3').get()
+// Explicit -P values (passed per target by the matrix release builds) win over the matrix defaults.
+def resolvedMinecraftVersion = matrixTarget.minecraft
+def resolvedFabricLoaderVersion = providers.gradleProperty('fabric_loader_version').getOrElse(matrixTarget.fabricLoader)
+def resolvedFabricApiVersion = providers.gradleProperty('fabric_api_version').getOrElse(matrixTarget.fabricApi)
+def resolvedModMenuVersion = providers.gradleProperty('modmenu_version').getOrElse(matrixTarget.modmenu)
 
-def pluginNameForFile = (providers.gradleProperty('mod_name').getOrElse('PermaClick') as String).replaceAll(/[^A-Za-z0-9]/, '')
+def pluginNameForFile = (modInfo.name as String).replaceAll(/[^A-Za-z0-9]/, '')
 def mcVersionForFile = (resolvedMinecraftVersion as String).replace('.', '-')
-def fabricVersionForFile = (fabric_loader_version as String).replace('.', '-').replace('+', '-').replace('_', '-')
-def resolvedJavaLanguageVersion = providers.gradleProperty('java_language_version').orElse('25').get()
-
-group = providers.gradleProperty('mod_group').get()
-version = providers.gradleProperty('mod_version').orElse(versionFromFile ?: '0.1').get()
+def fabricVersionForFile = (resolvedFabricLoaderVersion as String).replace('.', '-').replace('+', '-').replace('_', '-')
 
 repositories {
     maven { url = 'https://maven.fabricmc.net/' }
@@ -32,13 +32,13 @@ repositories {
 dependencies {
     minecraft "com.mojang:minecraft:${resolvedMinecraftVersion}"
 
-    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_api_version}"
-    implementation "com.terraformersmc:modmenu:${modmenu_version}"
+    implementation "net.fabricmc:fabric-loader:${resolvedFabricLoaderVersion}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${resolvedFabricApiVersion}"
+    implementation "com.terraformersmc:modmenu:${resolvedModMenuVersion}"
 
     implementation project(':permaclicker-common')
     implementation project(':permaclicker-client')
-    implementation project(':turtlelib-core')
+    implementation turtleLibDependency
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.1'
@@ -46,17 +46,18 @@ dependencies {
 
 def commonMainOutput = project(':permaclicker-common').sourceSets.main.output
 def clientMainOutput = project(':permaclicker-client').sourceSets.main.output
-def permaClickerDistDir = rootProject.layout.projectDirectory.dir('mods/permaclicker-mod/dist')
-def permaClickerDistSourcesDir = rootProject.layout.projectDirectory.dir('mods/permaclicker-mod/dist/sources')
+def permaClickerDistDir = layout.projectDirectory.dir('../dist')
+def permaClickerDistSourcesDir = layout.projectDirectory.dir('../dist/sources')
 def modLicenseFile = file('../LICENSE')
 
 tasks.named('processResources', ProcessResources) {
     inputs.property('version', project.version)
-    inputs.property('mod_id', providers.gradleProperty('mod_id').get())
-    inputs.property('fabric_loader_version', fabric_loader_version)
-    inputs.property('fabric_api_version', fabric_api_version)
+    inputs.property('mod_id', modInfo.id)
+    inputs.property('fabric_loader_version', resolvedFabricLoaderVersion)
+    inputs.property('fabric_api_version', resolvedFabricApiVersion)
     inputs.property('minecraft_version', resolvedMinecraftVersion)
     inputs.property('java_language_version', resolvedJavaLanguageVersion)
+    inputs.property('turtlelib_version', modInfo.turtleLibDependencyVersion)
 
     def metadataTemplateName = 'fabric.mod.unobf.json'
     inputs.property('metadata_template', metadataTemplateName)
@@ -66,11 +67,12 @@ tasks.named('processResources', ProcessResources) {
     filesMatching(metadataTemplateName) {
         expand([
             version               : project.version,
-            mod_id                : providers.gradleProperty('mod_id').get(),
-            fabric_loader_version : fabric_loader_version,
-            fabric_api_version    : fabric_api_version,
+            mod_id                : modInfo.id,
+            fabric_loader_version : resolvedFabricLoaderVersion,
+            fabric_api_version    : resolvedFabricApiVersion,
             minecraft_version     : resolvedMinecraftVersion,
-            java_language_version : resolvedJavaLanguageVersion
+            java_language_version : resolvedJavaLanguageVersion,
+            turtlelib_version     : modInfo.turtleLibDependencyVersion
         ])
 
         name = 'fabric.mod.json'
@@ -93,7 +95,7 @@ tasks.named('jar') {
     archiveFileName = "${pluginNameForFile}_${project.version}_MC-${mcVersionForFile}_FABRIC_${fabricVersionForFile}.jar"
     manifest {
         attributes(
-            'Implementation-Title': providers.gradleProperty('mod_name').get(),
+            'Implementation-Title': modInfo.name,
             'Implementation-Version': project.version,
             'Implementation-Vendor': 'hrobasti'
         )
