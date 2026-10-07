@@ -3,12 +3,12 @@ root = true
 [*]
 charset = utf-8
 end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
 indent_style = space
 indent_size = 4
-trim_trailing_whitespace = true
-insert_final_newline = true
 
-[*.{json,yml,yaml}]
+[*.{json,webmanifest,yml,yaml}]
 indent_size = 2
 
 [*.md]
@@ -16,3 +16,16 @@ trim_trailing_whitespace = false
 
 [*.bat]
 end_of_line = crlf
+
+# Optional, only when the workspace's formatter indents code with tabs:
+# [*.{php,js,cjs,mjs,css,html}]
+# indent_style = tab
+
+# Third-party code stays as shipped.
+# [{**/vendor/**,**/node_modules/**,{{THIRD_PARTY_PATHS}}}]
+# charset = unset
+# end_of_line = unset
+# insert_final_newline = unset
+# trim_trailing_whitespace = unset
+# indent_style = unset
+# indent_size = unset

@@ -1,3 +1,24 @@
+# Tooling installs
+node_modules/
+/DEV-TOOLS/vendor/
+
+# Secrets and machine-local config
+.env
+.env.*
+!.env.example
+*.local.json
+.claude/settings.local.json
+
+# Logs and temporary files
+*.log
+/.tmp/
+/tmp/
+
+# OS files
+Thumbs.db
+desktop.ini
+.DS_Store
+
 # Gradle
 .gradle/
 **/.gradle/
@@ -25,13 +46,6 @@ replay_pid*
 .classpath
 .project
 .settings/
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
 
 # Local runtime/config artifacts
 run/
