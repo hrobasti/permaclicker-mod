@@ -1,50 +1,60 @@
 package net.kroet.permaclicker.client;
 
+import com.mojang.logging.LogUtils;
 import java.util.concurrent.CompletableFuture;
 import net.kroet.permaclicker.common.config.PermaClickConfig;
 import net.kroet.permaclicker.common.core.PermaClickBridge;
 import net.kroet.permaclicker.common.core.PermaClickTextKeys;
+import net.kroet.permaclicker.common.update.ModLoader;
 import net.kroet.permaclicker.common.update.PermaClickUpdateService;
+import net.kroet.permaclicker.common.update.UpdateProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import org.slf4j.Logger;
 
 /**
- * Background update check plus the one-time toggle-key-reset notice (see the
- * 26.3 GLFW-&gt;SDL migration note in CLAUDE.md), both flushed to chat once the
- * player is available. Shared between Fabric and NeoForge; each loader
- * entrypoint owns one instance.
+ * Background update check whose result is flushed to chat once the player is
+ * available. Owned by {@link PermaClickClient}.
  */
 public final class UpdateNoticeController {
+    private static final Logger LOGGER = LogUtils.getLogger();
     private volatile PermaClickUpdateService.UpdateStatus pendingUpdateStatus;
-    private boolean pendingToggleKeyResetNotice;
 
-    public void scheduleUpdateCheck(PermaClickBridge bridge) {
+    /**
+     * @param currentVersion
+     *            the mod version as reported by the loader; the check is skipped
+     *            when it is unknown
+     */
+    public void scheduleUpdateCheck(PermaClickBridge bridge, ModLoader loader, String currentVersion) {
         PermaClickConfig config = bridge.currentConfig();
         if (config == null || !config.updateCheckEnabled()) {
             return;
         }
 
-        String currentVersion = ClientMessages.resolveCurrentVersion();
-        String minecraftVersion = SharedConstants.getCurrentVersion().toString();
+        if (currentVersion == null || currentVersion.isBlank()) {
+            LOGGER.info("Update check skipped: mod version unknown");
+            return;
+        }
+        String minecraftVersion = SharedConstants.getCurrentVersion().name();
         var updateChannel = config.updateChannel();
 
         CompletableFuture.runAsync(() -> {
             PermaClickUpdateService.UpdateStatus status = PermaClickUpdateService.checkForUpdates(
                     currentVersion,
                     minecraftVersion,
-                    updateChannel);
-
+                    updateChannel,
+                    loader);
+            status.errors().forEach((provider, reason) -> LOGGER.info("Update check: {} unavailable ({})", provider.label(), reason));
             if (status.hasUpdate()) {
                 pendingUpdateStatus = status;
             }
+        }).exceptionally(error -> {
+            LOGGER.warn("Update check failed", error);
+            return null;
         });
-    }
-
-    public void markToggleKeyReset() {
-        pendingToggleKeyResetNotice = true;
     }
 
     public void flushPendingUpdateMessage(Minecraft minecraft) {
@@ -58,30 +68,12 @@ public final class UpdateNoticeController {
 
         LocalPlayer player = minecraft.player;
 
-        ClientMessages.displayClientMessageCompat(
-                player,
-                Component.translatable(PermaClickTextKeys.UPDATE_AVAILABLE, status.currentVersion(), status.latestVersion())
-                        .withStyle(ChatFormatting.WHITE),
-                false);
-        ClientMessages.displayProviderLine(player, status, "modrinth", "Modrinth");
-        ClientMessages.displayProviderLine(player, status, "curseforge", "CurseForge");
+        ClientMessages.sendChat(player, Component.translatable(PermaClickTextKeys.UPDATE_AVAILABLE, status.currentVersion(), status.latestVersion())
+                .withStyle(ChatFormatting.WHITE));
+        for (UpdateProvider provider : UpdateProvider.values()) {
+            ClientMessages.displayProviderLine(player, status, provider);
+        }
 
         pendingUpdateStatus = null;
-    }
-
-    public void flushPendingToggleKeyResetNotice(Minecraft minecraft) {
-        if (!pendingToggleKeyResetNotice) {
-            return;
-        }
-
-        if (minecraft == null || minecraft.player == null) {
-            return;
-        }
-
-        ClientMessages.displayClientMessageCompat(
-                minecraft.player,
-                Component.translatable(PermaClickTextKeys.TOGGLE_KEY_RESET).withStyle(ChatFormatting.YELLOW),
-                false);
-        pendingToggleKeyResetNotice = false;
     }
 }

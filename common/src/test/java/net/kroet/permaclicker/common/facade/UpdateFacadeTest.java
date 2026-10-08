@@ -1,22 +1,21 @@
 package net.kroet.permaclicker.common.facade;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import net.kroet.permaclicker.common.config.UpdateChannel;
+import net.kroet.permaclicker.common.update.ModLoader;
 import org.junit.jupiter.api.Test;
 
 class UpdateFacadeTest {
     @Test
-    void checkGracefullyReturnsFallbackWhenProvidersFailOrAreUnavailable() {
-        UpdateFacade.UpdateCheckResult result = UpdateFacade.check(
-                "1.0.0",
-                "1.21.1",
-                UpdateChannel.BETA,
-                "definitely-invalid-project-id",
-                "also-invalid");
+    void withoutProjectIdsNothingIsQueried() {
+        UpdateFacade.UpdateCheckResult result = UpdateFacade.check("1.0.0", "26.3", UpdateChannel.BETA, ModLoader.FABRIC, "", null);
 
         assertEquals("1.0.0", result.currentVersion());
-        assertNotNull(result.providerVersions());
+        assertNull(result.latestVersion());
+        assertTrue(result.releases().isEmpty());
+        assertTrue(result.errors().isEmpty());
     }
 }

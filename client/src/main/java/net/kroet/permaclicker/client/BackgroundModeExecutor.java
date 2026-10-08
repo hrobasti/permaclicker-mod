@@ -25,8 +25,7 @@ public final class BackgroundModeExecutor {
         actions.updateCachedDestroyTarget(minecraft);
         minecraft.options.keyAttack.setDown(true);
 
-        // Stop at the first call that advances mining: at most one destroy step per
-        // tick.
+        // Stop at the first call that advances mining: one destroy step per tick.
         if (actions.continueAttack(minecraft) || actions.continueDestroyWithCachedTarget(minecraft)) {
             unfocusedMissTicks = 0;
             return true;

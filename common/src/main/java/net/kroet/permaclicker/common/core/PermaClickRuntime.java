@@ -25,13 +25,6 @@ public interface PermaClickRuntime {
         // optional runtime hook
     }
 
-    void showActionBar(String message);
-
-    default void showActionBarText(String message) {
-        showActionBarText(message, null);
-    }
-
-    default void showActionBarText(String message, String colorName) {
-        showActionBar(message);
-    }
+    /** Shows the action-bar status; colorName may be null for the default color. */
+    void showStatus(StatusOverlay status, String colorName);
 }

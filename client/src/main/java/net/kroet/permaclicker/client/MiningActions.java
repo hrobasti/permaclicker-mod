@@ -1,20 +1,23 @@
 package net.kroet.permaclicker.client;
 
+import net.kroet.permaclicker.client.mixin.KeyMappingAccessor;
 import net.kroet.permaclicker.client.mixin.MinecraftAttackInvoker;
 import net.kroet.permaclicker.client.mixin.MultiPlayerGameModeAccessor;
+import net.kroet.permaclicker.common.core.MiningTarget;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 
 /**
  * Block-mining primitives shared by the focused- and background-mode executors:
  * vanilla attack entry points (via compile-checked mixin invokers), a cached
- * destroy target that survives brief crosshair/hit-result gaps, and detection
- * of whether a call advanced mining. Each executor owns one instance because
- * the cached target is per-executor state.
+ * destroy target for the block in the crosshair, and detection of whether a
+ * call advanced mining. Each executor owns one instance because the cached
+ * target is per-executor state.
  *
  * <p>
  * Every method returns whether mining advanced this tick: destroy progress
@@ -32,7 +35,10 @@ final class MiningActions {
             return;
         }
 
-        if (!(minecraft.hitResult instanceof BlockHitResult hit)) {
+        // Minecraft re-picks the crosshair target every tick; looking away, at an
+        // entity or out of reach must not keep mining the remembered block.
+        if (!(minecraft.hitResult instanceof BlockHitResult hit) || hit.getType() != HitResult.Type.BLOCK) {
+            clearCachedDestroyTarget();
             return;
         }
 
@@ -56,6 +62,9 @@ final class MiningActions {
     }
 
     boolean startAttack(Minecraft minecraft) {
+        if (!target(minecraft).mayStartAttack()) {
+            return false;
+        }
         DestroySnapshot before = DestroySnapshot.of(minecraft.gameMode);
         try {
             ((MinecraftAttackInvoker) minecraft).permaclicker$invokeStartAttack();
@@ -66,8 +75,11 @@ final class MiningActions {
     }
 
     boolean clickAttackKey(Minecraft minecraft) {
+        if (!target(minecraft).mayStartAttack()) {
+            return false;
+        }
         try {
-            KeyMapping.click(minecraft.options.keyAttack.getDefaultKey());
+            KeyMapping.click(((KeyMappingAccessor) minecraft.options.keyAttack).permaclicker$getKey());
             return minecraft.gameMode != null && minecraft.gameMode.isDestroying();
         } catch (RuntimeException ignored) {
             return false;
@@ -106,6 +118,18 @@ final class MiningActions {
         } catch (RuntimeException ignored) {
             return false;
         }
+    }
+
+    private static MiningTarget target(Minecraft minecraft) {
+        HitResult hit = minecraft.hitResult;
+        if (hit == null) {
+            return MiningTarget.NONE;
+        }
+        return switch (hit.getType()) {
+            case BLOCK -> MiningTarget.BLOCK;
+            case ENTITY -> MiningTarget.ENTITY;
+            case MISS -> MiningTarget.NONE;
+        };
     }
 
     private void clearCachedDestroyTarget() {

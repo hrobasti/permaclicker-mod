@@ -2,27 +2,27 @@ package net.kroet.permaclicker.common.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.JsonParseException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
 /**
  * JSON-backed config persistence for PermaClick.
  */
 public final class PermaClickConfigStore {
+    /** Config file relative to the game directory. */
+    public static final String RELATIVE_PATH = "config/permaclicker.json";
+
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-    /**
-     * Bumped from the implicit unversioned format to 2 when MC 26.3 switched the
-     * input backend from GLFW to SDL, which changed key-code numbering (see
-     * PermaClickConfig.DEFAULT_TOGGLE_KEY_CODE). A file with no configVersion
-     * predates that change, so its toggleKeyCode is stale.
-     */
+    /** Format version written to the file; raise it on incompatible changes. */
     static final int CURRENT_CONFIG_VERSION = 2;
 
     private final Path configFile;
@@ -31,63 +31,68 @@ public final class PermaClickConfigStore {
         this.configFile = Objects.requireNonNull(configFile, "configFile");
     }
 
+    public static PermaClickConfigStore inGameDirectory(Path gameDirectory) {
+        return new PermaClickConfigStore(gameDirectory.resolve(RELATIVE_PATH));
+    }
+
     /**
      * @param config
      *            the resolved, normalized config
-     * @param toggleKeyWasReset
-     *            true if this file predated the 26.3 key-code migration and its
-     *            toggle key was reset to the current default as a result
+     * @param brokenFileBackup
+     *            where an unreadable file was moved before falling back to
+     *            defaults, or null
      */
-    public record LoadResult(PermaClickConfig config, boolean toggleKeyWasReset) {
+    public record LoadResult(PermaClickConfig config, Path brokenFileBackup) {
     }
 
     public LoadResult load() {
         if (!Files.exists(configFile)) {
-            return new LoadResult(PermaClickConfig.defaults(), false);
+            return new LoadResult(PermaClickConfig.defaults(), null);
         }
 
         try (Reader reader = Files.newBufferedReader(configFile, StandardCharsets.UTF_8)) {
             FileModel model = GSON.fromJson(reader, FileModel.class);
-            if (model == null) {
-                return new LoadResult(PermaClickConfig.defaults(), false);
-            }
-
-            boolean legacyToggleKeyFormat = model.configVersion() == null;
-            PermaClickConfig config = model.toConfig(legacyToggleKeyFormat);
-
-            if (legacyToggleKeyFormat) {
-                trySave(config);
-            }
-
-            return new LoadResult(config, legacyToggleKeyFormat);
-        } catch (IOException | JsonSyntaxException ignored) {
-            return new LoadResult(PermaClickConfig.defaults(), false);
+            return new LoadResult(model == null ? PermaClickConfig.defaults() : model.toConfig(), null);
+        } catch (IOException | JsonParseException e) {
+            return new LoadResult(PermaClickConfig.defaults(), backUpBrokenFile());
         }
     }
 
+    /**
+     * Writes to a temporary file first, so a crash never leaves a half-written
+     * config.
+     */
     public void save(PermaClickConfig config) throws IOException {
-        if (configFile.getParent() != null) {
-            Files.createDirectories(configFile.getParent());
-        }
-
-        try (Writer writer = Files.newBufferedWriter(configFile, StandardCharsets.UTF_8)) {
-            GSON.toJson(FileModel.fromConfig(config), writer);
+        Path directory = configFile.toAbsolutePath().getParent();
+        Files.createDirectories(directory);
+        Path temporary = Files.createTempFile(directory, configFile.getFileName().toString(), ".tmp");
+        try {
+            try (Writer writer = Files.newBufferedWriter(temporary, StandardCharsets.UTF_8)) {
+                GSON.toJson(FileModel.fromConfig(config), writer);
+            }
+            try {
+                Files.move(temporary, configFile, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+            } catch (AtomicMoveNotSupportedException e) {
+                Files.move(temporary, configFile, StandardCopyOption.REPLACE_EXISTING);
+            }
+        } finally {
+            Files.deleteIfExists(temporary);
         }
     }
 
-    private void trySave(PermaClickConfig config) {
+    private Path backUpBrokenFile() {
+        Path backup = configFile.resolveSibling(configFile.getFileName() + ".broken");
         try {
-            save(config);
-        } catch (IOException ignored) {
-            // Best-effort persistence of the migrated config; it will simply migrate again
-            // next load.
+            Files.move(configFile, backup, StandardCopyOption.REPLACE_EXISTING);
+            return backup;
+        } catch (IOException e) {
+            return null;
         }
     }
 
     private record FileModel(
             Integer configVersion,
             Boolean enabled,
-            Integer toggleKeyCode,
             Boolean overlayEnabled,
             String overlayColor,
             Boolean runInBackground,
@@ -101,7 +106,6 @@ public final class PermaClickConfigStore {
             return new FileModel(
                     CURRENT_CONFIG_VERSION,
                     config.enabled(),
-                    config.toggleKeyCode(),
                     config.overlayEnabled(),
                     config.overlayColor(),
                     config.runInBackground(),
@@ -113,46 +117,23 @@ public final class PermaClickConfigStore {
                     config.attackBufferTicks());
         }
 
-        PermaClickConfig toConfig(boolean legacyToggleKeyFormat) {
+        PermaClickConfig toConfig() {
             PermaClickConfig defaults = PermaClickConfig.defaults();
-
-            boolean resolvedEnabled = enabled == null ? defaults.enabled() : enabled;
-
-            int resolvedKeyCode = legacyToggleKeyFormat || toggleKeyCode == null || toggleKeyCode <= 0
-                    ? defaults.toggleKeyCode()
-                    : toggleKeyCode;
-
-            boolean resolvedOverlayEnabled = overlayEnabled == null ? defaults.overlayEnabled() : overlayEnabled;
-            String resolvedOverlayColor = PermaClickConfig.normalizeOverlayColor(
-                    overlayColor == null ? defaults.overlayColor() : overlayColor);
-            boolean resolvedRunInBackground = runInBackground == null ? defaults.runInBackground() : runInBackground;
-            int resolvedAutoStopMinutes = autoStopMinutes == null
-                    ? defaults.autoStopMinutes()
-                    : PermaClickConfig.clampAutoStopMinutes(autoStopMinutes);
-            boolean resolvedMovementLockEnabled = movementLockEnabled == null
-                    ? defaults.movementLockEnabled()
-                    : movementLockEnabled;
-            boolean resolvedUpdateCheckEnabled = updateCheckEnabled == null
-                    ? defaults.updateCheckEnabled()
-                    : updateCheckEnabled;
-            UpdateChannel resolvedUpdateChannel = UpdateChannel.fromString(updateChannel, defaults.updateChannel());
-            ClickMode resolvedClickMode = ClickMode.fromString(clickMode, defaults.clickMode());
-            int resolvedAttackBufferTicks = attackBufferTicks == null
-                    ? defaults.attackBufferTicks()
-                    : PermaClickConfig.clampAttackBufferTicks(attackBufferTicks);
-
             return new PermaClickConfig(
-                    resolvedEnabled,
-                    resolvedKeyCode,
-                    resolvedOverlayEnabled,
-                    resolvedOverlayColor,
-                    resolvedRunInBackground,
-                    resolvedAutoStopMinutes,
-                    resolvedMovementLockEnabled,
-                    resolvedUpdateCheckEnabled,
-                    resolvedUpdateChannel,
-                    resolvedClickMode,
-                    resolvedAttackBufferTicks);
+                    enabled == null ? defaults.enabled() : enabled,
+                    overlayEnabled == null ? defaults.overlayEnabled() : overlayEnabled,
+                    PermaClickConfig.normalizeOverlayColor(overlayColor == null ? defaults.overlayColor() : overlayColor),
+                    runInBackground == null ? defaults.runInBackground() : runInBackground,
+                    autoStopMinutes == null
+                            ? defaults.autoStopMinutes()
+                            : PermaClickConfig.clampAutoStopMinutes(autoStopMinutes),
+                    movementLockEnabled == null ? defaults.movementLockEnabled() : movementLockEnabled,
+                    updateCheckEnabled == null ? defaults.updateCheckEnabled() : updateCheckEnabled,
+                    UpdateChannel.fromString(updateChannel, defaults.updateChannel()),
+                    ClickMode.fromString(clickMode, defaults.clickMode()),
+                    attackBufferTicks == null
+                            ? defaults.attackBufferTicks()
+                            : PermaClickConfig.clampAttackBufferTicks(attackBufferTicks));
         }
     }
 }

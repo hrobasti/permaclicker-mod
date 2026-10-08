@@ -1,6 +1,6 @@
-package net.kroet.permaclicker.fabric.mixin;
+package net.kroet.permaclicker.client.mixin;
 
-import net.kroet.permaclicker.fabric.PermaClickFabricEntrypoint;
+import net.kroet.permaclicker.client.PermaClickClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.PauseScreen;
@@ -11,26 +11,26 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
-final class FabricPauseScreenSetScreenMixin {
+final class PauseScreenSetScreenMixin {
     @Inject(method = "setScreenAndShow", at = @At("HEAD"), cancellable = true)
     private void permaclicker$blockPauseScreen(Screen screen, CallbackInfo ci) {
         Minecraft minecraft = (Minecraft) (Object) this;
 
-        if (PermaClickFabricEntrypoint.isPermaClickerConfigScreen(screen)) {
-            if (PermaClickFabricEntrypoint.shouldBlockSettingsOpenForBackgroundMode(minecraft)) {
+        if (PermaClickClient.isConfigScreen(screen)) {
+            if (PermaClickClient.isPauseBlockContextActive(minecraft)) {
                 ci.cancel();
                 return;
             }
 
-            PermaClickFabricEntrypoint.stopForFocusedSettingsOpen(minecraft);
+            PermaClickClient.stopForFocusedEscPause(minecraft);
         }
 
-        if (screen instanceof PauseScreen && PermaClickFabricEntrypoint.isPauseBlockContextActive(minecraft)) {
+        if (screen instanceof PauseScreen && PermaClickClient.isPauseBlockContextActive(minecraft)) {
             ci.cancel();
             return;
         }
 
-        if (isChatScreen(screen) && PermaClickFabricEntrypoint.isChatBlockContextActive(minecraft)) {
+        if (isChatScreen(screen) && PermaClickClient.isChatBlockContextActive(minecraft)) {
             ci.cancel();
         }
     }

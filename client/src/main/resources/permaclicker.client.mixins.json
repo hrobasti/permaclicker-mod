@@ -3,9 +3,13 @@
   "package": "net.kroet.permaclicker.client.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "ChatOpenBlockMixin",
+    "KeyMappingAccessor",
     "MinecraftAttackInvoker",
     "MinecraftContinueAttackGuardMixin",
-    "MultiPlayerGameModeAccessor"
+    "MultiPlayerGameModeAccessor",
+    "PauseEscKeyMixin",
+    "PauseScreenSetScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

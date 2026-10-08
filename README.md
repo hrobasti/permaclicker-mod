@@ -17,14 +17,14 @@ On many servers this may violate rules and can result in penalties such as kick/
 
 ## What PermaClicker provides ✨
 
-- click mode: **Mining** (holds attack to mine the targeted block) or **Mobs & Animals** (hits the targeted mob or animal whenever the attack cooldown is fully charged; never attacks players)
+- click mode: **Mining** (holds attack to mine the targeted block; never hits mobs, animals or players) or **Mobs & Animals** (hits the targeted mob or animal, including villagers and pets, whenever the attack cooldown is fully charged; never attacks players)
 - configurable attack buffer for **Mobs & Animals** (`0..20` ticks, default `2`) as a safety margin against server lag
 - runtime mode: **Focused** or **Background**
 - auto-stop timer (`0..9999` minutes)
 - optional movement lock while active
 - status overlay in the action bar showing the active mode and remaining auto-stop time (can be disabled, configurable color)
 - rebindable hotkeys and an in-game config screen for Fabric and NeoForge
-- optional update checks via Modrinth and CurseForge (Stable / Beta / Alpha)
+- update check via Modrinth and CurseForge (Stable / Beta / Alpha), can be turned off (see below)
 
 ## Runtime behavior 🧭
 
@@ -41,6 +41,15 @@ If you care about tool or weapon durability (they can break while PermaClicker r
 ## Configuration ⚙️
 
 All settings are managed directly in the in-game config screen. Hotkeys are rebound in Minecraft's controls menu.
+
+## Update check & privacy 🔔
+
+When the game starts, PermaClicker checks once in the background whether a newer version exists, and shows a chat message with links after you join a world. The check is on by default; turn it off with **Update check** in the settings. The channel (**Stable**: releases only, **Beta**: releases and betas, **Alpha**: everything) decides which versions count.
+
+- **Queried services** (only platforms where PermaClicker is published): `api.modrinth.com` (Modrinth, official API) and `api.cfwidget.com` (CFWidget, an unofficial third-party service that mirrors CurseForge data; it publishes no privacy policy and states that it stores no identifiable information).
+- **Transmitted data:** your IP address (part of every web request), the mod name and version (user agent), the Minecraft version, the loader (Fabric or NeoForge) and the project ID. No account, player or world data.
+- Modrinth's handling of request data: [Modrinth privacy policy](https://modrinth.com/legal/privacy).
+- With Mod Menu installed (Fabric), Mod Menu additionally checks your installed mods on Modrinth; that check is configured in Mod Menu's own settings.
 
 ## Supported languages 🌍
 
@@ -85,14 +94,7 @@ Parts of the source code and documentation were created with AI assistance.
 
 ## Developer notes 🧩
 
-PermaClicker uses TurtleLib helpers in `common` intentionally via facades:
-
-- `LocaleFacade`
-- `MessageFacade`
-- `UpdateFacade`
-- `VersionFacade`
-
-Direct TurtleLib imports are intentionally limited to these integration points.
+PermaClicker uses TurtleLib only through `UpdateFacade` in `common`; no other code imports TurtleLib. Translations use Minecraft's lang files.
 
 ## License 📄
 

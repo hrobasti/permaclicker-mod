@@ -49,6 +49,6 @@ public record PermaClickRuntimeBindings(
         backgroundCursorFreeAction.accept(active);
     }
 
-    public record ActionBarPayload(String message, String colorName) {
+    public record ActionBarPayload(StatusOverlay status, String colorName) {
     }
 }

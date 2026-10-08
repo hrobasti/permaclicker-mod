@@ -2,11 +2,13 @@ package net.kroet.permaclicker.common.config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -21,17 +23,25 @@ class PermaClickConfigStoreTest {
         PermaClickConfigStore.LoadResult result = store.load();
 
         assertEquals(PermaClickConfig.defaults(), result.config());
-        assertFalse(result.toggleKeyWasReset());
+        assertNull(result.brokenFileBackup());
     }
 
     @Test
-    void saveAndLoadRoundTrip() throws IOException {
+    void inGameDirectoryUsesTheConfigFolder() throws IOException {
+        PermaClickConfigStore store = PermaClickConfigStore.inGameDirectory(tempDir);
+
+        store.save(PermaClickConfig.defaults());
+
+        assertTrue(Files.exists(tempDir.resolve("config/permaclicker.json")));
+    }
+
+    @Test
+    void saveAndLoadRoundTripWithoutLeftoverFiles() throws IOException {
         Path file = tempDir.resolve("config/permaclick.json");
         PermaClickConfigStore store = new PermaClickConfigStore(file);
 
         PermaClickConfig original = new PermaClickConfig(
                 true,
-                293,
                 false,
                 "red",
                 true,
@@ -42,14 +52,16 @@ class PermaClickConfigStoreTest {
                 ClickMode.MOB_ATTACK,
                 7);
         store.save(original);
+        store.save(original);
 
-        PermaClickConfigStore.LoadResult result = store.load();
-        assertEquals(original, result.config());
-        assertFalse(result.toggleKeyWasReset());
+        assertEquals(original, store.load().config());
+        try (Stream<Path> files = Files.list(file.getParent())) {
+            assertEquals(1, files.count());
+        }
     }
 
     @Test
-    void loadFallsBackOnInvalidJson() throws IOException {
+    void brokenFileIsBackedUpInsteadOfOverwritten() throws IOException {
         Path file = tempDir.resolve("permaclick.json");
         Files.writeString(file, "{ not-valid-json ");
         PermaClickConfigStore store = new PermaClickConfigStore(file);
@@ -57,7 +69,9 @@ class PermaClickConfigStoreTest {
         PermaClickConfigStore.LoadResult result = store.load();
 
         assertEquals(PermaClickConfig.defaults(), result.config());
-        assertFalse(result.toggleKeyWasReset());
+        assertEquals(tempDir.resolve("permaclick.json.broken"), result.brokenFileBackup());
+        assertEquals("{ not-valid-json ", Files.readString(result.brokenFileBackup()));
+        assertFalse(Files.exists(file));
     }
 
     @Test
@@ -67,7 +81,6 @@ class PermaClickConfigStoreTest {
                 {
                   "configVersion": 2,
                   "enabled": true,
-                  "toggleKeyCode": -1,
                   "overlayEnabled": false,
                   "overlayColor": "invalid",
                   "runInBackground": false,
@@ -80,13 +93,9 @@ class PermaClickConfigStoreTest {
                 }
                 """);
 
-        PermaClickConfigStore store = new PermaClickConfigStore(file);
-        PermaClickConfigStore.LoadResult result = store.load();
-        PermaClickConfig loaded = result.config();
+        PermaClickConfig loaded = new PermaClickConfigStore(file).load().config();
 
-        assertFalse(result.toggleKeyWasReset());
         assertTrue(loaded.enabled());
-        assertEquals(PermaClickConfig.DEFAULT_TOGGLE_KEY_CODE, loaded.toggleKeyCode());
         assertFalse(loaded.overlayEnabled());
         assertEquals(PermaClickConfig.DEFAULT_OVERLAY_COLOR, loaded.overlayColor());
         assertFalse(loaded.runInBackground());
@@ -99,27 +108,27 @@ class PermaClickConfigStoreTest {
     }
 
     @Test
-    void loadDefaultsClickModeFieldsWhenMissingFromExistingConfig() throws IOException {
+    void olderFilesStillLoad() throws IOException {
         Path file = tempDir.resolve("permaclick.json");
         Files.writeString(file, """
                 {
-                  "configVersion": 2,
                   "enabled": false,
-                  "toggleKeyCode": 64,
+                  "toggleKeyCode": 298,
                   "overlayEnabled": true,
-                  "overlayColor": "green",
+                  "overlayColor": "gold",
                   "runInBackground": false,
-                  "autoStopMinutes": 0,
+                  "autoStopMinutes": 5,
                   "movementLockEnabled": true,
                   "updateCheckEnabled": true,
                   "updateChannel": "BETA"
                 }
                 """);
-        PermaClickConfigStore store = new PermaClickConfigStore(file);
 
-        PermaClickConfigStore.LoadResult result = store.load();
+        PermaClickConfigStore.LoadResult result = new PermaClickConfigStore(file).load();
 
-        assertFalse(result.toggleKeyWasReset());
+        assertNull(result.brokenFileBackup());
+        assertEquals("gold", result.config().overlayColor());
+        assertEquals(5, result.config().autoStopMinutes());
         assertEquals(ClickMode.MINING, result.config().clickMode());
         assertEquals(PermaClickConfig.DEFAULT_ATTACK_BUFFER_TICKS, result.config().attackBufferTicks());
     }
@@ -134,40 +143,10 @@ class PermaClickConfigStoreTest {
                   "attackBufferTicks": -5
                 }
                 """);
-        PermaClickConfigStore store = new PermaClickConfigStore(file);
 
-        PermaClickConfig loaded = store.load().config();
+        PermaClickConfig loaded = new PermaClickConfigStore(file).load().config();
 
         assertEquals(ClickMode.MOB_ATTACK, loaded.clickMode());
         assertEquals(PermaClickConfig.MIN_ATTACK_BUFFER_TICKS, loaded.attackBufferTicks());
-    }
-
-    @Test
-    void loadMigratesLegacyToggleKeyToDefaultOnce() throws IOException {
-        Path file = tempDir.resolve("permaclick.json");
-        Files.writeString(file, """
-                {
-                  "enabled": true,
-                  "toggleKeyCode": 298,
-                  "overlayEnabled": true,
-                  "overlayColor": "green",
-                  "runInBackground": false,
-                  "autoStopMinutes": 0,
-                  "movementLockEnabled": true,
-                  "updateCheckEnabled": true,
-                  "updateChannel": "BETA"
-                }
-                """);
-        PermaClickConfigStore store = new PermaClickConfigStore(file);
-
-        PermaClickConfigStore.LoadResult firstLoad = store.load();
-
-        assertTrue(firstLoad.toggleKeyWasReset());
-        assertEquals(PermaClickConfig.DEFAULT_TOGGLE_KEY_CODE, firstLoad.config().toggleKeyCode());
-
-        PermaClickConfigStore.LoadResult secondLoad = store.load();
-
-        assertFalse(secondLoad.toggleKeyWasReset());
-        assertEquals(PermaClickConfig.DEFAULT_TOGGLE_KEY_CODE, secondLoad.config().toggleKeyCode());
     }
 }

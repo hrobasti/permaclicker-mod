@@ -1,13 +1,10 @@
 {
-  "permaclicker.title": "PermaClicker",
-
   "permaclicker.status.on": "PermaClicker は有効です",
   "permaclicker.status.off": "PermaClicker は無効です",
 
   "permaclicker.update.available": "[PermaClicker] アップデートがあります! %s -> %s",
   "permaclicker.update.provider.ok": "- %s: バージョン %s",
   "permaclicker.update.provider.error": "- %s: 取得に失敗しました。",
-  "permaclicker.config.toggle_key_reset": "[PermaClicker] Minecraft 26.3でキーの保存方法が変更されたため、トグルキーが初期設定にリセットされました。必要であればPermaClickerの設定で再設定してください。",
 
   "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "切り替え",

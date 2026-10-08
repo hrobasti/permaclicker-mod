@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 class PermaClickBridgeEventLoopTest {
     @Test
-    void keyPressAndTickTriggerMiningWhenRuntimeReady() {
+    void togglePressAndTickTriggerMiningWhenRuntimeReady() {
         PermaClickBridge bridge = new PermaClickBridge(new PermaClickClientController());
         PermaClickClientEventLoop loop = new PermaClickClientEventLoop(bridge);
 
@@ -27,7 +27,7 @@ class PermaClickBridgeEventLoopTest {
                 ignored -> {
                 }));
 
-        loop.onKeyInput(bridge.boundKeyCode(), true);
+        loop.onTogglePressed();
         loop.onClientTick();
 
         assertEquals(1, miningCalls.get());
@@ -54,13 +54,10 @@ class PermaClickBridgeEventLoopTest {
                 ignored -> {
                 }));
 
-        int key = bridge.boundKeyCode();
-
-        loop.onKeyInput(key, true);
+        loop.onTogglePressed();
         loop.onClientTick();
 
-        loop.onKeyInput(key, false);
-        loop.onKeyInput(key, true);
+        loop.onTogglePressed();
         loop.onClientTick();
 
         assertEquals(1, miningCalls.get());

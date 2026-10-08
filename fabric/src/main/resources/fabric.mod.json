@@ -3,22 +3,28 @@
   "id": "${mod_id}",
   "version": "${version}",
   "name": "PermaClicker",
-  "icon": "assets/permaclicker/icon.png",
-  "description": "PermaClicker keeps mining active while enabled.",
-  "authors": ["kroet.net"],
+  "description": "Keeps your attack going while you're AFK: continuous mining for block farms, or full-strength hits for mob and animal farms. For single-player or servers that allow it.",
+  "authors": [
+    {
+      "name": "kroet.net",
+      "contact": {
+        "homepage": "https://kroet.net"
+      }
+    }
+  ],
   "license": "MIT",
+  "icon": "assets/permaclicker/icon.png",
   "contact": {
-    "homepage": "https://github.com/hrobasti/permaclicker-mod"
+    "homepage": "https://kroet.net",
+    "sources": "https://github.com/hrobasti/permaclicker-mod",
+    "issues": "https://github.com/hrobasti/permaclicker-mod/issues"
   },
   "environment": "client",
   "entrypoints": {
-    "client": ["net.kroet.permaclicker.fabric.PermaClickerFabricBootstrap"],
+    "client": ["net.kroet.permaclicker.fabric.PermaClickFabricEntrypoint"],
     "modmenu": ["net.kroet.permaclicker.fabric.PermaClickerModMenuApi"]
   },
-  "mixins": [
-    "permaclicker.fabric.mixins.json",
-    "permaclicker.client.mixins.json"
-  ],
+  "mixins": ["permaclicker.client.mixins.json"],
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": ">=${fabric_api_version}",
@@ -32,9 +38,8 @@
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.source": "https://github.com/hrobasti/permaclicker-mod",
         "modmenu.github_sponsors": "https://github.com/sponsors/hrobasti",
-        "modmenu.kofi": "https://ko-fi.com/hrobasti"
+        "modmenu.kofi": "https://ko-fi.com/kroet"
       }
     }
   }

@@ -10,11 +10,8 @@ apply from: file('../gradle/turtlelib-dependency.gradle')
 def matrixTarget = resolveMatrixTarget('minecraft_version')
 applyJavaConventions(matrixTarget)
 
-// Loader-neutral client-side runtime code that genuinely needs Minecraft classes (unlike
-// :permaclicker-common, which stays Minecraft-free by design). Compiled here against a
-// Fabric-shaped Minecraft classpath and bundled as plain classes into both the Fabric and
-// NeoForge loader jars — see mods/permaclicker-mod/TODO-architecture-review.md (F1) for why
-// Fabric's (narrower) classpath is the safe compile target for code shared with NeoForge.
+// Client code that needs Minecraft classes, shared by both loaders and bundled into both jars.
+// It compiles against the narrower Fabric classpath, so it cannot call NeoForge-only patches.
 // Explicit -P values (passed per target by the matrix release builds) win over the matrix defaults.
 def resolvedMinecraftVersion = matrixTarget.minecraft
 def resolvedFabricLoaderVersion = providers.gradleProperty('fabric_loader_version').getOrElse(matrixTarget.fabricLoader)

@@ -1,6 +1,5 @@
 package net.kroet.permaclicker.common.core;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import net.kroet.permaclicker.common.config.PermaClickConfig;
@@ -9,30 +8,15 @@ import org.junit.jupiter.api.Test;
 
 class PermaClickClientControllerTest {
     @Test
-    void defaultKeyCodeIsF7() {
-        PermaClickClientController controller = new PermaClickClientController();
-        assertEquals(PermaClickClientController.DEFAULT_TOGGLE_KEY_CODE, controller.boundKeyCode());
-    }
-
-    @Test
     void tickTriggersMiningWhenEnabledAndReady() {
         PermaClickClientController controller = new PermaClickClientController();
         RuntimeStub runtime = new RuntimeStub();
 
-        controller.applyConfig(new PermaClickConfig(false, 292, true, "green", true, 0, true, true, UpdateChannel.BETA));
-        controller.onKeyEvent(292, true, runtime);
+        controller.applyConfig(new PermaClickConfig(false, true, "green", true, 0, true, true, UpdateChannel.BETA));
+        controller.toggle(runtime);
         controller.onClientTick(runtime);
 
         assertTrue(runtime.miningCalls > 0);
-    }
-
-    @Test
-    void applyConfigUpdatesBoundKeyCode() {
-        PermaClickClientController controller = new PermaClickClientController();
-
-        controller.applyConfig(new PermaClickConfig(false, 293, true, "green", true, 0, true, true, UpdateChannel.BETA));
-
-        assertEquals(293, controller.boundKeyCode());
     }
 
     private static final class RuntimeStub implements PermaClickRuntime {
@@ -60,7 +44,7 @@ class PermaClickClientControllerTest {
         }
 
         @Override
-        public void showActionBar(String message) {
+        public void showStatus(StatusOverlay status, String colorName) {
             // no-op
         }
     }

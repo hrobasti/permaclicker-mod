@@ -1,13 +1,10 @@
 {
-  "permaclicker.title": "PermaClicker",
-
   "permaclicker.status.on": "PermaClicker نشط",
   "permaclicker.status.off": "PermaClicker غير نشط",
 
   "permaclicker.update.available": "[PermaClicker] تحديث متاح! %s -> %s",
   "permaclicker.update.provider.ok": "- %s: الإصدار %s",
   "permaclicker.update.provider.error": "- %s: فشل الجلب.",
-  "permaclicker.config.toggle_key_reset": "[PermaClicker] تمت إعادة تعيين مفتاح التبديل إلى الافتراضي لأن ماينكرافت 26.3 غيّر طريقة تخزين المفاتيح. أعد ربطه في إعدادات PermaClicker إذا لزم الأمر.",
 
   "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "تبديل",

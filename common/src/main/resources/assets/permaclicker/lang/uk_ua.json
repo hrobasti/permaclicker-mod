@@ -1,13 +1,10 @@
 {
-  "permaclicker.title": "PermaClicker",
-
   "permaclicker.status.on": "PermaClicker активний",
   "permaclicker.status.off": "PermaClicker неактивний",
 
   "permaclicker.update.available": "[PermaClicker] Доступне оновлення! %s -> %s",
   "permaclicker.update.provider.ok": "- %s: Версія %s",
   "permaclicker.update.provider.error": "- %s: Не вдалося отримати.",
-  "permaclicker.config.toggle_key_reset": "[PermaClicker] Вашу клавішу перемикання скинуто до стандартної, оскільки Minecraft 26.3 змінив спосіб зберігання клавіш. За потреби призначте її знову в налаштуваннях PermaClicker.",
 
   "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "Перемкнути",

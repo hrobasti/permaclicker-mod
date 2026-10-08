@@ -1,13 +1,10 @@
 {
-  "permaclicker.title": "PermaClicker",
-
   "permaclicker.status.on": "PermaClicker está activo",
   "permaclicker.status.off": "PermaClicker está inactivo",
 
   "permaclicker.update.available": "[PermaClicker] ¡Actualización disponible! %s -> %s",
   "permaclicker.update.provider.ok": "- %s: Versión %s",
   "permaclicker.update.provider.error": "- %s: Error al obtener datos.",
-  "permaclicker.config.toggle_key_reset": "[PermaClicker] Tu tecla de activación se restableció al valor predeterminado porque Minecraft 26.3 cambió cómo se almacenan las teclas. Reasígnala en los ajustes de PermaClicker si es necesario.",
 
   "key.category.permaclicker.permaclicker": "PermaClicker",
   "key.permaclicker.toggle": "Alternar",

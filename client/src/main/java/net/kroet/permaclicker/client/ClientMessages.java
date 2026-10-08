@@ -1,9 +1,14 @@
 package net.kroet.permaclicker.client;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import net.kroet.permaclicker.common.core.PermaClickTextKeys;
 import net.kroet.permaclicker.common.update.PermaClickUpdateService;
+import net.kroet.permaclicker.common.update.ProviderRelease;
+import net.kroet.permaclicker.common.update.UpdateProvider;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -15,55 +20,45 @@ public final class ClientMessages {
     private ClientMessages() {
     }
 
-    public static String resolveCurrentVersion() {
-        String implementationVersion = ClientMessages.class.getPackage().getImplementationVersion();
-        return (implementationVersion == null || implementationVersion.isBlank()) ? "0.0.0" : implementationVersion;
-    }
-
-    public static void displayClientMessageCompat(LocalPlayer player, Component message, boolean actionBar) {
-        if (player == null || message == null) {
-            return;
-        }
-
-        // 26.2+: displayClientMessage was split into sendOverlayMessage (action bar)
-        // and
-        // sendSystemMessage (chat). Direct calls are compile-checked against the
-        // current mapping.
-        if (actionBar) {
-            player.sendOverlayMessage(message);
-        } else {
+    public static void sendChat(LocalPlayer player, Component message) {
+        if (player != null && message != null) {
             player.sendSystemMessage(message);
         }
     }
 
-    public static void displayProviderLine(
-            LocalPlayer player,
-            PermaClickUpdateService.UpdateStatus status,
-            String providerKey,
-            String providerLabel) {
-        String version = status.providerVersions().get(providerKey);
-        String url = status.providerVersionUrls().get(providerKey);
-
-        if (version == null || version.isBlank()) {
-            displayClientMessageCompat(
-                    player,
-                    Component.translatable(PermaClickTextKeys.UPDATE_PROVIDER_ERROR, providerLabel).withStyle(ChatFormatting.GRAY),
-                    false);
+    public static void displayProviderLine(LocalPlayer player, PermaClickUpdateService.UpdateStatus status, UpdateProvider provider) {
+        ProviderRelease release = status.releases().get(provider);
+        if (release == null) {
+            if (status.errors().containsKey(provider)) {
+                sendChat(player, Component.translatable(PermaClickTextKeys.UPDATE_PROVIDER_ERROR, provider.label()).withStyle(ChatFormatting.GRAY));
+            }
             return;
         }
 
-        MutableComponent line = Component.translatable(PermaClickTextKeys.UPDATE_PROVIDER_OK, providerLabel, version)
+        MutableComponent line = Component.translatable(PermaClickTextKeys.UPDATE_PROVIDER_OK, provider.label(), release.version())
                 .append(Component.literal(" "))
                 .withStyle(ChatFormatting.GRAY);
-
-        if (url != null && !url.isBlank()) {
-            MutableComponent link = Component.literal("[" + url + "]")
+        URI uri = parseUri(release.url());
+        if (uri != null) {
+            line.append(Component.literal("[" + release.url() + "]")
                     .withStyle(style -> style
                             .withColor(ChatFormatting.AQUA)
-                            .withUnderlined(true));
-            line.append(link);
+                            .withUnderlined(true)
+                            .withClickEvent(new ClickEvent.OpenUrl(uri))));
         }
 
-        displayClientMessageCompat(player, line, false);
+        sendChat(player, line);
+    }
+
+    private static URI parseUri(String url) {
+        if (url == null || url.isBlank()) {
+            return null;
+        }
+        try {
+            URI uri = new URI(url);
+            return "https".equalsIgnoreCase(uri.getScheme()) ? uri : null;
+        } catch (URISyntaxException e) {
+            return null;
+        }
     }
 }

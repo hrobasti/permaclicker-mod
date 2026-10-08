@@ -27,5 +27,5 @@ repositories {
 
 ext.useLocalTurtleLib = Boolean.parseBoolean(providers.gradleProperty('useLocalTurtleLib').getOrElse('false'))
 ext.turtleLibDependency = useLocalTurtleLib
-    ? project(':turtlelib-core')
+    ? dependencies.project(path: ':turtlelib-core')
     : "turtlelib:TurtleLib:${modInfo.turtleLibDependencyVersion}"

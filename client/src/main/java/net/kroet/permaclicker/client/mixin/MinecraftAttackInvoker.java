@@ -5,11 +5,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 /**
- * Compile-checked access to Minecraft's private attack entry points, replacing
- * reflection by method name. A rename in a future Minecraft version now fails
- * at build/mixin-apply time instead of silently falling through at runtime.
- * Shared between Fabric and NeoForge via
- * {@code permaclicker.client.mixins.json}.
+ * Compile-checked access to Minecraft's private attack entry points: a rename
+ * in a Minecraft update fails the build or mixin application instead of
+ * silently doing nothing at runtime.
  */
 @Mixin(Minecraft.class)
 public interface MinecraftAttackInvoker {

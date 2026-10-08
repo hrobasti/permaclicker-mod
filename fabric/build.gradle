@@ -59,12 +59,7 @@ tasks.named('processResources', ProcessResources) {
     inputs.property('java_language_version', resolvedJavaLanguageVersion)
     inputs.property('turtlelib_version', modInfo.turtleLibDependencyVersion)
 
-    def metadataTemplateName = 'fabric.mod.unobf.json'
-    inputs.property('metadata_template', metadataTemplateName)
-
-    exclude('fabric.mod.json')
-
-    filesMatching(metadataTemplateName) {
+    filesMatching('fabric.mod.json') {
         expand([
             version               : project.version,
             mod_id                : modInfo.id,
@@ -74,8 +69,6 @@ tasks.named('processResources', ProcessResources) {
             java_language_version : resolvedJavaLanguageVersion,
             turtlelib_version     : modInfo.turtleLibDependencyVersion
         ])
-
-        name = 'fabric.mod.json'
     }
 }
 

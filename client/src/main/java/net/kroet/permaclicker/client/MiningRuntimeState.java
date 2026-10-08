@@ -46,11 +46,9 @@ public final class MiningRuntimeState {
         }
 
         if (config.clickMode() == ClickMode.MOB_ATTACK) {
-            // Mob attack never holds the attack key: a held key would make vanilla's
-            // continueAttack
-            // break blocks behind or around the mob. attackRequestedThisTick stays false,
-            // so
-            // syncAttackHoldState releases any hold left over from a previous mining tick.
+            // Never hold the attack key here: vanilla would mine blocks behind the
+            // mob. The hold flag stays false, so a leftover hold from Mining mode
+            // is released.
             return mobAttackExecutor.performMobAttackTick(minecraft, config.attackBufferTicks());
         }
 

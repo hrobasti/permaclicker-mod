@@ -20,10 +20,6 @@ public final class PermaClickService {
     private static final int SECONDS_PER_MINUTE = 60;
     private static final int MINUTES_PER_HOUR = 60;
     private static final int HOURS_PER_DAY = 24;
-    private static final String STATUS_ACTIVE = "PermaClicker active";
-    private static final String STATUS_INACTIVE = "PermaClicker inactive";
-    private static final String MODE_LABEL_MINING = "Mining";
-    private static final String MODE_LABEL_MOB_ATTACK = "Mobs & Animals";
 
     private boolean enabled;
     private PermaClickConfig config;
@@ -31,7 +27,7 @@ public final class PermaClickService {
     private boolean movementLockActive;
     private boolean backgroundCursorFreeActive;
     private int overlayRefreshTicks;
-    private String lastActionBarMessage;
+    private StatusOverlay lastStatus;
 
     public PermaClickService() {
         this.enabled = false;
@@ -40,7 +36,7 @@ public final class PermaClickService {
         this.movementLockActive = false;
         this.backgroundCursorFreeActive = false;
         this.overlayRefreshTicks = 0;
-        this.lastActionBarMessage = null;
+        this.lastStatus = null;
     }
 
     public void applyConfig(PermaClickConfig newConfig) {
@@ -104,10 +100,8 @@ public final class PermaClickService {
         }
 
         boolean miningPerformed = runtime.performMiningTick();
-        // Mob-attack mode spends most ticks waiting for the cooldown or a target, so
-        // every
-        // active, non-suppressed tick counts towards auto-stop; mining counts
-        // successful ticks only.
+        // Mob attack mostly waits for cooldown or target, so every active tick
+        // counts towards auto-stop; mining counts successful ticks only.
         boolean countsTowardsAutoStop = miningPerformed || config.clickMode() == ClickMode.MOB_ATTACK;
         if (!countsTowardsAutoStop) {
             return;
@@ -163,7 +157,7 @@ public final class PermaClickService {
             return;
         }
 
-        runtime.showActionBarText(STATUS_INACTIVE, config.overlayColor());
+        runtime.showStatus(StatusOverlay.inactive(config.clickMode()), config.overlayColor());
 
         resetOverlayCache();
     }
@@ -176,20 +170,15 @@ public final class PermaClickService {
         String timer = formatTimerText();
         boolean dueByCadence = force || overlayRefreshTicks >= TICKS_PER_SECOND;
 
-        String status = STATUS_ACTIVE + " - " + modeLabel();
-        String message = timer == null ? status : status + " (" + timer + ")";
-        boolean changed = !message.equals(lastActionBarMessage);
+        StatusOverlay status = new StatusOverlay(true, config.clickMode(), timer);
+        boolean changed = !status.equals(lastStatus);
         if (!dueByCadence && !changed) {
             return;
         }
 
-        runtime.showActionBarText(message, config.overlayColor());
+        runtime.showStatus(status, config.overlayColor());
         overlayRefreshTicks = 0;
-        lastActionBarMessage = message;
-    }
-
-    private String modeLabel() {
-        return config.clickMode() == ClickMode.MOB_ATTACK ? MODE_LABEL_MOB_ATTACK : MODE_LABEL_MINING;
+        lastStatus = status;
     }
 
     private String formatTimerText() {
@@ -216,6 +205,6 @@ public final class PermaClickService {
 
     private void resetOverlayCache() {
         overlayRefreshTicks = 0;
-        lastActionBarMessage = null;
+        lastStatus = null;
     }
 }

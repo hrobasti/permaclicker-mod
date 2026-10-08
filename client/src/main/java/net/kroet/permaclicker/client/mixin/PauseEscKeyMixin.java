@@ -1,7 +1,7 @@
-package net.kroet.permaclicker.fabric.mixin;
+package net.kroet.permaclicker.client.mixin;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.kroet.permaclicker.fabric.PermaClickFabricEntrypoint;
+import net.kroet.permaclicker.client.PermaClickClient;
 import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.input.KeyEvent;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(KeyboardHandler.class)
-final class FabricPauseEscKeyMixin {
+final class PauseEscKeyMixin {
     @Inject(method = "keyPress", at = @At("HEAD"), cancellable = true)
     private void permaclicker$blockEscPauseOpening(long window, int unknown, KeyEvent keyEvent, CallbackInfo ci) {
         if (keyEvent == null || keyEvent.key() != InputConstants.KEY_ESCAPE) {
@@ -23,11 +23,11 @@ final class FabricPauseEscKeyMixin {
             return;
         }
 
-        if (PermaClickFabricEntrypoint.isPauseBlockContextActive(minecraft)) {
+        if (PermaClickClient.isPauseBlockContextActive(minecraft)) {
             ci.cancel();
             return;
         }
 
-        PermaClickFabricEntrypoint.stopForFocusedEscPause(minecraft);
+        PermaClickClient.stopForFocusedEscPause(minecraft);
     }
 }

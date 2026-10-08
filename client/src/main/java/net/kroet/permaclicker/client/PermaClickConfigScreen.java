@@ -1,10 +1,8 @@
-package net.kroet.permaclicker.fabric;
+package net.kroet.permaclicker.client;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import net.fabricmc.loader.api.FabricLoader;
 import net.kroet.permaclicker.common.config.ClickMode;
 import net.kroet.permaclicker.common.config.PermaClickConfig;
 import net.kroet.permaclicker.common.config.UpdateChannel;
@@ -26,7 +24,7 @@ import net.minecraft.network.chat.MutableComponent;
 /**
  * PermaClicker config screen with vanilla options-layout styling.
  */
-public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
+public final class PermaClickConfigScreen extends OptionsSubScreen {
     private static final int ROW_HEIGHT = 20;
     private static final int LABEL_WIDTH = 150;
     private static final int CONTROL_WIDTH = 150;
@@ -74,11 +72,16 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
     private EditBox attackBufferInputField;
     private OptionsList optionsList;
 
-    public PermaClickFabricConfigScreen(Screen parent) {
+    public PermaClickConfigScreen(Screen parent) {
         super(parent, Minecraft.getInstance().options, Component.translatable("permaclicker.config.title"));
         this.parent = parent;
 
-        PermaClickConfig config = PermaClickFabricEntrypoint.bridge().currentConfig();
+        PermaClickBridge bridge = PermaClickClient.bridge();
+        PermaClickConfig config = bridge != null ? bridge.currentConfig() : null;
+        if (config == null) {
+            config = PermaClickConfig.defaults();
+        }
+
         this.overlayEnabled = config.overlayEnabled();
         this.overlayColor = config.overlayColor();
         this.runInBackground = config.runInBackground();
@@ -319,18 +322,18 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
         @Override
         protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
             int textY = this.getY() + (this.height - 9) / 2;
-            guiGraphics.text(PermaClickFabricConfigScreen.this.font, this.getMessage(), this.getX(), textY, 0xFFFFFFFF, true);
+            guiGraphics.text(PermaClickConfigScreen.this.font, this.getMessage(), this.getX(), textY, 0xFFFFFFFF, true);
 
             int iconX = this.getX() + this.width - INFO_ICON_SIZE;
             int iconY = this.getY() + (this.height - INFO_ICON_SIZE) / 2;
             guiGraphics.fill(iconX, iconY, iconX + INFO_ICON_SIZE, iconY + INFO_ICON_SIZE, INFO_ICON_BG_COLOR);
-            guiGraphics.text(PermaClickFabricConfigScreen.this.font, Component.literal("i"), iconX + 3, iconY + 1, INFO_ICON_TEXT_COLOR, false);
+            guiGraphics.text(PermaClickConfigScreen.this.font, Component.literal("i"), iconX + 3, iconY + 1, INFO_ICON_TEXT_COLOR, false);
 
             boolean hoveredIcon = mouseX >= iconX && mouseX < iconX + INFO_ICON_SIZE
                     && mouseY >= iconY && mouseY < iconY + INFO_ICON_SIZE;
             if (hoveredIcon && !this.infoTooltipLines.isEmpty()) {
                 guiGraphics.setComponentTooltipForNextFrame(
-                        PermaClickFabricConfigScreen.this.font,
+                        PermaClickConfigScreen.this.font,
                         this.infoTooltipLines,
                         mouseX,
                         mouseY);
@@ -350,9 +353,9 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
 
         @Override
         protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-            int centeredX = PermaClickFabricConfigScreen.this.width / 2 - PermaClickFabricConfigScreen.this.font.width(this.getMessage()) / 2;
+            int centeredX = PermaClickConfigScreen.this.width / 2 - PermaClickConfigScreen.this.font.width(this.getMessage()) / 2;
             int textY = this.getY() + (this.height - 9) / 2;
-            guiGraphics.text(PermaClickFabricConfigScreen.this.font, this.getMessage(), centeredX, textY, 0xFFE7E7E7, true);
+            guiGraphics.text(PermaClickConfigScreen.this.font, this.getMessage(), centeredX, textY, 0xFFE7E7E7, true);
         }
 
         @Override
@@ -415,7 +418,17 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
     }
 
     private void saveAndClose() {
-        PermaClickBridge bridge = PermaClickFabricEntrypoint.bridge();
+        PermaClickBridge bridge = PermaClickClient.bridge();
+        if (bridge == null) {
+            onClose();
+            return;
+        }
+
+        PermaClickConfig current = bridge.currentConfig();
+        if (current == null) {
+            current = PermaClickConfig.defaults();
+        }
+
         int parsedAutoStop = autoStopMinutes;
         if (autoStopInputField != null) {
             parsedAutoStop = parseIntInput(autoStopInputField.getValue(), autoStopMinutes);
@@ -426,8 +439,7 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
         }
 
         PermaClickConfig updated = new PermaClickConfig(
-                bridge.currentConfig().enabled(),
-                bridge.currentConfig().toggleKeyCode(),
+                current.enabled(),
                 overlayEnabled,
                 overlayColor,
                 runInBackground,
@@ -439,11 +451,7 @@ public final class PermaClickFabricConfigScreen extends OptionsSubScreen {
                 PermaClickConfig.clampAttackBufferTicks(parsedAttackBuffer));
 
         bridge.applyConfig(updated);
-        try {
-            new FabricConfigLifecycle().saveCurrent(bridge, FabricLoader.getInstance().getGameDir());
-        } catch (IOException ignored) {
-            // best effort
-        }
+        PermaClickClient.saveConfig();
 
         onClose();
     }

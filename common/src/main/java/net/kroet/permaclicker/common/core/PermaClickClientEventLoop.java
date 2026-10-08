@@ -11,8 +11,8 @@ public final class PermaClickClientEventLoop {
         this.bridge = bridge;
     }
 
-    public void onKeyInput(int keyCode, boolean pressed) {
-        bridge.onKeyStateChanged(keyCode, pressed);
+    public void onTogglePressed() {
+        bridge.toggle();
     }
 
     public void onClientTick() {

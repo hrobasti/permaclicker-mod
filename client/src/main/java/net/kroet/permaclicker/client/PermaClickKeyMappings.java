@@ -1,7 +1,6 @@
 package net.kroet.permaclicker.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import net.kroet.permaclicker.common.config.PermaClickConfig;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 
@@ -27,7 +26,7 @@ public final class PermaClickKeyMappings {
         return new KeyMapping(
                 TOGGLE_TRANSLATION_KEY,
                 InputConstants.Type.KEYBOARD,
-                PermaClickConfig.DEFAULT_TOGGLE_KEY_CODE,
+                InputConstants.KEY_F7,
                 category);
     }
 

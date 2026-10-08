@@ -8,7 +8,6 @@ import java.util.Set;
  */
 public record PermaClickConfig(
         boolean enabled,
-        int toggleKeyCode,
         boolean overlayEnabled,
         String overlayColor,
         boolean runInBackground,
@@ -18,10 +17,6 @@ public record PermaClickConfig(
         UpdateChannel updateChannel,
         ClickMode clickMode,
         int attackBufferTicks) {
-    // SDL scancode for F7 (InputConstants.KEY_F7 in com.mojang.blaze3d.platform, MC
-    // 26.3+).
-    // Was 296 (GLFW keysym) before the 26.3 GLFW->SDL input backend migration.
-    public static final int DEFAULT_TOGGLE_KEY_CODE = 64;
     public static final String DEFAULT_OVERLAY_COLOR = "green";
     private static final Set<String> ALLOWED_OVERLAY_COLORS = Set.of(
             "black",
@@ -60,7 +55,6 @@ public record PermaClickConfig(
      */
     public PermaClickConfig(
             boolean enabled,
-            int toggleKeyCode,
             boolean overlayEnabled,
             String overlayColor,
             boolean runInBackground,
@@ -70,7 +64,6 @@ public record PermaClickConfig(
             UpdateChannel updateChannel) {
         this(
                 enabled,
-                toggleKeyCode,
                 overlayEnabled,
                 overlayColor,
                 runInBackground,
@@ -85,7 +78,6 @@ public record PermaClickConfig(
     public static PermaClickConfig defaults() {
         return new PermaClickConfig(
                 false,
-                DEFAULT_TOGGLE_KEY_CODE,
                 true,
                 DEFAULT_OVERLAY_COLOR,
                 false,
@@ -100,7 +92,6 @@ public record PermaClickConfig(
     public PermaClickConfig withEnabled(boolean enabled) {
         return new PermaClickConfig(
                 enabled,
-                toggleKeyCode,
                 overlayEnabled,
                 overlayColor,
                 runInBackground,

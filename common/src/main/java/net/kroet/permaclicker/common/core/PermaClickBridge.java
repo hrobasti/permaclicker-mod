@@ -28,16 +28,8 @@ public final class PermaClickBridge {
         return controller.currentConfig();
     }
 
-    public void setBoundKeyCode(int keyCode) {
-        controller.setBoundKeyCode(keyCode);
-    }
-
-    public int boundKeyCode() {
-        return controller.boundKeyCode();
-    }
-
-    public void onKeyStateChanged(int keyCode, boolean pressed) {
-        controller.onKeyEvent(keyCode, pressed, runtime);
+    public void toggle() {
+        controller.toggle(runtime);
     }
 
     public void onClientTick() {
@@ -94,13 +86,8 @@ public final class PermaClickBridge {
         }
 
         @Override
-        public void showActionBar(String message) {
-            bindings.actionBarMessage().accept(new PermaClickRuntimeBindings.ActionBarPayload(message, null));
-        }
-
-        @Override
-        public void showActionBarText(String message, String colorName) {
-            bindings.actionBarMessage().accept(new PermaClickRuntimeBindings.ActionBarPayload(message, colorName));
+        public void showStatus(StatusOverlay status, String colorName) {
+            bindings.actionBarMessage().accept(new PermaClickRuntimeBindings.ActionBarPayload(status, colorName));
         }
     }
 }
