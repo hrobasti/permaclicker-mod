@@ -4,16 +4,18 @@ PermaClicker keeps your attack input going while you're AFK: it mines continuous
 
 ## Anti-cheat notice ⚠️
 
-PermaClicker automates input behavior.
-Use it only where this is explicitly allowed.
-On many servers this may violate rules and can result in penalties such as kick/ban.
+PermaClicker automates input behavior. Use it only where this is explicitly allowed. On many servers this may violate rules and can result in penalties such as kick/ban.
 
 ## Quick start for players 🎮
 
 1. Put `PermaClicker` and `TurtleLib` (required dependency) in the `mods` folder.
 2. Start the game.
-3. Configure Hotkeys in Minecraft key binds. Defaults: `u` for Options, `F7` toggle on/off.
-4. Configure PermaClicker in-game via the config screen.
+3. Adjust the hotkeys in Minecraft's key binds if needed. Defaults: `F7` toggles PermaClicker on/off, `U` opens its settings.
+4. Configure PermaClicker in-game via the config screen (on Fabric also available through Mod Menu).
+
+## Update together ⚠️
+
+PermaClicker 2.0.0 requires TurtleLib 2.0.0 or newer, and TurtleLib 2.0.0 does not work with older PermaClicker versions. Update both mods together.
 
 ## What PermaClicker provides ✨
 
@@ -42,15 +44,6 @@ If you care about tool or weapon durability (they can break while PermaClicker r
 
 All settings are managed directly in the in-game config screen. Hotkeys are rebound in Minecraft's controls menu.
 
-## Update check & privacy 🔔
-
-When the game starts, PermaClicker checks once in the background whether a newer version exists, and shows a chat message with links after you join a world. The check is on by default; turn it off with **Update check** in the settings. The channel (**Stable**: releases only, **Beta**: releases and betas, **Alpha**: everything) decides which versions count.
-
-- **Queried services** (only platforms where PermaClicker is published): `api.modrinth.com` (Modrinth, official API) and `api.cfwidget.com` (CFWidget, an unofficial third-party service that mirrors CurseForge data; it publishes no privacy policy and states that it stores no identifiable information).
-- **Transmitted data:** your IP address (part of every web request), the mod name and version (user agent), the Minecraft version, the loader (Fabric or NeoForge) and the project ID. No account, player or world data.
-- Modrinth's handling of request data: [Modrinth privacy policy](https://modrinth.com/legal/privacy).
-- With Mod Menu installed (Fabric), Mod Menu additionally checks your installed mods on Modrinth; that check is configured in Mod Menu's own settings.
-
 ## Supported languages 🌍
 
 PermaClicker bundles each locale as a JSON file. Included languages:
@@ -69,6 +62,15 @@ PermaClicker bundles each locale as a JSON file. Included languages:
 - 🇹🇷 Turkish (tr\_TR)
 - 🇺🇦 Ukrainian (uk\_UA)
 - 🇨🇳 Simplified Chinese (zh\_CN)
+
+## Update check & privacy 🔔
+
+When the game starts, PermaClicker checks once in the background whether a newer version exists, and shows a chat message with links after you join a world. The check is on by default; turn it off with **Update check** in the settings. The channel (**Stable**: releases only, **Beta**: releases and betas, **Alpha**: everything) decides which versions count.
+
+- **Queried services** (only platforms where PermaClicker is published): `api.modrinth.com` (Modrinth, official API) and `api.cfwidget.com` (CFWidget, an unofficial third-party service that mirrors CurseForge data; it publishes no privacy policy and states that it stores no identifiable information).
+- **Transmitted data:** your IP address (part of every web request), the mod name and version (user agent), the Minecraft version, the loader (Fabric or NeoForge) and the project ID. No account, player or world data.
+- Modrinth's handling of request data: [Modrinth privacy policy](https://modrinth.com/legal/privacy).
+- With Mod Menu installed (Fabric), Mod Menu additionally checks your installed mods on Modrinth; that check is configured in Mod Menu's own settings.
 
 ## Quick start for devs 🛠️
 
