@@ -32,5 +32,5 @@
 ## PermaClicker-specific policy
 
 - Fabric API minimum version is maintained per matrix target.
-- NeoForge selection per MC branch is stable-first; if no stable exists, use latest beta.
+- NeoForge selection per MC branch: the oldest stable release (the jars only set a minimum NeoForge version, so this fits the most installations); if no stable exists, use the latest beta.
 - When PermaClicker starts using a newer TurtleLib API, raise `turtlelib_dependency_version` to the first TurtleLib release that provides it.
