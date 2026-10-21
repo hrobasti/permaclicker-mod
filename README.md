@@ -100,12 +100,12 @@ PermaClicker uses TurtleLib only through `UpdateFacade` in `common`; no other co
 
 ## License 📄
 
-MIT
+MIT. Releases up to 1.4.0 were published under the Apache License 2.0.
 
 Full license text:
 
 - [`LICENSE`](LICENSE)
 
-Third-party license texts/references:
+Third-party components, platform dependencies and trademarks:
 
 - [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)
