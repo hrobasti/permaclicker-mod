@@ -6,6 +6,8 @@ PermaClicker keeps your attack input going while you're AFK: it mines continuous
 
 PermaClicker automates input behavior. Use it only where this is explicitly allowed. On many servers this may violate rules and can result in penalties such as kick/ban.
 
+Starting with PermaClicker 2.2.0, PermaClicker works on a multiplayer server only if that server has it installed too: the PermaClicker mod on Fabric and NeoForge servers, or the PermaClicker plugin on Paper servers. Single-player keeps working as before.
+
 ## Quick start for players 🎮
 
 1. Put `PermaClicker` and `TurtleLib` (required dependency) in the `mods` folder.
