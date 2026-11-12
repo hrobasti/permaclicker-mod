@@ -35,6 +35,10 @@
   "permaclicker.config.attack_buffer_ticks": "Angriffspuffer (Ticks)",
   "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Zusätzliche Ticks nach vollem Cooldown vor dem Schlag (nur Mobs & Tiere, 20 Ticks = 1 Sekunde)",
 
+  "permaclicker.config.hit_armor_stands": "Rüstungsständer treffen",
+  "permaclicker.config.hit_armor_stands.tooltip.on.desc": "Trifft auch Rüstungsständer, z. B. um in Mob-Farmen Schwungangriffe auszulösen (nur Mobs & Tiere, nie im Kreativmodus)",
+  "permaclicker.config.hit_armor_stands.tooltip.off.desc": "Lässt Rüstungsständer aus",
+
   "permaclicker.config.auto_stop_minutes": "Auto-Stopp (Minuten)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "kein Timer",
   "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "Zahl von 1 bis 9999 eintragen, um nach der Anzahl von Minuten automatisch abzuschalten.",

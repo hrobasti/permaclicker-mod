@@ -35,6 +35,10 @@
   "permaclicker.config.attack_buffer_ticks": "攻撃バッファ（tick）",
   "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "クールダウン完了後、攻撃までに追加で待つtick数（「モブと動物」のみ、20 tick = 1秒）",
 
+  "permaclicker.config.hit_armor_stands": "防具立てを攻撃",
+  "permaclicker.config.hit_armor_stands.tooltip.on.desc": "防具立ても攻撃します。モブトラップで範囲攻撃を発生させる場合などに使います（モブと動物のみ、クリエイティブモードでは攻撃しません）",
+  "permaclicker.config.hit_armor_stands.tooltip.off.desc": "防具立ては無視します",
+
   "permaclicker.config.auto_stop_minutes": "自動停止（分）",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "タイマーを無効にします",
   "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "1〜9999 の数値で、その分数後に PermaClicker を自動停止します",

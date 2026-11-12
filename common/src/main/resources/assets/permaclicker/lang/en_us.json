@@ -35,6 +35,10 @@
   "permaclicker.config.attack_buffer_ticks": "Attack buffer (ticks)",
   "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Extra ticks to wait after a full cooldown before hitting (Mobs & Animals only, 20 ticks = 1 second)",
 
+  "permaclicker.config.hit_armor_stands": "Hit armor stands",
+  "permaclicker.config.hit_armor_stands.tooltip.on.desc": "Also hits armor stands, e.g. to trigger sweeping attacks in mob farms (Mobs & Animals only, never in Creative mode)",
+  "permaclicker.config.hit_armor_stands.tooltip.off.desc": "Ignores armor stands",
+
   "permaclicker.config.auto_stop_minutes": "Auto-stop (minutes)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Disables the timer",
   "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "Number from 1 to 9999 to stop PermaClicker automatically after that many minutes",

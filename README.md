@@ -21,6 +21,7 @@ PermaClicker 2.0.0 requires TurtleLib 2.0.0 or newer, and TurtleLib 2.0.0 does n
 
 - click mode: **Mining** (holds attack to mine the targeted block; never hits mobs, animals or players) or **Mobs & Animals** (hits the targeted mob or animal, including villagers and pets, whenever the attack cooldown is fully charged; never attacks players)
 - configurable attack buffer for **Mobs & Animals** (`0..20` ticks, default `2`) as a safety margin against server lag
+- **Mobs & Animals** can also hit armor stands (on by default), e.g. to trigger Sweeping Edge in a mob farm's killing chamber; the stands only wobble and never break
 - runtime mode: **Focused** or **Background**
 - auto-stop timer (`0..9999` minutes)
 - optional movement lock while active

@@ -35,6 +35,10 @@
   "permaclicker.config.attack_buffer_ticks": "Margine di attacco (tick)",
   "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Tick extra di attesa dopo la ricarica completa prima di colpire (solo Mob e animali, 20 tick = 1 secondo)",
 
+  "permaclicker.config.hit_armor_stands": "Colpisci supporti per armature",
+  "permaclicker.config.hit_armor_stands.tooltip.on.desc": "Colpisce anche i supporti per armature, ad es. per attivare gli attacchi ad area nelle farm di mob (solo Mob e animali, mai in modalità creativa)",
+  "permaclicker.config.hit_armor_stands.tooltip.off.desc": "Ignora i supporti per armature",
+
   "permaclicker.config.auto_stop_minutes": "Arresto automatico (minuti)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Disattiva il timer",
   "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "Numero da 1 a 9999 per fermare automaticamente PermaClicker dopo quel numero di minuti",

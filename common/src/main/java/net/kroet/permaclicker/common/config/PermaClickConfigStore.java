@@ -101,7 +101,8 @@ public final class PermaClickConfigStore {
             Boolean updateCheckEnabled,
             String updateChannel,
             String clickMode,
-            Integer attackBufferTicks) {
+            Integer attackBufferTicks,
+            Boolean hitArmorStands) {
         static FileModel fromConfig(PermaClickConfig config) {
             return new FileModel(
                     CURRENT_CONFIG_VERSION,
@@ -114,7 +115,8 @@ public final class PermaClickConfigStore {
                     config.updateCheckEnabled(),
                     config.updateChannel().name(),
                     config.clickMode().name(),
-                    config.attackBufferTicks());
+                    config.attackBufferTicks(),
+                    config.hitArmorStands());
         }
 
         PermaClickConfig toConfig() {
@@ -133,7 +135,8 @@ public final class PermaClickConfigStore {
                     ClickMode.fromString(clickMode, defaults.clickMode()),
                     attackBufferTicks == null
                             ? defaults.attackBufferTicks()
-                            : PermaClickConfig.clampAttackBufferTicks(attackBufferTicks));
+                            : PermaClickConfig.clampAttackBufferTicks(attackBufferTicks),
+                    hitArmorStands == null ? defaults.hitArmorStands() : hitArmorStands);
         }
     }
 }

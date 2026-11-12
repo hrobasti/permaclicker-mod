@@ -35,6 +35,10 @@
   "permaclicker.config.attack_buffer_ticks": "مهلة الهجوم (تكات)",
   "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "تكات إضافية للانتظار بعد امتلاء التهدئة قبل الضرب (لوضع المخلوقات والحيوانات فقط، 20 تكة = ثانية واحدة)",
 
+  "permaclicker.config.hit_armor_stands": "ضرب حوامل الدروع",
+  "permaclicker.config.hit_armor_stands.tooltip.on.desc": "يضرب حوامل الدروع أيضًا، مثلًا لتفعيل الضربات الكاسحة في مزارع المخلوقات (المخلوقات والحيوانات فقط، وليس في الوضع الإبداعي أبدًا)",
+  "permaclicker.config.hit_armor_stands.tooltip.off.desc": "يتجاهل حوامل الدروع",
+
   "permaclicker.config.auto_stop_minutes": "إيقاف تلقائي (دقائق)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "يعطّل المؤقت",
   "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "رقم من 1 إلى 9999 لإيقاف PermaClicker تلقائيًا بعد هذا العدد من الدقائق",

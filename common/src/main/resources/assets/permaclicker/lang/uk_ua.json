@@ -35,6 +35,10 @@
   "permaclicker.config.attack_buffer_ticks": "Буфер атаки (тіки)",
   "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Додаткові тіки очікування після повної перезарядки перед ударом (лише «Моби та тварини», 20 тіків = 1 секунда)",
 
+  "permaclicker.config.hit_armor_stands": "Бити стійки для обладунків",
+  "permaclicker.config.hit_armor_stands.tooltip.on.desc": "Також б'є стійки для обладунків, напр. щоб викликати розмашисті удари на фермах мобів (лише Моби та тварини, ніколи в творчому режимі)",
+  "permaclicker.config.hit_armor_stands.tooltip.off.desc": "Ігнорує стійки для обладунків",
+
   "permaclicker.config.auto_stop_minutes": "Авто-зупинка (хвилини)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Вимикає таймер",
   "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "Число від 1 до 9999, щоб автоматично зупинити PermaClicker через цю кількість хвилин",

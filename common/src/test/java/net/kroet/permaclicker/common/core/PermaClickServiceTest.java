@@ -325,7 +325,8 @@ class PermaClickServiceTest {
                 true,
                 UpdateChannel.BETA,
                 ClickMode.MOB_ATTACK,
-                PermaClickConfig.DEFAULT_ATTACK_BUFFER_TICKS);
+                PermaClickConfig.DEFAULT_ATTACK_BUFFER_TICKS,
+                PermaClickConfig.DEFAULT_HIT_ARMOR_STANDS);
     }
 
     private static final class RuntimeStub implements PermaClickRuntime {

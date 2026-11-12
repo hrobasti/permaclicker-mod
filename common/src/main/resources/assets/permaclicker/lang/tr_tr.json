@@ -35,6 +35,10 @@
   "permaclicker.config.attack_buffer_ticks": "Saldırı tamponu (tick)",
   "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Tam bekleme süresinden sonra vurmadan önce beklenecek ek tick sayısı (yalnızca Yaratıklar ve hayvanlar, 20 tick = 1 saniye)",
 
+  "permaclicker.config.hit_armor_stands": "Zırh askılarına vur",
+  "permaclicker.config.hit_armor_stands.tooltip.on.desc": "Zırh askılarına da vurur, örneğin yaratık çiftliklerinde süpürme saldırısı tetiklemek için (yalnızca Yaratıklar ve hayvanlar, Yaratıcı modda asla)",
+  "permaclicker.config.hit_armor_stands.tooltip.off.desc": "Zırh askılarını yok sayar",
+
   "permaclicker.config.auto_stop_minutes": "Otomatik durdurma (dakika)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Zamanlayıcıyı devre dışı bırakır",
   "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "PermaClicker'ı bu kadar dakika sonra otomatik durdurmak için 1-9999 arası sayı",

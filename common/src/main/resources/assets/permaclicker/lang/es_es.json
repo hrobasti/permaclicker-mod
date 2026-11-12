@@ -35,6 +35,10 @@
   "permaclicker.config.attack_buffer_ticks": "Margen de ataque (ticks)",
   "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Ticks adicionales de espera tras la recarga completa antes de golpear (solo Criaturas y animales, 20 ticks = 1 segundo)",
 
+  "permaclicker.config.hit_armor_stands": "Golpear soportes para armaduras",
+  "permaclicker.config.hit_armor_stands.tooltip.on.desc": "También golpea soportes para armaduras, p. ej. para provocar ataques de barrido en granjas de criaturas (solo Criaturas y animales, nunca en modo creativo)",
+  "permaclicker.config.hit_armor_stands.tooltip.off.desc": "Ignora los soportes para armaduras",
+
   "permaclicker.config.auto_stop_minutes": "Auto-detener (minutos)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Desactiva el temporizador",
   "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "Número de 1 a 9999 para detener PermaClicker automáticamente tras esa cantidad de minutos",

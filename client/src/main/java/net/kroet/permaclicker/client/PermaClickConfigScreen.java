@@ -56,6 +56,7 @@ public final class PermaClickConfigScreen extends OptionsSubScreen {
     private boolean runInBackground;
     private ClickMode clickMode;
     private int attackBufferTicks;
+    private boolean hitArmorStands;
     private int autoStopMinutes;
     private boolean movementLockEnabled;
     private boolean updateCheckEnabled;
@@ -63,6 +64,7 @@ public final class PermaClickConfigScreen extends OptionsSubScreen {
 
     private Button runtimeModeButton;
     private Button clickModeButton;
+    private Button hitArmorStandsButton;
     private Button movementLockButton;
     private Button overlayEnabledButton;
     private Button overlayColorButton;
@@ -87,6 +89,7 @@ public final class PermaClickConfigScreen extends OptionsSubScreen {
         this.runInBackground = config.runInBackground();
         this.clickMode = config.clickMode();
         this.attackBufferTicks = config.attackBufferTicks();
+        this.hitArmorStands = config.hitArmorStands();
         this.autoStopMinutes = config.autoStopMinutes();
         this.movementLockEnabled = config.movementLockEnabled();
         this.updateCheckEnabled = config.updateCheckEnabled();
@@ -145,6 +148,17 @@ public final class PermaClickConfigScreen extends OptionsSubScreen {
                                 Component.literal(PermaClickConfig.MIN_ATTACK_BUFFER_TICKS + "-" + PermaClickConfig.MAX_ATTACK_BUFFER_TICKS),
                                 "permaclicker.config.attack_buffer_ticks.tooltip.range.desc")),
                 this.attackBufferInputField);
+
+        this.hitArmorStandsButton = this.createToggleButton(toggleValue(hitArmorStands), button -> {
+            hitArmorStands = !hitArmorStands;
+            refreshButtonMessages();
+        });
+        addLabeledRow(
+                Component.translatable("permaclicker.config.hit_armor_stands"),
+                tooltipLines(
+                        tooltipLine(Component.translatable("permaclicker.config.value.on"), "permaclicker.config.hit_armor_stands.tooltip.on.desc"),
+                        tooltipLine(Component.translatable("permaclicker.config.value.off"), "permaclicker.config.hit_armor_stands.tooltip.off.desc")),
+                this.hitArmorStandsButton);
 
         this.autoStopInputField = new EditBox(
                 this.font,
@@ -250,11 +264,16 @@ public final class PermaClickConfigScreen extends OptionsSubScreen {
         if (clickModeButton != null) {
             clickModeButton.setMessage(clickModeValue());
         }
+        // Buffer and armor stands only affect mob-attack mode; grey them out while
+        // mining.
+        boolean mobAttackMode = clickMode == ClickMode.MOB_ATTACK;
         if (attackBufferInputField != null) {
-            // The buffer only affects mob-attack mode; grey it out while mining.
-            boolean bufferRelevant = clickMode == ClickMode.MOB_ATTACK;
-            attackBufferInputField.active = bufferRelevant;
-            attackBufferInputField.setEditable(bufferRelevant);
+            attackBufferInputField.active = mobAttackMode;
+            attackBufferInputField.setEditable(mobAttackMode);
+        }
+        if (hitArmorStandsButton != null) {
+            hitArmorStandsButton.setMessage(toggleValue(hitArmorStands));
+            hitArmorStandsButton.active = mobAttackMode;
         }
         if (movementLockButton != null) {
             movementLockButton.setMessage(toggleValue(movementLockEnabled));
@@ -448,7 +467,8 @@ public final class PermaClickConfigScreen extends OptionsSubScreen {
                 updateCheckEnabled,
                 updateChannel,
                 clickMode,
-                PermaClickConfig.clampAttackBufferTicks(parsedAttackBuffer));
+                PermaClickConfig.clampAttackBufferTicks(parsedAttackBuffer),
+                hitArmorStands);
 
         bridge.applyConfig(updated);
         PermaClickClient.saveConfig();

@@ -50,7 +50,8 @@ class PermaClickConfigStoreTest {
                 false,
                 UpdateChannel.ALPHA,
                 ClickMode.MOB_ATTACK,
-                7);
+                7,
+                false);
         store.save(original);
         store.save(original);
 
@@ -131,6 +132,7 @@ class PermaClickConfigStoreTest {
         assertEquals(5, result.config().autoStopMinutes());
         assertEquals(ClickMode.MINING, result.config().clickMode());
         assertEquals(PermaClickConfig.DEFAULT_ATTACK_BUFFER_TICKS, result.config().attackBufferTicks());
+        assertTrue(result.config().hitArmorStands());
     }
 
     @Test

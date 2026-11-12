@@ -35,6 +35,10 @@
   "permaclicker.config.attack_buffer_ticks": "Aanvalsbuffer (ticks)",
   "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Extra ticks wachten na een volledige cooldown voordat er wordt geslagen (alleen Mobs & dieren, 20 ticks = 1 seconde)",
 
+  "permaclicker.config.hit_armor_stands": "Harnasstandaards raken",
+  "permaclicker.config.hit_armor_stands.tooltip.on.desc": "Raakt ook harnasstandaards, bijv. om veegaanvallen in mobfarms uit te lokken (alleen Mobs & dieren, nooit in de creatieve modus)",
+  "permaclicker.config.hit_armor_stands.tooltip.off.desc": "Negeert harnasstandaards",
+
   "permaclicker.config.auto_stop_minutes": "Auto-stop (minuten)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Schakelt de timer uit",
   "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "Getal van 1 tot 9999 om PermaClicker automatisch te stoppen na dat aantal minuten",

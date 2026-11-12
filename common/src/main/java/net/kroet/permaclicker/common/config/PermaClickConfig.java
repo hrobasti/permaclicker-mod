@@ -16,7 +16,8 @@ public record PermaClickConfig(
         boolean updateCheckEnabled,
         UpdateChannel updateChannel,
         ClickMode clickMode,
-        int attackBufferTicks) {
+        int attackBufferTicks,
+        boolean hitArmorStands) {
     public static final String DEFAULT_OVERLAY_COLOR = "green";
     private static final Set<String> ALLOWED_OVERLAY_COLORS = Set.of(
             "black",
@@ -40,6 +41,7 @@ public record PermaClickConfig(
     public static final int MIN_ATTACK_BUFFER_TICKS = 0;
     public static final int MAX_ATTACK_BUFFER_TICKS = 20;
     public static final int DEFAULT_ATTACK_BUFFER_TICKS = 2;
+    public static final boolean DEFAULT_HIT_ARMOR_STANDS = true;
 
     public PermaClickConfig {
         overlayColor = normalizeOverlayColor(overlayColor);
@@ -51,7 +53,8 @@ public record PermaClickConfig(
 
     /**
      * Convenience constructor that keeps the click-mode fields at their defaults
-     * ({@link ClickMode#MINING}, {@link #DEFAULT_ATTACK_BUFFER_TICKS}).
+     * ({@link ClickMode#MINING}, {@link #DEFAULT_ATTACK_BUFFER_TICKS},
+     * {@link #DEFAULT_HIT_ARMOR_STANDS}).
      */
     public PermaClickConfig(
             boolean enabled,
@@ -72,7 +75,8 @@ public record PermaClickConfig(
                 updateCheckEnabled,
                 updateChannel,
                 ClickMode.MINING,
-                DEFAULT_ATTACK_BUFFER_TICKS);
+                DEFAULT_ATTACK_BUFFER_TICKS,
+                DEFAULT_HIT_ARMOR_STANDS);
     }
 
     public static PermaClickConfig defaults() {
@@ -86,7 +90,8 @@ public record PermaClickConfig(
                 true,
                 UpdateChannel.BETA,
                 ClickMode.MINING,
-                DEFAULT_ATTACK_BUFFER_TICKS);
+                DEFAULT_ATTACK_BUFFER_TICKS,
+                DEFAULT_HIT_ARMOR_STANDS);
     }
 
     public PermaClickConfig withEnabled(boolean enabled) {
@@ -100,7 +105,8 @@ public record PermaClickConfig(
                 updateCheckEnabled,
                 updateChannel,
                 clickMode,
-                attackBufferTicks);
+                attackBufferTicks,
+                hitArmorStands);
     }
 
     public static String normalizeOverlayColor(String rawColor) {

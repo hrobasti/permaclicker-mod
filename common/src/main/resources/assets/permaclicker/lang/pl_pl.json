@@ -35,6 +35,10 @@
   "permaclicker.config.attack_buffer_ticks": "Bufor ataku (ticki)",
   "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Dodatkowe ticki oczekiwania po pełnym odnowieniu przed uderzeniem (tylko Moby i zwierzęta, 20 ticków = 1 sekunda)",
 
+  "permaclicker.config.hit_armor_stands": "Uderzaj stojaki na zbroję",
+  "permaclicker.config.hit_armor_stands.tooltip.on.desc": "Uderza też stojaki na zbroję, np. aby wywołać ataki zamaszyste na farmach mobów (tylko Moby i zwierzęta, nigdy w trybie kreatywnym)",
+  "permaclicker.config.hit_armor_stands.tooltip.off.desc": "Pomija stojaki na zbroję",
+
   "permaclicker.config.auto_stop_minutes": "Auto-stop (minuty)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Wyłącza licznik czasu",
   "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "Liczba od 1 do 9999, aby automatycznie zatrzymać PermaClicker po tylu minutach",

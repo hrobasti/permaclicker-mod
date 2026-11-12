@@ -35,6 +35,10 @@
   "permaclicker.config.attack_buffer_ticks": "Marge d'attaque (ticks)",
   "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "Ticks supplémentaires à attendre après une recharge complète avant de frapper (Créatures et animaux uniquement, 20 ticks = 1 seconde)",
 
+  "permaclicker.config.hit_armor_stands": "Frapper les porte-armures",
+  "permaclicker.config.hit_armor_stands.tooltip.on.desc": "Frappe aussi les porte-armures, par ex. pour déclencher des attaques balayantes dans les fermes à créatures (Créatures et animaux uniquement, jamais en mode Créatif)",
+  "permaclicker.config.hit_armor_stands.tooltip.off.desc": "Ignore les porte-armures",
+
   "permaclicker.config.auto_stop_minutes": "Arrêt auto (minutes)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "Désactive le minuteur",
   "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "Nombre de 1 à 9999 pour arrêter PermaClicker automatiquement après ce nombre de minutes",

@@ -35,6 +35,10 @@
   "permaclicker.config.attack_buffer_ticks": "공격 버퍼 (틱)",
   "permaclicker.config.attack_buffer_ticks.tooltip.range.desc": "쿨다운 완료 후 공격 전에 추가로 기다릴 틱 수 (몹 & 동물 전용, 20틱 = 1초)",
 
+  "permaclicker.config.hit_armor_stands": "갑옷 거치대 공격",
+  "permaclicker.config.hit_armor_stands.tooltip.on.desc": "갑옷 거치대도 공격합니다. 예: 몹 농장에서 휩쓸기 공격을 일으킬 때 (몹 & 동물 전용, 크리에이티브 모드에서는 공격하지 않음)",
+  "permaclicker.config.hit_armor_stands.tooltip.off.desc": "갑옷 거치대를 무시합니다",
+
   "permaclicker.config.auto_stop_minutes": "자동 중지(분)",
   "permaclicker.config.auto_stop_minutes.tooltip.off.desc": "타이머를 비활성화합니다",
   "permaclicker.config.auto_stop_minutes.tooltip.range.desc": "1~9999 사이 숫자를 입력하면 해당 분 후 PermaClicker가 자동으로 중지됩니다",

@@ -49,7 +49,7 @@ public final class MiningRuntimeState {
             // Never hold the attack key here: vanilla would mine blocks behind the
             // mob. The hold flag stays false, so a leftover hold from Mining mode
             // is released.
-            return mobAttackExecutor.performMobAttackTick(minecraft, config.attackBufferTicks());
+            return mobAttackExecutor.performMobAttackTick(minecraft, config.attackBufferTicks(), config.hitArmorStands());
         }
 
         attackRequestedThisTick = true;
