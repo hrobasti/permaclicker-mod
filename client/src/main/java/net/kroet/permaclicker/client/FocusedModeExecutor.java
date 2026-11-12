@@ -10,10 +10,6 @@ public final class FocusedModeExecutor {
     private final MiningActions actions = new MiningActions();
 
     public boolean performFocusedMiningTick(Minecraft minecraft) {
-        if (minecraft == null || minecraft.options == null) {
-            return false;
-        }
-
         actions.updateCachedDestroyTarget(minecraft);
         minecraft.options.keyAttack.setDown(true);
 

@@ -2,6 +2,7 @@ package net.kroet.permaclicker.common.config;
 
 import java.util.Locale;
 import java.util.Set;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Loader-neutral runtime config model.
@@ -109,7 +110,7 @@ public record PermaClickConfig(
                 hitArmorStands);
     }
 
-    public static String normalizeOverlayColor(String rawColor) {
+    public static String normalizeOverlayColor(@Nullable String rawColor) {
         if (rawColor == null || rawColor.isBlank()) {
             return DEFAULT_OVERLAY_COLOR;
         }

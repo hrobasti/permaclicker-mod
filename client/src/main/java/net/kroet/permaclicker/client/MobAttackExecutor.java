@@ -9,6 +9,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.phys.EntityHitResult;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Mob-attack click mode: instead of holding the attack key, performs a single
@@ -31,6 +32,7 @@ public final class MobAttackExecutor {
      * @return true if a hit was performed this tick
      */
     public boolean performMobAttackTick(Minecraft minecraft, int bufferTicks, boolean hitArmorStands) {
+        @Nullable
         LocalPlayer player = minecraft == null ? null : minecraft.player;
         if (player == null || minecraft.gameMode == null || player.isSpectator()) {
             cadence.reset();
@@ -41,6 +43,7 @@ public final class MobAttackExecutor {
             return false;
         }
 
+        @Nullable
         Entity target = minecraft.hitResult instanceof EntityHitResult entityHit ? entityHit.getEntity() : null;
         boolean armorStandTarget = hitArmorStands && isHittableArmorStand(target, player);
         boolean hasTarget = isAttackableMob(target) || armorStandTarget;
@@ -66,7 +69,7 @@ public final class MobAttackExecutor {
      * Any living mob is a valid target; players are never {@link Mob}s, and non-mob
      * entities such as item frames, boats or minecarts are excluded as well.
      */
-    private static boolean isAttackableMob(Entity target) {
+    private static boolean isAttackableMob(@Nullable Entity target) {
         return target instanceof Mob mob && mob.isAlive();
     }
 
@@ -74,7 +77,7 @@ public final class MobAttackExecutor {
      * Farms hit armor stands to trigger sweeping attacks. Creative players would
      * destroy the stand with a single hit, so they never target one.
      */
-    private static boolean isHittableArmorStand(Entity target, LocalPlayer player) {
+    private static boolean isHittableArmorStand(@Nullable Entity target, LocalPlayer player) {
         return target instanceof ArmorStand stand
                 && stand.isAlive()
                 && !stand.isMarker()

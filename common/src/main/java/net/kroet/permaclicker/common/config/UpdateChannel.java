@@ -1,6 +1,7 @@
 package net.kroet.permaclicker.common.config;
 
 import java.util.Locale;
+import org.jspecify.annotations.Nullable;
 
 /**
  * User-facing update release channels for PermaClicker.
@@ -8,7 +9,7 @@ import java.util.Locale;
 public enum UpdateChannel {
     STABLE, BETA, ALPHA;
 
-    public static UpdateChannel fromString(String raw, UpdateChannel fallback) {
+    public static UpdateChannel fromString(@Nullable String raw, UpdateChannel fallback) {
         if (raw == null || raw.isBlank()) {
             return fallback;
         }

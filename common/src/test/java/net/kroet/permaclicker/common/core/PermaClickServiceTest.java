@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import net.kroet.permaclicker.common.config.ClickMode;
 import net.kroet.permaclicker.common.config.PermaClickConfig;
 import net.kroet.permaclicker.common.config.UpdateChannel;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 class PermaClickServiceTest {
@@ -335,8 +336,8 @@ class PermaClickServiceTest {
         private boolean playerReady = false;
         private boolean miningPerformed = false;
         private boolean actionBarShown = false;
-        private String lastActionBarMessage;
-        private String lastActionBarColor;
+        private @Nullable String lastActionBarMessage;
+        private @Nullable String lastActionBarColor;
         private boolean movementLockActive = false;
         private int movementLockTransitions = 0;
         private boolean backgroundCursorFreeActive = false;

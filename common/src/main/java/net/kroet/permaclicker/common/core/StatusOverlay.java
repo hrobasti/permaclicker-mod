@@ -1,6 +1,7 @@
 package net.kroet.permaclicker.common.core;
 
 import net.kroet.permaclicker.common.config.ClickMode;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Content of the action-bar status; the client renders it from the lang files.
@@ -8,7 +9,7 @@ import net.kroet.permaclicker.common.config.ClickMode;
  * @param timer
  *            remaining auto-stop time such as {@code 00:01:00}, or null
  */
-public record StatusOverlay(boolean active, ClickMode clickMode, String timer) {
+public record StatusOverlay(boolean active, ClickMode clickMode, @Nullable String timer) {
     public static StatusOverlay inactive(ClickMode clickMode) {
         return new StatusOverlay(false, clickMode, null);
     }

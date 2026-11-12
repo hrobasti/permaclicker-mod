@@ -95,13 +95,10 @@ def verifyMatrixTargets = tasks.register('verifyMatrixTargets') {
 tasks.register('testPermaClicker') {
     dependsOn('spotlessCheck')
     group = 'verification'
-    description = 'Runs all PermaClicker unit tests (common + client + Fabric + NeoForge).'
-    dependsOn(
-        ':permaclicker-common:test',
-        ':permaclicker-client:test',
-        ':permaclicker-fabric:test',
-        ':permaclicker-neoforge:test'
-    )
+    description = 'Runs all PermaClicker unit tests and the null analysis (common + client + Fabric + NeoForge).'
+    ['common', 'client', 'fabric', 'neoforge'].each { module ->
+        dependsOn(":permaclicker-${module}:test", ":permaclicker-${module}:nullCheck")
+    }
 }
 
 def neoForgeMatrixBuildTasks = matrixTargets.collect { target ->

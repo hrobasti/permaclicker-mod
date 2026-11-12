@@ -17,6 +17,9 @@ dependencies {
     api turtleLibDependency
     // The config store uses Gson directly; the TurtleLib release asset carries no dependency metadata.
     implementation 'com.google.code.gson:gson:2.10.1'
+    // Null annotations for the package markers (Minecraft provides them at runtime).
+    compileOnly 'org.jspecify:jspecify:1.0.0'
+    testCompileOnly 'org.jspecify:jspecify:1.0.0'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.12.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.12.1'
 }

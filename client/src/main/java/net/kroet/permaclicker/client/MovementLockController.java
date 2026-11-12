@@ -1,6 +1,8 @@
 package net.kroet.permaclicker.client;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Freezes player movement input and view direction while active. Shared between
@@ -26,7 +28,7 @@ public final class MovementLockController {
     }
 
     public void applyInputSuppression(Minecraft minecraft) {
-        if (!active || minecraft == null || minecraft.options == null) {
+        if (!active) {
             return;
         }
 
@@ -40,7 +42,9 @@ public final class MovementLockController {
     }
 
     public void applyViewFreeze(Minecraft minecraft) {
-        if (!active || minecraft == null || minecraft.player == null) {
+        @Nullable
+        LocalPlayer player = minecraft == null ? null : minecraft.player;
+        if (!active || player == null) {
             return;
         }
 
@@ -48,18 +52,20 @@ public final class MovementLockController {
             captureLockedView(minecraft);
         }
 
-        minecraft.player.setYRot(lockedYaw);
-        minecraft.player.setXRot(lockedPitch);
-        minecraft.player.yRotO = lockedYaw;
-        minecraft.player.xRotO = lockedPitch;
+        player.setYRot(lockedYaw);
+        player.setXRot(lockedPitch);
+        player.yRotO = lockedYaw;
+        player.xRotO = lockedPitch;
     }
 
     private void captureLockedView(Minecraft minecraft) {
-        if (minecraft == null || minecraft.player == null) {
+        @Nullable
+        LocalPlayer player = minecraft == null ? null : minecraft.player;
+        if (player == null) {
             return;
         }
-        lockedYaw = minecraft.player.getYRot();
-        lockedPitch = minecraft.player.getXRot();
+        lockedYaw = player.getYRot();
+        lockedPitch = player.getXRot();
         hasLockedView = true;
     }
 }

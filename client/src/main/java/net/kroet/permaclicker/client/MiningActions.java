@@ -6,11 +6,13 @@ import net.kroet.permaclicker.client.mixin.MultiPlayerGameModeAccessor;
 import net.kroet.permaclicker.common.core.MiningTarget;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Block-mining primitives shared by the focused- and background-mode executors:
@@ -27,11 +29,12 @@ import net.minecraft.world.phys.HitResult;
  * </p>
  */
 final class MiningActions {
-    private BlockPos cachedDestroyPos;
-    private Direction cachedDestroyDirection;
+    private @Nullable BlockPos cachedDestroyPos;
+    private @Nullable Direction cachedDestroyDirection;
 
     void updateCachedDestroyTarget(Minecraft minecraft) {
-        if (minecraft.level == null) {
+        ClientLevel level = minecraft.level;
+        if (level == null) {
             return;
         }
 
@@ -43,7 +46,7 @@ final class MiningActions {
         }
 
         BlockPos currentPos = hit.getBlockPos();
-        if (minecraft.level.getBlockState(currentPos).isAir()) {
+        if (level.getBlockState(currentPos).isAir()) {
             return;
         }
 
@@ -96,20 +99,23 @@ final class MiningActions {
 
     private boolean destroyWithCachedTarget(Minecraft minecraft, DestroyCall destroyCall) {
         MultiPlayerGameMode gameMode = minecraft.gameMode;
-        if (gameMode == null || minecraft.level == null || cachedDestroyPos == null || cachedDestroyDirection == null) {
+        ClientLevel level = minecraft.level;
+        BlockPos pos = cachedDestroyPos;
+        Direction direction = cachedDestroyDirection;
+        if (gameMode == null || level == null || pos == null || direction == null) {
             return false;
         }
 
-        if (minecraft.level.getBlockState(cachedDestroyPos).isAir()) {
+        if (level.getBlockState(pos).isAir()) {
             clearCachedDestroyTarget();
             return false;
         }
 
         try {
             DestroySnapshot before = DestroySnapshot.of(gameMode);
-            destroyCall.apply(gameMode, cachedDestroyPos, cachedDestroyDirection);
+            destroyCall.apply(gameMode, pos, direction);
 
-            if (minecraft.level.getBlockState(cachedDestroyPos).isAir()) {
+            if (level.getBlockState(pos).isAir()) {
                 clearCachedDestroyTarget();
                 return true;
             }
@@ -143,7 +149,7 @@ final class MiningActions {
     }
 
     private record DestroySnapshot(boolean destroying, int stage, float progress, int delay) {
-        static DestroySnapshot of(MultiPlayerGameMode gameMode) {
+        static DestroySnapshot of(@Nullable MultiPlayerGameMode gameMode) {
             if (gameMode == null) {
                 return new DestroySnapshot(false, Integer.MIN_VALUE, Float.NaN, Integer.MIN_VALUE);
             }
@@ -154,7 +160,7 @@ final class MiningActions {
                     destroyDelay(gameMode));
         }
 
-        boolean hasAdvancedIn(MultiPlayerGameMode gameMode) {
+        boolean hasAdvancedIn(@Nullable MultiPlayerGameMode gameMode) {
             if (gameMode == null) {
                 return false;
             }

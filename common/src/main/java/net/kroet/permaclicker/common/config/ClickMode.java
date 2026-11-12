@@ -1,6 +1,7 @@
 package net.kroet.permaclicker.common.config;
 
 import java.util.Locale;
+import org.jspecify.annotations.Nullable;
 
 /**
  * What PermaClicker's held attack input is used for while active.
@@ -17,7 +18,7 @@ public enum ClickMode {
      */
     MOB_ATTACK;
 
-    public static ClickMode fromString(String raw, ClickMode fallback) {
+    public static ClickMode fromString(@Nullable String raw, ClickMode fallback) {
         if (raw == null || raw.isBlank()) {
             return fallback;
         }

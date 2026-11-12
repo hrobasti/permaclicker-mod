@@ -3,6 +3,7 @@ package net.kroet.permaclicker.client;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import net.kroet.permaclicker.common.config.ClickMode;
 import net.kroet.permaclicker.common.config.PermaClickConfig;
 import net.kroet.permaclicker.common.config.UpdateChannel;
@@ -20,6 +21,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import org.jspecify.annotations.Nullable;
 
 /**
  * PermaClicker config screen with vanilla options-layout styling.
@@ -49,7 +51,7 @@ public final class PermaClickConfigScreen extends OptionsSubScreen {
             "yellow",
             "white");
 
-    private final Screen parent;
+    private final @Nullable Screen parent;
 
     private boolean overlayEnabled;
     private String overlayColor;
@@ -62,27 +64,23 @@ public final class PermaClickConfigScreen extends OptionsSubScreen {
     private boolean updateCheckEnabled;
     private UpdateChannel updateChannel;
 
-    private Button runtimeModeButton;
-    private Button clickModeButton;
-    private Button hitArmorStandsButton;
-    private Button movementLockButton;
-    private Button overlayEnabledButton;
-    private Button overlayColorButton;
-    private Button updateCheckButton;
-    private Button updateChannelButton;
-    private EditBox autoStopInputField;
-    private EditBox attackBufferInputField;
-    private OptionsList optionsList;
+    private @Nullable Button runtimeModeButton;
+    private @Nullable Button clickModeButton;
+    private @Nullable Button hitArmorStandsButton;
+    private @Nullable Button movementLockButton;
+    private @Nullable Button overlayEnabledButton;
+    private @Nullable Button overlayColorButton;
+    private @Nullable Button updateCheckButton;
+    private @Nullable Button updateChannelButton;
+    private @Nullable EditBox autoStopInputField;
+    private @Nullable EditBox attackBufferInputField;
+    private @Nullable OptionsList optionsList;
 
-    public PermaClickConfigScreen(Screen parent) {
-        super(parent, Minecraft.getInstance().options, Component.translatable("permaclicker.config.title"));
+    public PermaClickConfigScreen(@Nullable Screen parent) {
+        super(uncheckedParent(parent), Minecraft.getInstance().options, Component.translatable("permaclicker.config.title"));
         this.parent = parent;
 
-        PermaClickBridge bridge = PermaClickClient.bridge();
-        PermaClickConfig config = bridge != null ? bridge.currentConfig() : null;
-        if (config == null) {
-            config = PermaClickConfig.defaults();
-        }
+        PermaClickConfig config = PermaClickClient.bridge().currentConfig();
 
         this.overlayEnabled = config.overlayEnabled();
         this.overlayColor = config.overlayColor();
@@ -110,130 +108,140 @@ public final class PermaClickConfigScreen extends OptionsSubScreen {
         }
 
         addSectionRow(Component.translatable("permaclicker.config.section.general"));
-        this.runtimeModeButton = this.createToggleButton(runtimeModeValue(), button -> {
+        Button runtimeMode = this.createToggleButton(runtimeModeValue(), button -> {
             runInBackground = !runInBackground;
             refreshButtonMessages();
         });
+        this.runtimeModeButton = runtimeMode;
         addLabeledRow(
                 Component.translatable("permaclicker.config.runtime_mode"),
                 tooltipLines(
                         tooltipLine(Component.translatable("permaclicker.config.runtime_mode.focused"), "permaclicker.config.runtime_mode.tooltip.focused.desc"),
                         tooltipLine(Component.translatable("permaclicker.config.runtime_mode.background"), "permaclicker.config.runtime_mode.tooltip.background.desc")),
-                this.runtimeModeButton);
+                runtimeMode);
 
-        this.clickModeButton = this.createToggleButton(clickModeValue(), button -> {
+        Button clickModeToggle = this.createToggleButton(clickModeValue(), button -> {
             clickMode = clickMode == ClickMode.MOB_ATTACK ? ClickMode.MINING : ClickMode.MOB_ATTACK;
             refreshButtonMessages();
         });
+        this.clickModeButton = clickModeToggle;
         addLabeledRow(
                 Component.translatable("permaclicker.config.click_mode"),
                 tooltipLines(
                         tooltipLine(Component.translatable("permaclicker.config.click_mode.mining"), "permaclicker.config.click_mode.tooltip.mining.desc"),
                         tooltipLine(Component.translatable("permaclicker.config.click_mode.mob_attack"), "permaclicker.config.click_mode.tooltip.mob_attack.desc")),
-                this.clickModeButton);
+                clickModeToggle);
 
-        this.attackBufferInputField = new EditBox(
+        EditBox attackBufferInput = new EditBox(
                 this.font,
                 0,
                 0,
                 CONTROL_WIDTH,
                 ROW_HEIGHT,
                 Component.translatable("permaclicker.config.attack_buffer_ticks"));
-        this.attackBufferInputField.setMaxLength(2);
-        this.attackBufferInputField.setValue(Integer.toString(attackBufferTicks));
+        this.attackBufferInputField = attackBufferInput;
+        attackBufferInput.setMaxLength(2);
+        attackBufferInput.setValue(Integer.toString(attackBufferTicks));
         addLabeledRow(
                 Component.translatable("permaclicker.config.attack_buffer_ticks"),
                 tooltipLines(
                         tooltipLine(
                                 Component.literal(PermaClickConfig.MIN_ATTACK_BUFFER_TICKS + "-" + PermaClickConfig.MAX_ATTACK_BUFFER_TICKS),
                                 "permaclicker.config.attack_buffer_ticks.tooltip.range.desc")),
-                this.attackBufferInputField);
+                attackBufferInput);
 
-        this.hitArmorStandsButton = this.createToggleButton(toggleValue(hitArmorStands), button -> {
+        Button hitArmorStandsToggle = this.createToggleButton(toggleValue(hitArmorStands), button -> {
             hitArmorStands = !hitArmorStands;
             refreshButtonMessages();
         });
+        this.hitArmorStandsButton = hitArmorStandsToggle;
         addLabeledRow(
                 Component.translatable("permaclicker.config.hit_armor_stands"),
                 tooltipLines(
                         tooltipLine(Component.translatable("permaclicker.config.value.on"), "permaclicker.config.hit_armor_stands.tooltip.on.desc"),
                         tooltipLine(Component.translatable("permaclicker.config.value.off"), "permaclicker.config.hit_armor_stands.tooltip.off.desc")),
-                this.hitArmorStandsButton);
+                hitArmorStandsToggle);
 
-        this.autoStopInputField = new EditBox(
+        EditBox autoStopInput = new EditBox(
                 this.font,
                 0,
                 0,
                 CONTROL_WIDTH,
                 ROW_HEIGHT,
                 Component.translatable("permaclicker.config.auto_stop_minutes"));
-        this.autoStopInputField.setMaxLength(4);
-        this.autoStopInputField.setValue(Integer.toString(autoStopMinutes));
+        this.autoStopInputField = autoStopInput;
+        autoStopInput.setMaxLength(4);
+        autoStopInput.setValue(Integer.toString(autoStopMinutes));
         addLabeledRow(
                 Component.translatable("permaclicker.config.auto_stop_minutes"),
                 tooltipLines(
                         tooltipLine(Component.literal("0"), "permaclicker.config.auto_stop_minutes.tooltip.off.desc"),
                         tooltipLine(Component.literal("1-9999"), "permaclicker.config.auto_stop_minutes.tooltip.range.desc")),
-                this.autoStopInputField);
+                autoStopInput);
 
-        this.movementLockButton = this.createToggleButton(toggleValue(movementLockEnabled), button -> {
+        Button movementLockToggle = this.createToggleButton(toggleValue(movementLockEnabled), button -> {
             movementLockEnabled = !movementLockEnabled;
             refreshButtonMessages();
         });
+        this.movementLockButton = movementLockToggle;
         addLabeledRow(
                 Component.translatable("permaclicker.config.cursor_lock"),
                 tooltipLines(
                         tooltipLine(Component.translatable("permaclicker.config.value.on"), "permaclicker.config.cursor_lock.tooltip.on.desc"),
                         tooltipLine(Component.translatable("permaclicker.config.value.off"), "permaclicker.config.cursor_lock.tooltip.off.desc")),
-                this.movementLockButton);
+                movementLockToggle);
 
         addSectionRow(Component.translatable("permaclicker.config.section.overlay"));
-        this.overlayEnabledButton = this.createToggleButton(toggleValue(overlayEnabled), button -> {
+        Button overlayEnabledToggle = this.createToggleButton(toggleValue(overlayEnabled), button -> {
             overlayEnabled = !overlayEnabled;
             refreshButtonMessages();
         });
+        this.overlayEnabledButton = overlayEnabledToggle;
         addLabeledRow(
                 Component.translatable("permaclicker.config.overlay.enabled"),
                 tooltipLines(
                         tooltipLine(Component.translatable("permaclicker.config.value.on"), "permaclicker.config.overlay.enabled.tooltip.on.desc"),
                         tooltipLine(Component.translatable("permaclicker.config.value.off"), "permaclicker.config.overlay.enabled.tooltip.off.desc")),
-                this.overlayEnabledButton);
+                overlayEnabledToggle);
 
-        this.overlayColorButton = this.createToggleButton(overlayColorValue(), button -> {
+        Button overlayColorToggle = this.createToggleButton(overlayColorValue(), button -> {
             overlayColor = nextOverlayColor(overlayColor);
             refreshButtonMessages();
         });
+        this.overlayColorButton = overlayColorToggle;
         addLabeledRow(
                 Component.translatable("permaclicker.config.overlay.color"),
                 tooltipLines(
                         tooltipLine(
                                 Component.translatable("permaclicker.config.overlay.color.tooltip.any.label"),
                                 "permaclicker.config.overlay.color.tooltip.any.desc")),
-                this.overlayColorButton);
+                overlayColorToggle);
 
         addSectionRow(Component.translatable("permaclicker.config.section.updates"));
-        this.updateCheckButton = this.createToggleButton(toggleValue(updateCheckEnabled), button -> {
+        Button updateCheckToggle = this.createToggleButton(toggleValue(updateCheckEnabled), button -> {
             updateCheckEnabled = !updateCheckEnabled;
             refreshButtonMessages();
         });
+        this.updateCheckButton = updateCheckToggle;
         addLabeledRow(
                 Component.translatable("permaclicker.config.update.enabled"),
                 tooltipLines(
                         tooltipLine(Component.translatable("permaclicker.config.value.on"), "permaclicker.config.update.enabled.tooltip.on.desc"),
                         tooltipLine(Component.translatable("permaclicker.config.value.off"), "permaclicker.config.update.enabled.tooltip.off.desc")),
-                this.updateCheckButton);
+                updateCheckToggle);
 
-        this.updateChannelButton = this.createToggleButton(updateChannelValue(), button -> {
+        Button updateChannelToggle = this.createToggleButton(updateChannelValue(), button -> {
             updateChannel = nextChannel(updateChannel);
             refreshButtonMessages();
         });
+        this.updateChannelButton = updateChannelToggle;
         addLabeledRow(
                 Component.translatable("permaclicker.config.update.channel"),
                 tooltipLines(
                         tooltipLine(Component.translatable("permaclicker.config.update.channel.stable"), "permaclicker.config.update.channel.tooltip.stable.desc"),
                         tooltipLine(Component.translatable("permaclicker.config.update.channel.beta"), "permaclicker.config.update.channel.tooltip.beta.desc"),
                         tooltipLine(Component.translatable("permaclicker.config.update.channel.alpha"), "permaclicker.config.update.channel.tooltip.alpha.desc")),
-                this.updateChannelButton);
+                updateChannelToggle);
 
         refreshButtonMessages();
     }
@@ -258,38 +266,47 @@ public final class PermaClickConfigScreen extends OptionsSubScreen {
     }
 
     private void refreshButtonMessages() {
-        if (runtimeModeButton != null) {
-            runtimeModeButton.setMessage(runtimeModeValue());
+        Button runtimeMode = runtimeModeButton;
+        if (runtimeMode != null) {
+            runtimeMode.setMessage(runtimeModeValue());
         }
-        if (clickModeButton != null) {
-            clickModeButton.setMessage(clickModeValue());
+        Button clickModeToggle = clickModeButton;
+        if (clickModeToggle != null) {
+            clickModeToggle.setMessage(clickModeValue());
         }
         // Buffer and armor stands only affect mob-attack mode; grey them out while
         // mining.
         boolean mobAttackMode = clickMode == ClickMode.MOB_ATTACK;
-        if (attackBufferInputField != null) {
-            attackBufferInputField.active = mobAttackMode;
-            attackBufferInputField.setEditable(mobAttackMode);
+        EditBox attackBufferInput = attackBufferInputField;
+        if (attackBufferInput != null) {
+            attackBufferInput.active = mobAttackMode;
+            attackBufferInput.setEditable(mobAttackMode);
         }
-        if (hitArmorStandsButton != null) {
-            hitArmorStandsButton.setMessage(toggleValue(hitArmorStands));
-            hitArmorStandsButton.active = mobAttackMode;
+        Button hitArmorStandsToggle = hitArmorStandsButton;
+        if (hitArmorStandsToggle != null) {
+            hitArmorStandsToggle.setMessage(toggleValue(hitArmorStands));
+            hitArmorStandsToggle.active = mobAttackMode;
         }
-        if (movementLockButton != null) {
-            movementLockButton.setMessage(toggleValue(movementLockEnabled));
+        Button movementLockToggle = movementLockButton;
+        if (movementLockToggle != null) {
+            movementLockToggle.setMessage(toggleValue(movementLockEnabled));
         }
-        if (overlayEnabledButton != null) {
-            overlayEnabledButton.setMessage(toggleValue(overlayEnabled));
+        Button overlayEnabledToggle = overlayEnabledButton;
+        if (overlayEnabledToggle != null) {
+            overlayEnabledToggle.setMessage(toggleValue(overlayEnabled));
         }
-        if (overlayColorButton != null) {
-            overlayColorButton.setMessage(overlayColorValue());
+        Button overlayColorToggle = overlayColorButton;
+        if (overlayColorToggle != null) {
+            overlayColorToggle.setMessage(overlayColorValue());
         }
-        if (updateCheckButton != null) {
-            updateCheckButton.setMessage(toggleValue(updateCheckEnabled));
+        Button updateCheckToggle = updateCheckButton;
+        if (updateCheckToggle != null) {
+            updateCheckToggle.setMessage(toggleValue(updateCheckEnabled));
         }
-        if (updateChannelButton != null) {
-            updateChannelButton.setMessage(updateChannelValue());
-            updateChannelButton.active = updateCheckEnabled;
+        Button updateChannelToggle = updateChannelButton;
+        if (updateChannelToggle != null) {
+            updateChannelToggle.setMessage(updateChannelValue());
+            updateChannelToggle.active = updateCheckEnabled;
         }
     }
 
@@ -302,13 +319,13 @@ public final class PermaClickConfigScreen extends OptionsSubScreen {
     private void addLabeledRow(Component labelText, List<Component> infoTooltipLines, AbstractWidget controlWidget) {
         InfoLabelWidget labelWidget = new InfoLabelWidget(labelText, infoTooltipLines);
         controlWidget.setWidth(CONTROL_WIDTH);
-        this.optionsList.addSmall(labelWidget, controlWidget);
+        Objects.requireNonNull(this.optionsList, "optionsList is created in addContents").addSmall(labelWidget, controlWidget);
     }
 
     private void addSectionRow(Component sectionText) {
         SectionLabelWidget left = new SectionLabelWidget(sectionText);
         SpacerWidget right = new SpacerWidget();
-        this.optionsList.addSmall(left, right);
+        Objects.requireNonNull(this.optionsList, "optionsList is created in addContents").addSmall(left, right);
     }
 
     private static List<Component> tooltipLines(Component... lines) {
@@ -438,15 +455,7 @@ public final class PermaClickConfigScreen extends OptionsSubScreen {
 
     private void saveAndClose() {
         PermaClickBridge bridge = PermaClickClient.bridge();
-        if (bridge == null) {
-            onClose();
-            return;
-        }
-
         PermaClickConfig current = bridge.currentConfig();
-        if (current == null) {
-            current = PermaClickConfig.defaults();
-        }
 
         int parsedAutoStop = autoStopMinutes;
         if (autoStopInputField != null) {
@@ -479,12 +488,19 @@ public final class PermaClickConfigScreen extends OptionsSubScreen {
     @Override
     public void onClose() {
         if (this.minecraft != null) {
-            this.minecraft.setScreenAndShow(parent);
+            PermaClickGameContext.setScreenAndShow(this.minecraft, parent);
         }
     }
 
+    // The in-game hotkey opens this screen without a parent; OptionsSubScreen
+    // declares its parent non-null but only hands it to the nullable Gui.setScreen.
+    @SuppressWarnings("null")
+    private static Screen uncheckedParent(@Nullable Screen parent) {
+        return parent;
+    }
+
     private static int parseIntInput(String raw, int fallback) {
-        if (raw == null || raw.isBlank()) {
+        if (raw.isBlank()) {
             return fallback;
         }
         try {

@@ -8,6 +8,8 @@ import net.kroet.permaclicker.common.core.PermaClickBridge;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.gui.screens.Screen;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Shared game-context predicates and small helpers used by both loader
@@ -19,11 +21,11 @@ public final class PermaClickGameContext {
     }
 
     public static boolean isBackgroundModeActive(Minecraft minecraft, PermaClickConfig config) {
-        if (minecraft == null || minecraft.player == null || minecraft.level == null || minecraft.gameMode == null) {
+        if (minecraft.player == null || minecraft.level == null || minecraft.gameMode == null) {
             return false;
         }
 
-        if (config == null || !config.enabled()) {
+        if (!config.enabled()) {
             return false;
         }
 
@@ -31,15 +33,12 @@ public final class PermaClickGameContext {
     }
 
     public static boolean isWindowMinimized(Minecraft minecraft) {
-        if (minecraft == null) {
-            return false;
-        }
         Window window = minecraft.getWindow();
         return window != null && window.isIconified();
     }
 
     public static boolean isChatMiningContextActive(Minecraft minecraft, PermaClickConfig config) {
-        if (minecraft == null || minecraft.player == null || minecraft.level == null || minecraft.gameMode == null) {
+        if (minecraft.player == null || minecraft.level == null || minecraft.gameMode == null) {
             return false;
         }
 
@@ -47,7 +46,7 @@ public final class PermaClickGameContext {
             return false;
         }
 
-        if (config == null || !config.enabled()) {
+        if (!config.enabled()) {
             return false;
         }
 
@@ -65,40 +64,40 @@ public final class PermaClickGameContext {
     }
 
     public static boolean isChatBlockContextActive(Minecraft minecraft, PermaClickConfig config) {
-        if (minecraft == null || minecraft.player == null || minecraft.level == null || minecraft.gameMode == null) {
+        if (minecraft.player == null || minecraft.level == null || minecraft.gameMode == null) {
             return false;
         }
 
-        return config != null && config.enabled();
+        return config.enabled();
     }
 
     public static boolean isInGameHotkeyContext(Minecraft minecraft) {
-        return minecraft != null
-                && minecraft.player != null
+        return minecraft.player != null
                 && minecraft.level != null
                 && minecraft.gameMode != null
                 && minecraft.gui.screen() == null;
     }
 
     public static boolean isMiningAllowedScreen(Minecraft minecraft) {
-        if (minecraft.gui.screen() == null) {
+        Screen screen = minecraft.gui.screen();
+        if (screen == null) {
             return true;
         }
-        if (minecraft.gui.screen() instanceof ChatScreen) {
+        if (screen instanceof ChatScreen) {
             return true;
         }
 
-        String simpleName = minecraft.gui.screen().getClass().getSimpleName();
+        String simpleName = screen.getClass().getSimpleName();
         return "ChatScreen".equals(simpleName) || simpleName.endsWith("ChatScreen");
     }
 
     public static void stopForFocusedEscPause(Minecraft minecraft, PermaClickBridge bridge) {
-        if (minecraft == null || minecraft.player == null || minecraft.level == null || minecraft.gameMode == null) {
+        if (minecraft.player == null || minecraft.level == null || minecraft.gameMode == null) {
             return;
         }
 
         PermaClickConfig config = bridge.currentConfig();
-        if (config == null || !config.enabled()) {
+        if (!config.enabled()) {
             return;
         }
 
@@ -107,6 +106,14 @@ public final class PermaClickGameContext {
         }
 
         bridge.stopIfEnabled();
+    }
+
+    /** Shows {@code screen} at once; null closes the current screen. */
+    // Minecraft.setScreenAndShow forwards to Gui.setScreen, which accepts null;
+    // only its own parameter lacks the annotation.
+    @SuppressWarnings("null")
+    public static void setScreenAndShow(Minecraft minecraft, @Nullable Screen screen) {
+        minecraft.setScreenAndShow(screen);
     }
 
     public static ChatFormatting resolveOverlayColor(String rawColorName) {

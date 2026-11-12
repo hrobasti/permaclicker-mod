@@ -2,6 +2,7 @@ package net.kroet.permaclicker.common.core;
 
 import net.kroet.permaclicker.common.config.ClickMode;
 import net.kroet.permaclicker.common.config.PermaClickConfig;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Core state machine for toggling and mining loop execution.
@@ -27,7 +28,7 @@ public final class PermaClickService {
     private boolean movementLockActive;
     private boolean backgroundCursorFreeActive;
     private int overlayRefreshTicks;
-    private StatusOverlay lastStatus;
+    private @Nullable StatusOverlay lastStatus;
 
     public PermaClickService() {
         this.enabled = false;
@@ -181,7 +182,7 @@ public final class PermaClickService {
         lastStatus = status;
     }
 
-    private String formatTimerText() {
+    private @Nullable String formatTimerText() {
         if (remainingTicks < 0) {
             return null;
         }

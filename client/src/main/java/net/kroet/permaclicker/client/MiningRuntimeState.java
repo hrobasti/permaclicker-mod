@@ -41,10 +41,6 @@ public final class MiningRuntimeState {
      *         whether a hit was performed
      */
     public boolean performClickTick(Minecraft minecraft, PermaClickConfig config) {
-        if (minecraft == null || minecraft.options == null || config == null) {
-            return false;
-        }
-
         if (config.clickMode() == ClickMode.MOB_ATTACK) {
             // Never hold the attack key here: vanilla would mine blocks behind the
             // mob. The hold flag stays false, so a leftover hold from Mining mode
@@ -64,9 +60,6 @@ public final class MiningRuntimeState {
     }
 
     public void syncAttackHoldState(Minecraft minecraft) {
-        if (minecraft == null || minecraft.options == null) {
-            return;
-        }
         if (!attackRequestedThisTick) {
             if (attackHoldForcedByPermaClick) {
                 minecraft.options.keyAttack.setDown(false);

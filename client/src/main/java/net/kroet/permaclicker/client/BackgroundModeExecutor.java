@@ -14,10 +14,6 @@ public final class BackgroundModeExecutor {
     private int unfocusedMissTicks;
 
     public boolean performBackgroundMiningTick(Minecraft minecraft) {
-        if (minecraft == null || minecraft.options == null) {
-            return false;
-        }
-
         if (minecraft.gui.screen() instanceof PauseScreen) {
             return false;
         }
@@ -46,15 +42,11 @@ public final class BackgroundModeExecutor {
     }
 
     public boolean aggressivelySuppressPauseScreen(Minecraft minecraft) {
-        if (minecraft == null) {
-            return false;
-        }
-
         if (minecraft.options != null) {
             minecraft.options.pauseOnLostFocus = false;
         }
         if (minecraft.gui.screen() instanceof PauseScreen) {
-            minecraft.setScreenAndShow(null);
+            PermaClickGameContext.setScreenAndShow(minecraft, null);
             return true;
         }
 

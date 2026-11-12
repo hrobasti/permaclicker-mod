@@ -14,12 +14,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 final class PauseEscKeyMixin {
     @Inject(method = "keyPress", at = @At("HEAD"), cancellable = true)
     private void permaclicker$blockEscPauseOpening(long window, int unknown, KeyEvent keyEvent, CallbackInfo ci) {
-        if (keyEvent == null || keyEvent.key() != InputConstants.KEY_ESCAPE) {
+        if (keyEvent.key() != InputConstants.KEY_ESCAPE) {
             return;
         }
 
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft == null || minecraft.gui.screen() != null) {
+        if (minecraft.gui.screen() != null) {
             return;
         }
 

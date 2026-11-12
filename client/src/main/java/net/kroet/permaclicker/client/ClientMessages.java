@@ -11,6 +11,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Shared chat-message helpers used by both loader entrypoints for update-check
@@ -50,7 +51,7 @@ public final class ClientMessages {
         sendChat(player, line);
     }
 
-    private static URI parseUri(String url) {
+    private static @Nullable URI parseUri(@Nullable String url) {
         if (url == null || url.isBlank()) {
             return null;
         }

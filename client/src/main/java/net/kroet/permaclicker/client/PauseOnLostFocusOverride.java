@@ -1,6 +1,7 @@
 package net.kroet.permaclicker.client;
 
 import net.minecraft.client.Minecraft;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Temporarily forces Minecraft's "pause on lost focus" option off while
@@ -9,7 +10,7 @@ import net.minecraft.client.Minecraft;
  * entrypoint owns one instance.
  */
 public final class PauseOnLostFocusOverride {
-    private Boolean originalValue;
+    private @Nullable Boolean originalValue;
     private boolean overridden;
 
     public void update(Minecraft minecraft, boolean active) {
@@ -40,17 +41,11 @@ public final class PauseOnLostFocusOverride {
         originalValue = null;
     }
 
-    private static Boolean readValue(Minecraft minecraft) {
-        if (minecraft == null || minecraft.options == null) {
-            return null;
-        }
+    private static @Nullable Boolean readValue(Minecraft minecraft) {
         return minecraft.options.pauseOnLostFocus;
     }
 
     private static void writeValue(Minecraft minecraft, boolean value) {
-        if (minecraft == null || minecraft.options == null) {
-            return;
-        }
         minecraft.options.pauseOnLostFocus = value;
     }
 }

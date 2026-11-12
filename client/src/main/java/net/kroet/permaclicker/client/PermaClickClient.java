@@ -16,8 +16,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 /**
@@ -35,9 +37,9 @@ public final class PermaClickClient {
     private static final PauseOnLostFocusOverride PAUSE_OVERRIDE = new PauseOnLostFocusOverride();
     private static final UpdateNoticeController UPDATE_NOTICE = new UpdateNoticeController();
 
-    private static PermaClickConfigStore configStore;
-    private static KeyMapping toggleKey;
-    private static KeyMapping configKey;
+    private static @Nullable PermaClickConfigStore configStore;
+    private static @Nullable KeyMapping toggleKey;
+    private static @Nullable KeyMapping configKey;
 
     private PermaClickClient() {
     }
@@ -46,9 +48,10 @@ public final class PermaClickClient {
      * Loads the config and starts the update check; called once at client start.
      */
     public static void init(Path gameDirectory, ModLoader loader, String modVersion) {
-        configStore = PermaClickConfigStore.inGameDirectory(gameDirectory);
+        PermaClickConfigStore store = PermaClickConfigStore.inGameDirectory(gameDirectory);
+        configStore = store;
         BRIDGE.bind(createBindings());
-        PermaClickConfigStore.LoadResult result = configStore.load();
+        PermaClickConfigStore.LoadResult result = store.load();
         if (result.brokenFileBackup() != null) {
             LOGGER.warn("PermaClicker config was unreadable and moved to {}; using defaults", result.brokenFileBackup());
         }
@@ -69,15 +72,17 @@ public final class PermaClickClient {
 
         // Clicks are counted by Minecraft, so a press is never lost to a screen that
         // was open while the key was released.
-        if (toggleKey != null) {
-            while (toggleKey.consumeClick()) {
+        KeyMapping toggle = toggleKey;
+        if (toggle != null) {
+            while (toggle.consumeClick()) {
                 if (inGameHotkeyContext) {
                     EVENT_LOOP.onTogglePressed();
                 }
             }
         }
-        if (configKey != null) {
-            while (configKey.consumeClick()) {
+        KeyMapping config = configKey;
+        if (config != null) {
+            while (config.consumeClick()) {
                 if (inGameHotkeyContext) {
                     openConfigScreen(minecraft);
                 }
@@ -109,17 +114,18 @@ public final class PermaClickClient {
     }
 
     public static void saveConfig() {
-        if (configStore == null) {
+        PermaClickConfigStore store = configStore;
+        if (store == null) {
             return;
         }
         try {
-            configStore.save(BRIDGE.currentConfig());
+            store.save(BRIDGE.currentConfig());
         } catch (IOException e) {
             LOGGER.warn("Could not save the PermaClicker config", e);
         }
     }
 
-    public static Screen createConfigScreen(Screen parent) {
+    public static Screen createConfigScreen(@Nullable Screen parent) {
         return new PermaClickConfigScreen(parent);
     }
 
@@ -142,7 +148,7 @@ public final class PermaClickClient {
         PermaClickGameContext.stopForFocusedEscPause(minecraft, BRIDGE);
     }
 
-    public static boolean isConfigScreen(Screen screen) {
+    public static boolean isConfigScreen(@Nullable Screen screen) {
         return screen instanceof PermaClickConfigScreen;
     }
 
@@ -176,9 +182,11 @@ public final class PermaClickClient {
                 () -> MINING_STATE.performClickTick(Minecraft.getInstance(), BRIDGE.currentConfig()),
                 payload -> {
                     Minecraft minecraft = Minecraft.getInstance();
-                    if (minecraft != null && minecraft.player != null) {
+                    @Nullable
+                    LocalPlayer player = minecraft == null ? null : minecraft.player;
+                    if (player != null) {
                         ChatFormatting overlayColor = PermaClickGameContext.resolveOverlayColor(payload.colorName());
-                        minecraft.player.sendOverlayMessage(statusText(payload.status()).withStyle(overlayColor));
+                        player.sendOverlayMessage(statusText(payload.status()).withStyle(overlayColor));
                     }
                 },
                 active -> MOVEMENT_LOCK.setActive(Minecraft.getInstance(), active),

@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Minecraft.class)
 final class PauseScreenSetScreenMixin {
     @Inject(method = "setScreenAndShow", at = @At("HEAD"), cancellable = true)
-    private void permaclicker$blockPauseScreen(Screen screen, CallbackInfo ci) {
+    private void permaclicker$blockPauseScreen(@Nullable Screen screen, CallbackInfo ci) {
         Minecraft minecraft = (Minecraft) (Object) this;
 
         if (PermaClickClient.isConfigScreen(screen)) {
@@ -35,7 +36,7 @@ final class PauseScreenSetScreenMixin {
         }
     }
 
-    private static boolean isChatScreen(Screen screen) {
+    private static boolean isChatScreen(@Nullable Screen screen) {
         if (screen == null) {
             return false;
         }

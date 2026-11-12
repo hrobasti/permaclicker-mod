@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class PermaClickConfigStoreTest {
+    // JUnit injects the directory before each test.
+    @SuppressWarnings("null")
     @TempDir
     Path tempDir;
 

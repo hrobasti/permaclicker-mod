@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
+import org.jspecify.annotations.Nullable;
 
 /**
  * JSON-backed config persistence for PermaClick.
@@ -42,7 +43,7 @@ public final class PermaClickConfigStore {
      *            where an unreadable file was moved before falling back to
      *            defaults, or null
      */
-    public record LoadResult(PermaClickConfig config, Path brokenFileBackup) {
+    public record LoadResult(PermaClickConfig config, @Nullable Path brokenFileBackup) {
     }
 
     public LoadResult load() {
@@ -80,7 +81,7 @@ public final class PermaClickConfigStore {
         }
     }
 
-    private Path backUpBrokenFile() {
+    private @Nullable Path backUpBrokenFile() {
         Path backup = configFile.resolveSibling(configFile.getFileName() + ".broken");
         try {
             Files.move(configFile, backup, StandardCopyOption.REPLACE_EXISTING);

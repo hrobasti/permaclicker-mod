@@ -11,6 +11,7 @@ import net.kroet.turtlelib.UpdateChecker.UpdateLoader;
 import net.kroet.turtlelib.UpdateChecker.UpdatePlatform;
 import net.kroet.turtlelib.UpdateChecker.UpdateReleaseChannel;
 import net.kroet.turtlelib.UpdateChecker.UpdateResult;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Single facade for update-check operations delegated to TurtleLib
@@ -22,7 +23,7 @@ public final class UpdateFacade {
     private UpdateFacade() {
     }
 
-    private static String userAgent(String currentVersion) {
+    private static String userAgent(@Nullable String currentVersion) {
         String version = currentVersion == null || currentVersion.isBlank() ? "dev" : currentVersion.trim();
         return "PermaClicker/" + version + USER_AGENT_SUFFIX;
     }
@@ -32,8 +33,8 @@ public final class UpdateFacade {
             String minecraftVersion,
             UpdateChannel updateChannel,
             ModLoader loader,
-            String modrinthProjectId,
-            String curseforgeProjectId) {
+            @Nullable String modrinthProjectId,
+            @Nullable String curseforgeProjectId) {
         UpdateResult result = new UpdateChecker(
                 userAgent(currentVersion),
                 modrinthProjectId,
@@ -51,7 +52,7 @@ public final class UpdateFacade {
         return new UpdateCheckResult(result.currentVersion(), result.latestVersion(), releases, errors);
     }
 
-    private static UpdateReleaseChannel mapChannel(UpdateChannel channel) {
+    private static UpdateReleaseChannel mapChannel(@Nullable UpdateChannel channel) {
         if (channel == null) {
             return UpdateReleaseChannel.BETA;
         }
@@ -62,7 +63,7 @@ public final class UpdateFacade {
         };
     }
 
-    private static UpdateLoader mapLoader(ModLoader loader) {
+    private static @Nullable UpdateLoader mapLoader(@Nullable ModLoader loader) {
         if (loader == null) {
             return null;
         }
@@ -85,7 +86,7 @@ public final class UpdateFacade {
      */
     public record UpdateCheckResult(
             String currentVersion,
-            String latestVersion,
+            @Nullable String latestVersion,
             Map<UpdateProvider, ProviderRelease> releases,
             Map<UpdateProvider, String> errors) {
         public UpdateCheckResult {
